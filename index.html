@@ -7,21 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
         }
         .tab-active {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background-color: #eff6ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            background-color: #eef2ff;
         }
         .result-card {
-            transform-style: preserve-3d;
-            transition: transform 0.5s, box-shadow 0.5s;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .result-card:hover {
             transform: translateY(-5px);
@@ -32,33 +35,43 @@
         }
         input[type="range"] {
             -webkit-appearance: none; appearance: none;
-            width: 100%; height: 8px; background: #d1d5db;
-            border-radius: 5px; outline: none; opacity: 0.7;
+            width: 100%; height: 8px; background: #e5e7eb;
+            border-radius: 5px; outline: none; opacity: 0.8;
             transition: opacity .2s;
         }
         input[type="range"]:hover { opacity: 1; }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; appearance: none;
-            width: 24px; height: 24px; background: #3b82f6;
+            width: 24px; height: 24px; background: #4f46e5;
             cursor: pointer; border-radius: 50%;
         }
         input[type="range"]::-moz-range-thumb {
-            width: 24px; height: 24px; background: #3b82f6;
+            width: 24px; height: 24px; background: #4f46e5;
             cursor: pointer; border-radius: 50%;
+        }
+        .quiz-option {
+            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .quiz-option:hover {
+            transform: scale(1.02);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="gradient-bg text-gray-800">
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">The True Cost Calculator</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">The True Cost Calculator</h1>
             <p class="mt-2 text-lg text-gray-600">A new perspective on your time, money, and life.</p>
         </header>
 
         <!-- Tabs -->
         <div class="mb-8 flex justify-center border-b border-gray-200">
             <button id="tab-calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('calculator')">Purchase Calculator</button>
+            <button id="tab-motive" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('motive')">My Money Motive</button>
             <button id="tab-goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('goals')">Financial Goals</button>
             <button id="tab-retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('retirement')">Retirement</button>
         </div>
@@ -68,8 +81,8 @@
             <div id="calculator-content">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Input Section -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md h-fit">
-                        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Your Details</h2>
+                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit">
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Details</h2>
                         <div class="space-y-4">
                              <div>
                                 <label for="age" class="block text-sm font-medium text-gray-700">Your Age</label>
@@ -83,7 +96,7 @@
                                 </select>
                             </div>
                             <hr>
-                            <h2 class="text-xl font-semibold text-gray-800 pt-2">Your Purchase</h2>
+                            <h2 class="text-xl font-bold text-gray-800 pt-2">Your Purchase</h2>
                             <div>
                                 <label for="itemName" class="block text-sm font-medium text-gray-700">Item Name</label>
                                 <input type="text" id="itemName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., New Smartphone">
@@ -107,54 +120,55 @@
                                     <option value="NY">New York</option>
                                 </select>
                             </div>
-                            <button id="calculateBtn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
+                            <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
                         </div>
                     </div>
 
                     <!-- Results Section -->
                     <div id="results-section" class="lg:col-span-2 space-y-6 hidden">
-                        <div class="text-center p-4 bg-white rounded-lg shadow">
-                             <h2 class="text-3xl font-bold text-gray-900">The True Cost of a <span id="resultItemName" class="text-blue-600"></span></h2>
+                        <div class="text-center p-4 bg-white rounded-lg shadow-md">
+                             <h2 class="text-3xl font-bold text-gray-900">The True Cost of a <span id="resultItemName" class="text-indigo-600"></span></h2>
                              <p class="text-gray-600">Base Cost: <span id="baseCostDisplay" class="font-semibold"></span> + Est. Sales Tax: <span id="taxDisplay" class="font-semibold"></span> = Total: <span id="totalCostWithTax" class="font-semibold"></span></p>
                              <p class="text-gray-600 mt-1">Your estimated net hourly wage: <span id="netIncomeDisplay" class="font-semibold"></span></p>
                         </div>
+                        <div id="calculator-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200"></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Time Cost -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                                <div class="flex items-center mb-3"><i data-lucide="clock" class="w-8 h-8 text-blue-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Time Cost</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="clock" class="w-8 h-8 text-indigo-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Time Cost</h3></div>
                                 <p class="text-gray-600">This purchase will cost you</p>
-                                <p class="text-3xl font-bold text-blue-600 my-2"><span id="hoursWorked">0</span> hours</p>
+                                <p class="text-3xl font-bold text-indigo-600 my-2"><span id="hoursWorked">0</span> hours</p>
                                 <p class="text-gray-600">of your life's work.</p>
                             </div>
                             <!-- Lifetime Perspective -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                                <div class="flex items-center mb-3"><i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Lifetime Perspective</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Lifetime Perspective</h3></div>
                                 <p class="text-gray-600">You have approx. <strong id="hoursLeft" class="text-teal-600"></strong> waking hours left in your healthy life.</p>
                                 <p class="text-gray-600 mt-2">This purchase consumes <strong id="lifePercentage" class="text-teal-600"></strong> of one of those precious years.</p>
                             </div>
                             <!-- Meaningful Alternatives Chart -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="gift" class="w-8 h-8 text-cyan-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Meaningful Alternatives</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="gift" class="w-8 h-8 text-cyan-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Meaningful Alternatives</h3></div>
                                 <p class="text-gray-600 mb-4">Here's how the cost compares to other essentials and experiences:</p>
                                 <canvas id="alternativesChart"></canvas>
                             </div>
                             <!-- Opportunity Cost -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Future Value Projection</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Future Value Projection</h3></div>
                                 <p class="text-gray-600 mb-4">If invested, this money could grow significantly over 20 years:</p>
                                 <canvas id="futureValueChart"></canvas>
                                 <p class="text-xs text-center mt-2 text-gray-500">Based on simplified avg. annual returns: S&P 500 (8%), BTC (15%), Gold (4%). Not financial advice.</p>
                             </div>
                             <!-- Purchasing Power Erosion -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="trending-down" class="w-8 h-8 text-red-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Purchasing Power Erosion</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="trending-down" class="w-8 h-8 text-red-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Purchasing Power Erosion</h3></div>
                                 <p class="text-gray-600 mb-4">If left as cash, the value of this money is projected to decline due to inflation:</p>
                                 <canvas id="purchasingPowerChart"></canvas>
                                 <p class="text-xs text-center mt-2 text-gray-500">This chart shows the declining purchasing power of your money, assuming a 3% annual inflation rate. Investing helps combat this loss.</p>
                             </div>
                              <!-- Happiness Scale -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="smile" class="w-8 h-8 text-purple-500 mr-3"></i><h3 class="text-xl font-semibold text-gray-800">Is It Worth It?</h3></div>
+                                <div class="flex items-center mb-3"><i data-lucide="smile" class="w-8 h-8 text-purple-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Is It Worth It?</h3></div>
                                 <label for="happinessScale" class="block text-sm font-medium text-gray-700 mb-2">On a scale of 1-10, how much long-term happiness will this bring you?</label>
                                 <input type="range" id="happinessScale" min="1" max="10" value="5" class="w-full">
                                 <div class="text-center mt-2"><span id="happinessValue" class="text-2xl font-bold text-purple-600">5</span></div>
@@ -164,11 +178,50 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Money Motive Tab -->
+            <div id="motive-content" class="hidden max-w-2xl mx-auto">
+                <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2">What's Your Money Motive?</h2>
+                    <p class="text-center text-gray-600 mb-6">Discover the unconscious beliefs that drive your financial decisions.</p>
+                    <div id="quiz-progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                        <div id="quiz-progress" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <h3 id="quizQuestion" class="text-xl font-semibold text-center mb-6 h-12"></h3>
+                    <div id="quizOptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Options will be populated by JS -->
+                    </div>
+                </div>
+                <div id="motive-result-container" class="hidden bg-white p-8 rounded-xl shadow-lg text-center">
+                    <div id="archetypeIcon" class="mx-auto mb-4"></div>
+                    <h2 id="archetypeTitle" class="text-3xl font-bold mb-2"></h2>
+                    <div class="text-left space-y-4 mt-6">
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Core Motivation:</h4>
+                            <p id="archetypeDescription" class="text-gray-600"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Potential Strengths:</h4>
+                            <p id="archetypeStrengths" class="text-gray-600"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Potential Blind Spots:</h4>
+                            <p id="archetypeBlinds" class="text-gray-600"></p>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-lg text-gray-800">Mantra for Growth:</h4>
+                            <p id="archetypeMantra" class="text-indigo-600 italic font-semibold"></p>
+                        </div>
+                    </div>
+                    <button id="retakeQuizBtn" class="mt-8 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Retake Quiz</button>
+                </div>
+            </div>
             
             <!-- Financial Goals Tab -->
-            <div id="goals-content" class="hidden max-w-2xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Set Your Financial Goal</h2>
+            <div id="goals-content" class="hidden max-w-2xl mx-auto space-y-6">
+                <div id="goals-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200 hidden"></div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Set Your Financial Goal</h2>
                     <div class="space-y-4">
                         <div>
                             <label for="goalName" class="block text-sm font-medium text-gray-700">Goal Name</label>
@@ -182,12 +235,12 @@
                             <label for="currentSavings" class="block text-sm font-medium text-gray-700">Current Savings for this Goal</label>
                             <input type="number" id="currentSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
                         </div>
-                        <button id="setGoalBtn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition">Set Goal & See Progress</button>
+                        <button id="setGoalBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Set Goal & See Progress</button>
                     </div>
                 </div>
                 <div id="goal-tracker-section" class="mt-8 hidden">
-                    <h3 class="text-2xl font-bold text-center">Progress Towards <span id="goalResultName" class="text-blue-600"></span></h3>
-                    <div class="bg-white p-6 rounded-lg shadow mt-4">
+                    <h3 class="text-2xl font-bold text-center">Progress Towards <span id="goalResultName" class="text-indigo-600"></span></h3>
+                    <div class="bg-white p-6 rounded-lg shadow-lg mt-4">
                          <canvas id="goalDonutChart" class="max-w-xs mx-auto"></canvas>
                          <p class="text-center mt-4 text-gray-600">Skipping the <strong id="goalItemName"></strong> would add <strong id="goalContribution" class="text-green-600"></strong> to your goal!</p>
                     </div>
@@ -198,8 +251,8 @@
             <div id="retirement-content" class="hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Retirement Inputs -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md h-fit">
-                        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Retirement Details</h2>
+                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit">
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Retirement Details</h2>
                         <div class="space-y-4">
                             <div>
                                 <label for="retireAge" class="block text-sm font-medium text-gray-700">Current Age</label>
@@ -221,37 +274,41 @@
                                 <label for="annualExpenses" class="block text-sm font-medium text-gray-700">Est. Annual Retirement Expenses</label>
                                 <input type="number" id="annualExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 40000">
                             </div>
-                            <button id="calculateRetireBtn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition">Calculate Retirement</button>
+                             <div>
+                                <label for="retirementDream" class="block text-sm font-medium text-gray-700">My Retirement Dream Is...</label>
+                                <input type="text" id="retirementDream" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., Traveling the world">
+                            </div>
+                            <button id="calculateRetireBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Retirement</button>
                         </div>
                     </div>
                     <!-- Retirement Results -->
                     <div id="retirement-results-section" class="lg:col-span-2 space-y-6 hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
-                                <h3 class="text-xl font-semibold text-gray-800">Projected Retirement Age</h3>
-                                <p id="retirementAgeResult" class="text-6xl font-bold text-blue-600 my-2">0</p>
-                            </div>
-                             <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
-                                <h3 class="text-xl font-semibold text-gray-800">Retirement Snapshot</h3>
-                                <p class="text-gray-600 mt-2">FI Number: <strong id="fiNumberResult" class="text-gray-800"></strong></p>
-                                <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
-                                <p class="text-gray-600">Portfolio lasts for: <strong class="text-gray-800">~30 years</strong></p>
-                            </div>
+                        <div id="retirement-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200"></div>
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
+                            <h3 class="text-xl font-bold text-gray-800">Your Retirement Goal</h3>
+                            <p class="text-2xl text-indigo-600 my-2">"<span id="dreamDisplay"></span>"</p>
+                            <p class="text-gray-600">You can achieve this at age <strong id="retirementAgeResult" class="text-indigo-600 text-3xl">0</strong></p>
+                        </div>
+                         <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
+                            <h3 class="text-xl font-bold text-gray-800">Retirement Snapshot</h3>
+                            <p class="text-gray-600 mt-2">FI Number: <strong id="fiNumberResult" class="text-gray-800"></strong></p>
+                            <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
+                            <p class="text-gray-600">Portfolio lasts for: <strong class="text-gray-800">~30 years</strong></p>
                         </div>
                         <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-xl font-semibold text-center mb-4">The Impact of This Purchase</h3>
+                            <h3 class="text-xl font-bold text-center mb-4">The Impact of This Purchase</h3>
                             <p class="text-center text-gray-600 mb-4">Investing the <strong id="retireItemName" class="text-green-600"></strong> instead of spending it could buy you more time in retirement.</p>
                             <div id="purchaseImpactResult" class="p-4 rounded-lg bg-green-50 text-center">
                                 <!-- Content generated by JS -->
                             </div>
                         </div>
                         <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-xl font-semibold text-center mb-4">What Your Extra Retirement Time Means</h3>
+                            <h3 class="text-xl font-bold text-center mb-4">What Your Extra Retirement Time Means</h3>
                             <div id="retirementMeaning" class="text-center text-gray-700"></div>
                         </div>
                         <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-xl font-semibold text-center mb-4">The Value of Time: Work vs. Freedom</h3>
-                            <p class="text-center text-gray-600 mb-4">Retiring earlier means more time for what matters.</p>
+                            <h3 class="text-xl font-bold text-center mb-4">Your Life's Timeline</h3>
+                            <p class="text-center text-gray-600 mb-4">Based on your current path, here is the breakdown of your life's waking hours.</p>
                             <div id="timeValueTable" class="space-y-4"></div>
                         </div>
                     </div>
@@ -279,6 +336,7 @@
         let currentGoal = { name: '', amount: 0, saved: 0 };
         let lastCalculatedCost = 0;
         let chartInstances = {};
+        let userMotive = null;
 
         // --- DOM Elements ---
         const calculateBtn = document.getElementById('calculateBtn');
@@ -287,6 +345,7 @@
         const goalTrackerSection = document.getElementById('goal-tracker-section');
         const calculateRetireBtn = document.getElementById('calculateRetireBtn');
         const retirementResultsSection = document.getElementById('retirement-results-section');
+        const retakeQuizBtn = document.getElementById('retakeQuizBtn');
 
         // --- Utility Functions ---
         const formatCurrency = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
@@ -294,7 +353,7 @@
         
         // --- Tab Switching ---
         function switchTab(tabName) {
-            ['calculator', 'goals', 'retirement'].forEach(name => {
+            ['calculator', 'motive', 'goals', 'retirement'].forEach(name => {
                 const content = document.getElementById(`${name}-content`);
                 const tab = document.getElementById(`tab-${name}`);
                 if (content && tab) {
@@ -355,6 +414,7 @@
             updateChart('purchasingPowerChart', buildPurchasingPowerChartConfig(totalCost));
             updateGoalTracker();
             document.getElementById('happinessScale').dispatchEvent(new Event('input'));
+            displayDynamicFact('calculator');
         }
 
         // --- Charting Functions ---
@@ -442,6 +502,7 @@
             currentGoal = { name: goalName, amount: goalAmount, saved: currentSavings };
             alert(`Goal Set: ${goalName} for ${formatCurrency(goalAmount)}`);
             updateGoalTracker();
+            displayDynamicFact('goals');
         }
 
         function updateGoalTracker() {
@@ -463,7 +524,7 @@
                     labels: ['Current Savings', 'This Purchase', 'Remaining'],
                     datasets: [{
                         data: [saved, potentialSave, Math.max(0, remaining)],
-                        backgroundColor: ['#3b82f6', '#16a34a', '#e5e7eb'],
+                        backgroundColor: ['#4f46e5', '#16a34a', '#e5e7eb'],
                         hoverOffset: 4
                     }]
                 },
@@ -491,6 +552,7 @@
             const currentRetireSavings = parseFloat(document.getElementById('currentRetireSavings').value) || 0;
             const savingsRate = parseFloat(document.getElementById('savingsRate').value) / 100 || 0;
             const annualExpenses = parseFloat(document.getElementById('annualExpenses').value) || 0;
+            const retirementDream = document.getElementById('retirementDream').value || "achieving your dream";
 
             if (age <= 0 || annualIncome <= 0 || savingsRate <= 0 || annualExpenses <= 0) {
                 alert("Please fill in all retirement fields with valid numbers.");
@@ -498,29 +560,22 @@
             }
 
             const fiNumber = annualExpenses * 25;
-            
-            const scenarios = {
-                base: {rate: savingsRate},
-                s5: {rate: savingsRate + 0.05},
-                s10: {rate: savingsRate + 0.10}
-            };
-
-            for (const key in scenarios) {
-                const scenario = scenarios[key];
-                scenario.annualSavings = annualIncome * scenario.rate;
-                scenario.years = calculateYearsToRetire(currentRetireSavings, scenario.annualSavings, fiNumber);
-                scenario.age = age + scenario.years;
-            }
+            const annualSavings = annualIncome * savingsRate;
+            const yearsToRetire = calculateYearsToRetire(currentRetireSavings, annualSavings, fiNumber);
+            const retirementAge = age + yearsToRetire;
 
             // Update UI
             retirementResultsSection.classList.remove('hidden');
-            document.getElementById('retirementAgeResult').textContent = scenarios.base.age;
+            document.getElementById('dreamDisplay').textContent = retirementDream;
+            document.getElementById('retirementAgeResult').textContent = retirementAge;
             document.getElementById('fiNumberResult').textContent = formatCurrency(fiNumber);
             document.getElementById('withdrawalResult').textContent = formatCurrency(fiNumber * 0.04);
             document.getElementById('retireItemName').textContent = document.getElementById('itemName').value || 'purchase';
             
-            updatePurchaseImpact(scenarios.base, annualExpenses);
-            updateTimeValueTable(scenarios);
+            const baseScenario = { years: yearsToRetire, age: retirementAge };
+            updatePurchaseImpact(baseScenario, annualExpenses);
+            updateTimeValueTable(baseScenario);
+            displayDynamicFact('retirement');
         }
         
         function updatePurchaseImpact(baseScenario, annualExpenses) {
@@ -545,60 +600,176 @@
             const container = document.getElementById('retirementMeaning');
             let message = '';
             if (hours > 1000) {
-                message = `With over <strong class="text-blue-600">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
+                message = `With over <strong class="text-indigo-600">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
             } else if (hours > 160) { // More than two weeks
-                message = `Those <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
+                message = `Those <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
             } else if (hours > 40) { // More than a work week
-                message = `What could you do with an extra <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
+                message = `What could you do with an extra <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
             } else {
-                message = `Even <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
+                message = `Even <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
             }
             container.innerHTML = message;
         }
 
-        function updateTimeValueTable(scenarios) {
+        function updateTimeValueTable(scenario) {
             const container = document.getElementById('timeValueTable');
             container.innerHTML = '';
             const gender = document.getElementById('gender').value;
             const lifeExpectancy = LIFE_EXPECTANCY[gender];
             
-            const createRow = (label, scenario) => {
-                const yearsWorking = scenario.years;
-                const yearsRetired = lifeExpectancy - scenario.age;
-                const hoursWorking = yearsWorking * 40 * 52;
-                const hoursRetired = yearsRetired * WAKING_HOURS_PER_YEAR;
-                const daysWorking = hoursWorking / 16;
-                const daysRetired = hoursRetired / 16;
+            const yearsWorking = scenario.years;
+            const yearsRetired = lifeExpectancy - scenario.age;
+            const hoursWorking = yearsWorking * 40 * 52;
+            const hoursRetired = yearsRetired * WAKING_HOURS_PER_YEAR;
+            const daysWorking = hoursWorking / 16;
+            const daysRetired = hoursRetired / 16;
+            const birthdaysWorking = yearsWorking;
+            const birthdaysRetired = yearsRetired;
 
-                return `
-                    <div class="p-3 rounded-lg ${label === 'Current' ? 'bg-gray-100' : 'bg-blue-50'}">
-                        <h4 class="font-bold text-lg ${label === 'Current' ? 'text-gray-800' : 'text-blue-800'}">${label} Path</h4>
-                        <div class="flex justify-around items-center mt-2 text-center">
-                            <div>
-                                <i data-lucide="briefcase" class="w-8 h-8 mx-auto text-red-500"></i>
-                                <p class="font-semibold text-red-700">${formatNumber(hoursWorking, 0)} hours</p>
-                                <p class="text-xs text-gray-500">(${formatNumber(daysWorking, 0)} days)</p>
-                            </div>
-                            <div>
-                                <i data-lucide="sunset" class="w-8 h-8 mx-auto text-green-500"></i>
-                                <p class="font-semibold text-green-700">${formatNumber(hoursRetired, 0)} hours</p>
-                                <p class="text-xs text-gray-500">(${formatNumber(daysRetired, 0)} days)</p>
-                            </div>
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-gray-100 text-center">
+                        <h4 class="font-bold text-lg text-gray-800 flex items-center justify-center"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>The Working Years</h4>
+                        <div class="mt-2 space-y-1">
+                            <p><strong class="text-2xl text-red-600">${formatNumber(birthdaysWorking, 0)}</strong> Birthdays</p>
+                            <p><strong class="text-lg text-red-600">${formatNumber(daysWorking, 0)}</strong> Waking Days</p>
+                            <p><strong class="text-lg text-red-600">${formatNumber(hoursWorking, 0)}</strong> Waking Hours</p>
                         </div>
                     </div>
-                `;
-            };
-
-            container.innerHTML += createRow('Current', scenarios.base);
-            container.innerHTML += createRow('+5%', scenarios.s5);
-            container.innerHTML += createRow('+10%', scenarios.s10);
+                    <div class="p-4 rounded-lg bg-indigo-50 text-center">
+                        <h4 class="font-bold text-lg text-indigo-800 flex items-center justify-center"><i data-lucide="sunset" class="w-5 h-5 mr-2"></i>The Freedom Years</h4>
+                         <div class="mt-2 space-y-1">
+                            <p><strong class="text-2xl text-green-600">${formatNumber(birthdaysRetired, 0)}</strong> Birthdays</p>
+                            <p><strong class="text-lg text-green-600">${formatNumber(daysRetired, 0)}</strong> Waking Days</p>
+                            <p><strong class="text-lg text-green-600">${formatNumber(hoursRetired, 0)}</strong> Waking Hours</p>
+                        </div>
+                    </div>
+                </div>
+            `;
             lucide.createIcons();
         }
+
+        // --- Money Motive Quiz Logic ---
+        const quizData = [
+            { question: "When you get an unexpected bonus, your first thought is:", answers: [ { text: "Put it straight into savings or investments.", motive: "Security" }, { text: "Book a flight for a spontaneous trip.", motive: "Experience" }, { text: "Treat your friends or family to a nice dinner.", motive: "Generous" }, { text: "Buy that designer item you've been eyeing.", motive: "Status" } ] },
+            { question: "You're most likely to spend money on:", answers: [ { text: "A course to learn a new skill.", motive: "Security" }, { text: "Tickets to a concert or festival.", motive: "Experience" }, { text: "A donation to a cause you care about.", motive: "Generous" }, { text: "Upgrading your car or phone.", motive: "Status" } ] },
+            { question: "Your ideal weekend involves:", answers: [ { text: "Organizing your finances and planning for the future.", motive: "Security" }, { text: "Exploring a new city or hiking trail.", motive: "Experience" }, { text: "Volunteering or hosting a get-together.", motive: "Generous" }, { text: "Shopping at a high-end mall.", motive: "Status" } ] },
+            { question: "When you think about money, you feel most successful when:", answers: [ { text: "Your emergency fund is fully stocked.", motive: "Security" }, { text: "You have a rich collection of memories and stories.", motive: "Experience" }, { text: "You can help someone in need without worrying.", motive: "Generous" }, { text: "People notice and admire your lifestyle.", motive: "Status" } ] },
+            { question: "Which phrase resonates with you most?", answers: [ { text: "Slow and steady wins the race.", motive: "Security" }, { text: "Collect moments, not things.", motive: "Experience" }, { text: "It's better to give than to receive.", motive: "Generous" }, { text: "You get what you pay for.", motive: "Status" } ] },
+            { question: "A 'rich life' to you means:", answers: [ { text: "Never having to worry about money.", motive: "Security" }, { text: "Freedom to travel and explore.", motive: "Experience" }, { text: "The ability to support your community.", motive: "Generous" }, { text: "Enjoying the best of everything.", motive: "Status" } ] }
+        ];
+
+        const archetypes = {
+            Security: { title: "The Security Seeker", icon: '<i data-lucide="shield-check" class="w-16 h-16 text-green-500"></i>', description: "You are motivated by stability and peace of mind. You find comfort in planning, saving, and knowing you're prepared for the future.", strengths: "Excellent at saving, disciplined, and great at long-term planning.", blinds: "May be overly risk-averse, potentially missing out on growth opportunities. Can sometimes delay gratification to an extent that they forget to enjoy the present.", mantra: "My financial plan gives me the freedom to be secure today and enjoy tomorrow." },
+            Experience: { title: "The Experience Chaser", icon: '<i data-lucide="map" class="w-16 h-16 text-yellow-500"></i>', description: "You believe life is about the memories you make, not the things you own. You prioritize spending on travel, events, and activities that enrich your life.", strengths: "Lives a rich and fulfilling life full of stories. Understands that value isn't always monetary.", blinds: "Can struggle with long-term savings goals. May prioritize a short-term adventure over a long-term need, like retirement savings.", mantra: "I can build a future that funds my adventures and secures my peace." },
+            Generous: { title: "The Generous Giver", icon: '<i data-lucide="heart-handshake" class="w-16 h-16 text-pink-500"></i>', description: "You find the greatest joy in using your resources to help others. Your financial decisions are often guided by your heart.", strengths: "Deeply empathetic and builds strong community bonds. Finds immense fulfillment in helping others.", blinds: "May neglect their own financial needs, a classic 'put your own oxygen mask on first' scenario. Can sometimes be taken advantage of financially.", mantra: "Securing my own finances is the most powerful way I can continue to help others." },
+            Status: { title: "The Status Symbolist", icon: '<i data-lucide="gem" class="w-16 h-16 text-purple-500"></i>', description: "You appreciate quality, craftsmanship, and the finer things in life. You see money as a tool to achieve a certain lifestyle.", strengths: "Often highly driven and successful. Has a clear vision for the life they want to build.", blinds: "Susceptible to lifestyle inflation. May tie self-worth too closely to material possessions, leading to a never-ending cycle of spending.", mantra: "I define my success; my possessions do not. True wealth is freedom." }
+        };
+
+        let currentQuestionIndex = 0;
+        let motiveScores = {};
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            motiveScores = { Security: 0, Experience: 0, Generous: 0, Status: 0 };
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('motive-result-container').classList.add('hidden');
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById('quizQuestion').textContent = questionData.question;
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            questionData.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option p-4 border-2 border-gray-200 rounded-lg text-left hover:bg-indigo-50 hover:border-indigo-300';
+                button.textContent = answer.text;
+                button.onclick = () => selectAnswer(answer.motive);
+                optionsContainer.appendChild(button);
+            });
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            document.getElementById('quiz-progress').style.width = `${progress}%`;
+        }
+
+        function selectAnswer(motive) {
+            motiveScores[motive]++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const finalMotive = Object.keys(motiveScores).reduce((a, b) => motiveScores[a] > motiveScores[b] ? a : b);
+            userMotive = finalMotive;
+            const archetype = archetypes[finalMotive];
+            
+            document.getElementById('archetypeIcon').innerHTML = archetype.icon;
+            document.getElementById('archetypeTitle').textContent = archetype.title;
+            document.getElementById('archetypeDescription').textContent = archetype.description;
+            document.getElementById('archetypeStrengths').textContent = archetype.strengths;
+            document.getElementById('archetypeBlinds').textContent = archetype.blinds;
+            document.getElementById('archetypeMantra').textContent = `"${archetype.mantra}"`;
+            
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('motive-result-container').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- Dynamic Facts Logic ---
+        function displayDynamicFact(tab) {
+            const age = parseInt(document.getElementById('age').value) || 30;
+            const gender = document.getElementById('gender').value;
+            const factContainer = document.getElementById(`${tab}-fact`);
+            if (!factContainer) return;
+
+            let facts = [];
+            
+            // Age-based facts
+            if (age < 30) {
+                facts.push("Did you know? Thanks to compound interest, a dollar saved in your 20s can be worth nearly 15 times as much as a dollar saved in your 50s.");
+            } else if (age >= 50) {
+                facts.push("Food for thought: The average healthcare cost for a retired couple is over $300,000. Planning for this now creates peace of mind for later.");
+            }
+
+            // Gender-based facts
+            if (gender === 'female') {
+                facts.push("On average, women live longer than men, meaning retirement savings need to last longer. Every dollar invested today is an investment in your future independence.");
+            }
+
+            // Motive-based facts
+            if (userMotive === 'Security') {
+                facts.push("A study found that people with a stocked emergency fund report significantly lower stress levels, regardless of their income.");
+            } else if (userMotive === 'Experience') {
+                facts.push("Research from Cornell University shows that the happiness from experiential purchases lasts far longer than the happiness from material ones.");
+            } else if (userMotive === 'Generous') {
+                facts.push("Strategic giving, like donating appreciated stocks, can often provide a larger tax benefit, allowing you to give even more to the causes you love.");
+            } else if (userMotive === 'Status') {
+                facts.push("The average new car loses about 20% of its value in the first year. Investing that difference could be worth tens of thousands in the future.");
+            }
+
+            // Default facts if no specific ones match
+            if (facts.length === 0) {
+                facts.push("The S&P 500 has historically returned an average of about 10% per year. Investing is one of the most powerful tools for building wealth.");
+                facts.push("A 'latte factor' of $5 a day adds up to $1,825 a year. Invested, that could be over $100,000 in 30 years.");
+            }
+
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            factContainer.innerHTML = `<p class="text-indigo-800"><i class="inline-block" data-lucide="lightbulb"></i> <strong>Food for Thought:</strong> ${randomFact}</p>`;
+            factContainer.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
 
         // --- Event Listeners ---
         calculateBtn.addEventListener('click', calculatePurchase);
         setGoalBtn.addEventListener('click', setGoal);
         calculateRetireBtn.addEventListener('click', handleRetirementCalculation);
+        retakeQuizBtn.addEventListener('click', startQuiz);
         document.getElementById('happinessScale').addEventListener('input', (e) => {
             const value = e.target.value;
             document.getElementById('happinessValue').textContent = value;
@@ -624,6 +795,7 @@
         // --- Initial Load ---
         window.onload = () => {
             lucide.createIcons();
+            startQuiz(); // Start the quiz when the motive tab is first loaded
         };
     </script>
 </body>
