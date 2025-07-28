@@ -60,6 +60,7 @@
         <div class="mb-8 flex justify-center border-b border-gray-200">
             <button id="tab-calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('calculator')">Purchase Calculator</button>
             <button id="tab-goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('goals')">Financial Goals</button>
+            <button id="tab-retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('retirement')">Retirement</button>
         </div>
 
         <main id="app-container">
@@ -192,6 +193,70 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Retirement Tab -->
+            <div id="retirement-content" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Retirement Inputs -->
+                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md h-fit">
+                        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Retirement Details</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="retireAge" class="block text-sm font-medium text-gray-700">Current Age</label>
+                                <input type="number" id="retireAge" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 30">
+                            </div>
+                            <div>
+                                <label for="annualIncome" class="block text-sm font-medium text-gray-700">Annual Pre-Tax Income</label>
+                                <input type="number" id="annualIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 70000">
+                            </div>
+                            <div>
+                                <label for="currentRetireSavings" class="block text-sm font-medium text-gray-700">Current Retirement Savings</label>
+                                <input type="number" id="currentRetireSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 50000">
+                            </div>
+                            <div>
+                                <label for="savingsRate" class="block text-sm font-medium text-gray-700">Annual Savings Rate (%)</label>
+                                <input type="number" id="savingsRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 15">
+                            </div>
+                             <div>
+                                <label for="annualExpenses" class="block text-sm font-medium text-gray-700">Est. Annual Retirement Expenses</label>
+                                <input type="number" id="annualExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 40000">
+                            </div>
+                            <button id="calculateRetireBtn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition">Calculate Retirement</button>
+                        </div>
+                    </div>
+                    <!-- Retirement Results -->
+                    <div id="retirement-results-section" class="lg:col-span-2 space-y-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
+                                <h3 class="text-xl font-semibold text-gray-800">Projected Retirement Age</h3>
+                                <p id="retirementAgeResult" class="text-6xl font-bold text-blue-600 my-2">0</p>
+                            </div>
+                             <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
+                                <h3 class="text-xl font-semibold text-gray-800">Retirement Snapshot</h3>
+                                <p class="text-gray-600 mt-2">FI Number: <strong id="fiNumberResult" class="text-gray-800"></strong></p>
+                                <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
+                                <p class="text-gray-600">Portfolio lasts for: <strong class="text-gray-800">~30 years</strong></p>
+                            </div>
+                        </div>
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-xl font-semibold text-center mb-4">The Impact of This Purchase</h3>
+                            <p class="text-center text-gray-600 mb-4">Investing the <strong id="retireItemName" class="text-green-600"></strong> instead of spending it could buy you more time in retirement.</p>
+                            <div id="purchaseImpactResult" class="p-4 rounded-lg bg-green-50 text-center">
+                                <!-- Content generated by JS -->
+                            </div>
+                        </div>
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-xl font-semibold text-center mb-4">What Your Extra Retirement Time Means</h3>
+                            <div id="retirementMeaning" class="text-center text-gray-700"></div>
+                        </div>
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-xl font-semibold text-center mb-4">The Value of Time: Work vs. Freedom</h3>
+                            <p class="text-center text-gray-600 mb-4">Retiring earlier means more time for what matters.</p>
+                            <div id="timeValueTable" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -209,16 +274,19 @@
         const FEDERAL_TAX_RATE = 0.15;
         const LIFE_EXPECTANCY = { male: 73, female: 79 };
         const WAKING_HOURS_PER_YEAR = 16 * 365;
+        const AVG_MARKET_RETURN = 0.07; // After inflation
 
         let currentGoal = { name: '', amount: 0, saved: 0 };
         let lastCalculatedCost = 0;
-        let alternativesChartInstance, goalDonutChartInstance, futureValueChartInstance, purchasingPowerChartInstance;
+        let chartInstances = {};
 
         // --- DOM Elements ---
         const calculateBtn = document.getElementById('calculateBtn');
         const resultsSection = document.getElementById('results-section');
         const setGoalBtn = document.getElementById('setGoalBtn');
         const goalTrackerSection = document.getElementById('goal-tracker-section');
+        const calculateRetireBtn = document.getElementById('calculateRetireBtn');
+        const retirementResultsSection = document.getElementById('retirement-results-section');
 
         // --- Utility Functions ---
         const formatCurrency = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
@@ -226,7 +294,7 @@
         
         // --- Tab Switching ---
         function switchTab(tabName) {
-            ['calculator', 'goals'].forEach(name => {
+            ['calculator', 'goals', 'retirement'].forEach(name => {
                 const content = document.getElementById(`${name}-content`);
                 const tab = document.getElementById(`tab-${name}`);
                 if (content && tab) {
@@ -256,6 +324,9 @@
                 return;
             }
             
+            document.getElementById('retireAge').value = age;
+            document.getElementById('annualIncome').value = preTaxHourlyIncome * 40 * 52;
+
             const selectedState = stateData[state];
             const totalTaxRate = FEDERAL_TAX_RATE + FICA_RATE + selectedState.incomeTaxRate;
             const netHourlyIncome = preTaxHourlyIncome * (1 - totalTaxRate);
@@ -279,19 +350,23 @@
             document.getElementById('hoursLeft').textContent = formatNumber(hoursLeftInLife, 0);
             document.getElementById('lifePercentage').textContent = `${formatNumber(lifePercentage, 6)}%`;
             
-            updateAlternativesChart(totalCost, state);
-            updateFutureValueChart(totalCost);
-            updatePurchasingPowerChart(totalCost);
+            updateChart('alternativesChart', buildAlternativesChartConfig(totalCost, state));
+            updateChart('futureValueChart', buildFutureValueChartConfig(totalCost));
+            updateChart('purchasingPowerChart', buildPurchasingPowerChartConfig(totalCost));
             updateGoalTracker();
             document.getElementById('happinessScale').dispatchEvent(new Event('input'));
         }
 
         // --- Charting Functions ---
-        function updateAlternativesChart(cost, state) {
-            const ctx = document.getElementById('alternativesChart').getContext('2d');
+        function updateChart(canvasId, config) {
+            if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            chartInstances[canvasId] = new Chart(ctx, config);
+        }
+
+        function buildAlternativesChartConfig(cost, state) {
             const stateInfo = stateData[state];
-            if (alternativesChartInstance) alternativesChartInstance.destroy();
-            alternativesChartInstance = new Chart(ctx, {
+            return {
                 type: 'bar',
                 data: {
                     labels: ['This Item', 'Avg. Monthly Rent', 'Avg. Monthly Utilities', 'Weekly Groceries', 'Weekend Getaway'],
@@ -307,17 +382,13 @@
                     scales: { x: { beginAtZero: true, ticks: { callback: (value) => formatCurrency(value) } } },
                     plugins: { legend: { display: false } }
                 }
-            });
+            };
         }
 
-        function updateFutureValueChart(initialCost) {
-            const ctx = document.getElementById('futureValueChart').getContext('2d');
-            if (futureValueChartInstance) futureValueChartInstance.destroy();
-
+        function buildFutureValueChartConfig(initialCost) {
             const years = Array.from({length: 21}, (_, i) => i);
             const createProjection = (rate) => years.map(y => initialCost * Math.pow(1 + rate, y));
-
-            futureValueChartInstance = new Chart(ctx, {
+            return {
                 type: 'line',
                 data: {
                     labels: years,
@@ -329,23 +400,16 @@
                 },
                 options: {
                     responsive: true,
-                    scales: {
-                        y: { ticks: { callback: (value) => formatCurrency(value) } },
-                        x: { title: { display: true, text: 'Years' } }
-                    },
+                    scales: { y: { ticks: { callback: (value) => formatCurrency(value) } }, x: { title: { display: true, text: 'Years' } } },
                     plugins: { legend: { position: 'top' } }
                 }
-            });
+            };
         }
         
-        function updatePurchasingPowerChart(initialCost) {
-            const ctx = document.getElementById('purchasingPowerChart').getContext('2d');
-            if (purchasingPowerChartInstance) purchasingPowerChartInstance.destroy();
-
+        function buildPurchasingPowerChartConfig(initialCost) {
             const years = Array.from({length: 21}, (_, i) => i);
-            const ppData = years.map(y => initialCost * Math.pow(1 - 0.03, y)); // Assume 3% inflation
-
-            purchasingPowerChartInstance = new Chart(ctx, {
+            const ppData = years.map(y => initialCost * Math.pow(1 - 0.03, y));
+            return {
                 type: 'line',
                 data: {
                     labels: years,
@@ -360,13 +424,10 @@
                 },
                 options: {
                     responsive: true,
-                    scales: {
-                        y: { ticks: { callback: (value) => formatCurrency(value) } },
-                        x: { title: { display: true, text: 'Years' } }
-                    },
+                    scales: { y: { ticks: { callback: (value) => formatCurrency(value) } }, x: { title: { display: true, text: 'Years' } } },
                     plugins: { legend: { display: false } }
                 }
-            });
+            };
         }
         
         // --- Goal Logic ---
@@ -374,12 +435,10 @@
             const goalName = document.getElementById('goalName').value;
             const goalAmount = parseFloat(document.getElementById('goalAmount').value);
             const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
-
             if (!goalName || goalAmount <= 0) {
                 alert("Please enter a valid goal name and amount.");
                 return;
             }
-            
             currentGoal = { name: goalName, amount: goalAmount, saved: currentSavings };
             alert(`Goal Set: ${goalName} for ${formatCurrency(goalAmount)}`);
             updateGoalTracker();
@@ -387,24 +446,18 @@
 
         function updateGoalTracker() {
             if (currentGoal.amount <= 0) return;
-            
             goalTrackerSection.classList.remove('hidden');
             document.getElementById('goalResultName').textContent = currentGoal.name;
             document.getElementById('goalItemName').textContent = document.getElementById('itemName').value || "purchase";
             document.getElementById('goalContribution').textContent = formatCurrency(lastCalculatedCost);
-
-            updateGoalDonutChart();
+            updateChart('goalDonutChart', buildGoalDonutChartConfig());
         }
 
-        function updateGoalDonutChart() {
-            const ctx = document.getElementById('goalDonutChart').getContext('2d');
+        function buildGoalDonutChartConfig() {
             const { amount, saved } = currentGoal;
             const potentialSave = lastCalculatedCost > 0 ? lastCalculatedCost : 0;
             const remaining = amount - saved - potentialSave;
-
-            if (goalDonutChartInstance) goalDonutChartInstance.destroy();
-
-            goalDonutChartInstance = new Chart(ctx, {
+            return {
                 type: 'doughnut',
                 data: {
                     labels: ['Current Savings', 'This Purchase', 'Remaining'],
@@ -416,17 +469,136 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: `Goal: ${formatCurrency(amount)}` }
-                    }
+                    plugins: { legend: { position: 'top' }, title: { display: true, text: `Goal: ${formatCurrency(amount)}` } }
                 }
-            });
+            };
+        }
+
+        // --- Retirement Logic ---
+        function calculateYearsToRetire(startSavings, annualSavings, fiNumber) {
+            let currentSavings = startSavings;
+            let years = 0;
+            while (currentSavings < fiNumber && years < 100) {
+                currentSavings = currentSavings * (1 + AVG_MARKET_RETURN) + annualSavings;
+                years++;
+            }
+            return years;
+        }
+
+        function handleRetirementCalculation() {
+            const age = parseInt(document.getElementById('retireAge').value) || 0;
+            const annualIncome = parseFloat(document.getElementById('annualIncome').value) || 0;
+            const currentRetireSavings = parseFloat(document.getElementById('currentRetireSavings').value) || 0;
+            const savingsRate = parseFloat(document.getElementById('savingsRate').value) / 100 || 0;
+            const annualExpenses = parseFloat(document.getElementById('annualExpenses').value) || 0;
+
+            if (age <= 0 || annualIncome <= 0 || savingsRate <= 0 || annualExpenses <= 0) {
+                alert("Please fill in all retirement fields with valid numbers.");
+                return;
+            }
+
+            const fiNumber = annualExpenses * 25;
+            
+            const scenarios = {
+                base: {rate: savingsRate},
+                s5: {rate: savingsRate + 0.05},
+                s10: {rate: savingsRate + 0.10}
+            };
+
+            for (const key in scenarios) {
+                const scenario = scenarios[key];
+                scenario.annualSavings = annualIncome * scenario.rate;
+                scenario.years = calculateYearsToRetire(currentRetireSavings, scenario.annualSavings, fiNumber);
+                scenario.age = age + scenario.years;
+            }
+
+            // Update UI
+            retirementResultsSection.classList.remove('hidden');
+            document.getElementById('retirementAgeResult').textContent = scenarios.base.age;
+            document.getElementById('fiNumberResult').textContent = formatCurrency(fiNumber);
+            document.getElementById('withdrawalResult').textContent = formatCurrency(fiNumber * 0.04);
+            document.getElementById('retireItemName').textContent = document.getElementById('itemName').value || 'purchase';
+            
+            updatePurchaseImpact(scenarios.base, annualExpenses);
+            updateTimeValueTable(scenarios);
+        }
+        
+        function updatePurchaseImpact(baseScenario, annualExpenses) {
+            const container = document.getElementById('purchaseImpactResult');
+            const hourlyRetirementCost = annualExpenses / WAKING_HOURS_PER_YEAR;
+            const futureValue = lastCalculatedCost * Math.pow(1 + AVG_MARKET_RETURN, baseScenario.years);
+            const hoursBought = futureValue / hourlyRetirementCost;
+            const daysBought = hoursBought / 16;
+            
+            container.innerHTML = `
+                <p class="font-bold text-2xl text-green-600">+ ${formatNumber(hoursBought, 0)} hours</p>
+                <p class="text-sm text-green-700">(${formatNumber(daysBought, 1)} days of freedom)</p>
+                <p class="text-xs text-gray-500 mt-2">
+                    Assumes purchase amount is invested at ${AVG_MARKET_RETURN * 100}% annually until your retirement at age ${baseScenario.age}.
+                </p>
+            `;
+            
+            updateRetirementMeaning(hoursBought);
+        }
+
+        function updateRetirementMeaning(hours) {
+            const container = document.getElementById('retirementMeaning');
+            let message = '';
+            if (hours > 1000) {
+                message = `With over <strong class="text-blue-600">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
+            } else if (hours > 160) { // More than two weeks
+                message = `Those <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
+            } else if (hours > 40) { // More than a work week
+                message = `What could you do with an extra <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
+            } else {
+                message = `Even <strong class="text-blue-600">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
+            }
+            container.innerHTML = message;
+        }
+
+        function updateTimeValueTable(scenarios) {
+            const container = document.getElementById('timeValueTable');
+            container.innerHTML = '';
+            const gender = document.getElementById('gender').value;
+            const lifeExpectancy = LIFE_EXPECTANCY[gender];
+            
+            const createRow = (label, scenario) => {
+                const yearsWorking = scenario.years;
+                const yearsRetired = lifeExpectancy - scenario.age;
+                const hoursWorking = yearsWorking * 40 * 52;
+                const hoursRetired = yearsRetired * WAKING_HOURS_PER_YEAR;
+                const daysWorking = hoursWorking / 16;
+                const daysRetired = hoursRetired / 16;
+
+                return `
+                    <div class="p-3 rounded-lg ${label === 'Current' ? 'bg-gray-100' : 'bg-blue-50'}">
+                        <h4 class="font-bold text-lg ${label === 'Current' ? 'text-gray-800' : 'text-blue-800'}">${label} Path</h4>
+                        <div class="flex justify-around items-center mt-2 text-center">
+                            <div>
+                                <i data-lucide="briefcase" class="w-8 h-8 mx-auto text-red-500"></i>
+                                <p class="font-semibold text-red-700">${formatNumber(hoursWorking, 0)} hours</p>
+                                <p class="text-xs text-gray-500">(${formatNumber(daysWorking, 0)} days)</p>
+                            </div>
+                            <div>
+                                <i data-lucide="sunset" class="w-8 h-8 mx-auto text-green-500"></i>
+                                <p class="font-semibold text-green-700">${formatNumber(hoursRetired, 0)} hours</p>
+                                <p class="text-xs text-gray-500">(${formatNumber(daysRetired, 0)} days)</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            container.innerHTML += createRow('Current', scenarios.base);
+            container.innerHTML += createRow('+5%', scenarios.s5);
+            container.innerHTML += createRow('+10%', scenarios.s10);
+            lucide.createIcons();
         }
 
         // --- Event Listeners ---
         calculateBtn.addEventListener('click', calculatePurchase);
         setGoalBtn.addEventListener('click', setGoal);
+        calculateRetireBtn.addEventListener('click', handleRetirementCalculation);
         document.getElementById('happinessScale').addEventListener('input', (e) => {
             const value = e.target.value;
             document.getElementById('happinessValue').textContent = value;
