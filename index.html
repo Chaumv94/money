@@ -70,10 +70,10 @@
 
         <!-- Tabs -->
         <div class="mb-8 flex justify-center border-b border-gray-200">
-            <button id="tab-calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('calculator')">Purchase Calculator</button>
-            <button id="tab-motive" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('motive')">My Money Motive</button>
-            <button id="tab-goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('goals')">Financial Goals</button>
-            <button id="tab-retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent" onclick="switchTab('retirement')">Retirement</button>
+            <button data-tab="calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Purchase Calculator</button>
+            <button data-tab="motive" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">My Money Motive</button>
+            <button data-tab="goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Financial Goals</button>
+            <button data-tab="retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Retirement</button>
         </div>
 
         <main id="app-container">
@@ -81,54 +81,82 @@
             <div id="calculator-content">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Input Section -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit">
-                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Details</h2>
-                        <div class="space-y-4">
-                             <div>
-                                <label for="age" class="block text-sm font-medium text-gray-700">Your Age</label>
-                                <input type="number" id="age" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 30">
+                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit space-y-4">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Details</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="age" class="block text-sm font-medium text-gray-700">Your Age</label>
+                                    <input type="number" id="age" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 30">
+                                </div>
+                                <div>
+                                    <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                                    <select id="gender" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
-                                <select id="gender" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
-                            </div>
-                            <hr>
-                            <h2 class="text-xl font-bold text-gray-800 pt-2">Your Purchase</h2>
-                            <div>
-                                <label for="itemName" class="block text-sm font-medium text-gray-700">Item Name</label>
-                                <input type="text" id="itemName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., New Smartphone">
-                            </div>
-                            <div>
-                                <label for="itemCost" class="block text-sm font-medium text-gray-700">Cost (USD)</label>
-                                <input type="number" id="itemCost" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 999">
-                            </div>
-                            <div>
-                                <label for="preTaxHourlyIncome" class="block text-sm font-medium text-gray-700">Pre-Tax Hourly Income</label>
-                                <input type="number" id="preTaxHourlyIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 35">
-                            </div>
-                             <div>
-                                <label for="location" class="block text-sm font-medium text-gray-700">Your State</label>
-                                <select id="location" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
-                                    <option value="CA">California</option>
-                                    <option value="OR" selected>Oregon</option>
-                                    <option value="WA">Washington</option>
-                                    <option value="TX">Texas</option>
-                                    <option value="FL">Florida</option>
-                                    <option value="NY">New York</option>
-                                </select>
-                            </div>
-                            <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
                         </div>
+                        <hr>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800 pt-2">Your Purchase</h2>
+                             <div class="space-y-4 mt-4">
+                                <div>
+                                    <label for="itemName" class="block text-sm font-medium text-gray-700">Item Name</label>
+                                    <input type="text" id="itemName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., New Smartphone">
+                                </div>
+                                <div>
+                                    <label for="itemCost" class="block text-sm font-medium text-gray-700">Cost (USD)</label>
+                                    <input type="number" id="itemCost" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 999">
+                                </div>
+                                <div>
+                                    <label for="preTaxHourlyIncome" class="block text-sm font-medium text-gray-700">Pre-Tax Hourly Income</label>
+                                    <input type="number" id="preTaxHourlyIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 35">
+                                </div>
+                                <div>
+                                    <label for="paycheckFrequency" class="block text-sm font-medium text-gray-700">Paycheck Frequency</label>
+                                    <select id="paycheckFrequency" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                        <option value="weekly">Weekly</option>
+                                        <option value="biweekly" selected>Bi-Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="location" class="block text-sm font-medium text-gray-700">Your State</label>
+                                    <select id="location" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                        <option value="CA">California</option>
+                                        <option value="OR" selected>Oregon</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="NY">New York</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                         <hr>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800 pt-2">Financial Snapshot (Optional)</h2>
+                            <div class="space-y-4 mt-4">
+                                <div>
+                                    <label for="currentSavings" class="block text-sm font-medium text-gray-700">Emergency Savings</label>
+                                    <input type="number" id="currentSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                                </div>
+                                <div>
+                                    <label for="monthlyExpenses" class="block text-sm font-medium text-gray-700">Monthly Expenses</label>
+                                    <input type="number" id="monthlyExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 3000">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
                     </div>
 
                     <!-- Results Section -->
                     <div id="results-section" class="lg:col-span-2 space-y-6 hidden">
                         <div class="text-center p-4 bg-white rounded-lg shadow-md">
                              <h2 class="text-3xl font-bold text-gray-900">The True Cost of a <span id="resultItemName" class="text-indigo-600"></span></h2>
-                             <p class="text-gray-600">Base Cost: <span id="baseCostDisplay" class="font-semibold"></span> + Est. Sales Tax: <span id="taxDisplay" class="font-semibold"></span> = Total: <span id="totalCostWithTax" class="font-semibold"></span></p>
+                             <p class="text-gray-600">Total Cost: <span id="totalCostWithTax" class="font-semibold"></span></p>
                              <p class="text-gray-600 mt-1">Your estimated net hourly wage: <span id="netIncomeDisplay" class="font-semibold"></span></p>
                         </div>
                         <div id="calculator-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200"></div>
@@ -138,41 +166,34 @@
                                 <div class="flex items-center mb-3"><i data-lucide="clock" class="w-8 h-8 text-indigo-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Time Cost</h3></div>
                                 <p class="text-gray-600">This purchase will cost you</p>
                                 <p class="text-3xl font-bold text-indigo-600 my-2"><span id="hoursWorked">0</span> hours</p>
-                                <p class="text-gray-600">of your life's work.</p>
+                                <p class="text-gray-600">(<span id="daysWorked">0</span> waking days)</p>
+                            </div>
+                            <!-- Paycheck Power -->
+                            <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                                <div class="flex items-center mb-3"><i data-lucide="receipt" class="w-8 h-8 text-orange-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Paycheck Power</h3></div>
+                                <p class="text-gray-600">This purchase is equal to</p>
+                                <p class="text-3xl font-bold text-orange-600 my-2"><span id="paycheckPercentage">0</span>%</p>
+                                <p class="text-gray-600">of one net paycheck.</p>
+                            </div>
+                             <!-- Freedom Fund -->
+                            <div id="freedom-fund-card" class="result-card bg-white p-6 rounded-xl shadow-md hidden">
+                                <div class="flex items-center mb-3"><i data-lucide="shield-half" class="w-8 h-8 text-sky-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Freedom Fund</h3></div>
+                                <p class="text-gray-600">Your current runway is <strong id="runwayMonths" class="text-sky-600"></strong> months. Saving this adds</p>
+                                <p class="text-3xl font-bold text-sky-600 my-2">+<span id="runwayAdded">0</span> days</p>
+                                <p class="text-gray-600">to your financial safety net.</p>
                             </div>
                             <!-- Lifetime Perspective -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
                                 <div class="flex items-center mb-3"><i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Lifetime Perspective</h3></div>
                                 <p class="text-gray-600">You have approx. <strong id="hoursLeft" class="text-teal-600"></strong> waking hours left in your healthy life.</p>
                                 <p class="text-gray-600 mt-2">This purchase consumes <strong id="lifePercentage" class="text-teal-600"></strong> of one of those precious years.</p>
-                            </div>
-                            <!-- Meaningful Alternatives Chart -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="gift" class="w-8 h-8 text-cyan-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Meaningful Alternatives</h3></div>
-                                <p class="text-gray-600 mb-4">Here's how the cost compares to other essentials and experiences:</p>
-                                <canvas id="alternativesChart"></canvas>
                             </div>
                             <!-- Opportunity Cost -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
                                 <div class="flex items-center mb-3"><i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Future Value Projection</h3></div>
                                 <p class="text-gray-600 mb-4">If invested, this money could grow significantly over 20 years:</p>
                                 <canvas id="futureValueChart"></canvas>
-                                <p class="text-xs text-center mt-2 text-gray-500">Based on simplified avg. annual returns: S&P 500 (8%), BTC (15%), Gold (4%). Not financial advice.</p>
-                            </div>
-                            <!-- Purchasing Power Erosion -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="trending-down" class="w-8 h-8 text-red-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Purchasing Power Erosion</h3></div>
-                                <p class="text-gray-600 mb-4">If left as cash, the value of this money is projected to decline due to inflation:</p>
-                                <canvas id="purchasingPowerChart"></canvas>
-                                <p class="text-xs text-center mt-2 text-gray-500">This chart shows the declining purchasing power of your money, assuming a 3% annual inflation rate. Investing helps combat this loss.</p>
-                            </div>
-                             <!-- Happiness Scale -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="smile" class="w-8 h-8 text-purple-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Is It Worth It?</h3></div>
-                                <label for="happinessScale" class="block text-sm font-medium text-gray-700 mb-2">On a scale of 1-10, how much long-term happiness will this bring you?</label>
-                                <input type="range" id="happinessScale" min="1" max="10" value="5" class="w-full">
-                                <div class="text-center mt-2"><span id="happinessValue" class="text-2xl font-bold text-purple-600">5</span></div>
-                                <p id="happinessVerdict" class="text-center mt-2 text-gray-600 font-medium"></p>
+                                <p class="text-xs text-center mt-2 text-gray-500">Based on updated long-term avg. annual returns: S&P 500 (10%), BTC (15% speculative), Gold (5%). Not financial advice.</p>
                             </div>
                         </div>
                     </div>
@@ -232,8 +253,8 @@
                             <input type="number" id="goalAmount" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 40000">
                         </div>
                         <div>
-                            <label for="currentSavings" class="block text-sm font-medium text-gray-700">Current Savings for this Goal</label>
-                            <input type="number" id="currentSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                            <label for="currentGoalSavings" class="block text-sm font-medium text-gray-700">Current Savings for this Goal</label>
+                            <input type="number" id="currentGoalSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
                         </div>
                         <button id="setGoalBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Set Goal & See Progress</button>
                     </div>
@@ -293,7 +314,7 @@
                             <h3 class="text-xl font-bold text-gray-800">Retirement Snapshot</h3>
                             <p class="text-gray-600 mt-2">FI Number: <strong id="fiNumberResult" class="text-gray-800"></strong></p>
                             <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
-                            <p class="text-gray-600">Portfolio lasts for: <strong class="text-gray-800">~30 years</strong></p>
+                            <p class="text-xs text-gray-500 mt-1">Your portfolio is designed to last for a <strong class="font-semibold">30-year retirement</strong>.</p>
                         </div>
                         <div class="result-card bg-white p-6 rounded-xl shadow-md">
                             <h3 class="text-xl font-bold text-center mb-4">The Impact of This Purchase</h3>
@@ -318,35 +339,31 @@
     </div>
 
     <script>
+        // --- App Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+
         // --- State, Config, and Chart Instances ---
         const stateData = {
-            'CA': { name: 'California', salesTax: 0.0725, incomeTaxRate: 0.06, avgRent: 1750, avgUtils: 280, avgGrocery: 250, avgWeekend: 750 },
-            'OR': { name: 'Oregon', salesTax: 0.0, incomeTaxRate: 0.08, avgRent: 1450, avgUtils: 210, avgGrocery: 220, avgWeekend: 650 },
-            'WA': { name: 'Washington', salesTax: 0.065, incomeTaxRate: 0.0, avgRent: 1600, avgUtils: 230, avgGrocery: 240, avgWeekend: 700 },
-            'TX': { name: 'Texas', salesTax: 0.0625, incomeTaxRate: 0.0, avgRent: 1300, avgUtils: 250, avgGrocery: 200, avgWeekend: 600 },
-            'FL': { name: 'Florida', salesTax: 0.06, incomeTaxRate: 0.0, avgRent: 1700, avgUtils: 260, avgGrocery: 230, avgWeekend: 800 },
-            'NY': { name: 'New York', salesTax: 0.04, incomeTaxRate: 0.055, avgRent: 2500, avgUtils: 200, avgGrocery: 280, avgWeekend: 900 }
+            'CA': { name: 'California', salesTax: 0.0725, incomeTaxRate: 0.06 },
+            'OR': { name: 'Oregon', salesTax: 0.0, incomeTaxRate: 0.08 },
+            'WA': { name: 'Washington', salesTax: 0.065, incomeTaxRate: 0.0 },
+            'TX': { name: 'Texas', salesTax: 0.0625, incomeTaxRate: 0.0 },
+            'FL': { name: 'Florida', salesTax: 0.06, incomeTaxRate: 0.0 },
+            'NY': { name: 'New York', salesTax: 0.04, incomeTaxRate: 0.055 }
         };
         const FICA_RATE = 0.0765;
         const FEDERAL_TAX_RATE = 0.15;
-        const LIFE_EXPECTANCY = { male: 73, female: 79 };
+        const LIFE_EXPECTANCY = { male: 76, female: 81 }; 
         const WAKING_HOURS_PER_YEAR = 16 * 365;
-        const AVG_MARKET_RETURN = 0.07; // After inflation
+        const AVG_MARKET_RETURN = 0.07; 
 
         let currentGoal = { name: '', amount: 0, saved: 0 };
         let lastCalculatedCost = 0;
         let chartInstances = {};
         let userMotive = null;
-
-        // --- DOM Elements ---
-        const calculateBtn = document.getElementById('calculateBtn');
-        const resultsSection = document.getElementById('results-section');
-        const setGoalBtn = document.getElementById('setGoalBtn');
-        const goalTrackerSection = document.getElementById('goal-tracker-section');
-        const calculateRetireBtn = document.getElementById('calculateRetireBtn');
-        const retirementResultsSection = document.getElementById('retirement-results-section');
-        const retakeQuizBtn = document.getElementById('retakeQuizBtn');
-
+        
         // --- Utility Functions ---
         const formatCurrency = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
         const formatNumber = (v, d = 2) => Number(v).toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -355,14 +372,14 @@
         function switchTab(tabName) {
             ['calculator', 'motive', 'goals', 'retirement'].forEach(name => {
                 const content = document.getElementById(`${name}-content`);
-                const tab = document.getElementById(`tab-${name}`);
+                const tab = document.querySelector(`[data-tab="${name}"]`);
                 if (content && tab) {
                     content.classList.add('hidden');
                     tab.classList.remove('tab-active');
                 }
             });
             const activeContent = document.getElementById(`${tabName}-content`);
-            const activeTab = document.getElementById(`tab-${tabName}`);
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
             if(activeContent && activeTab) {
                 activeContent.classList.remove('hidden');
                 activeTab.classList.add('tab-active');
@@ -370,23 +387,22 @@
         }
 
         // --- Core Calculation Logic ---
-        function calculatePurchase() {
-            const age = parseInt(document.getElementById('age').value) || 0;
-            const gender = document.getElementById('gender').value;
-            const itemName = document.getElementById('itemName').value || "this item";
-            const itemCost = parseFloat(document.getElementById('itemCost').value) || 0;
-            const preTaxHourlyIncome = parseFloat(document.getElementById('preTaxHourlyIncome').value) || 0;
-            const state = document.getElementById('location').value;
-
+        function calculatePurchase(elements) {
+            const age = parseInt(elements.age.value) || 0;
+            const gender = elements.gender.value;
+            const itemName = elements.itemName.value || "this item";
+            const itemCost = parseFloat(elements.itemCost.value) || 0;
+            const preTaxHourlyIncome = parseFloat(elements.preTaxHourlyIncome.value) || 0;
+            
             if (itemCost <= 0 || preTaxHourlyIncome <= 0 || age <= 0) {
                 alert("Please enter a valid age, cost, and pre-tax hourly income.");
                 return;
             }
             
-            document.getElementById('retireAge').value = age;
-            document.getElementById('annualIncome').value = preTaxHourlyIncome * 40 * 52;
+            elements.retireAge.value = age;
+            elements.annualIncome.value = preTaxHourlyIncome * 40 * 52;
 
-            const selectedState = stateData[state];
+            const selectedState = stateData[elements.location.value];
             const totalTaxRate = FEDERAL_TAX_RATE + FICA_RATE + selectedState.incomeTaxRate;
             const netHourlyIncome = preTaxHourlyIncome * (1 - totalTaxRate);
             const salesTaxAmount = itemCost * selectedState.salesTax;
@@ -398,23 +414,47 @@
             const hoursLeftInLife = yearsLeft > 0 ? yearsLeft * WAKING_HOURS_PER_YEAR : 0;
             const lifePercentage = hoursLeftInLife > 0 ? (hoursWorked / WAKING_HOURS_PER_YEAR) * 100 : 0;
 
-            resultsSection.classList.remove('hidden');
-            document.getElementById('resultItemName').textContent = itemName;
-            document.getElementById('baseCostDisplay').textContent = formatCurrency(itemCost);
-            document.getElementById('taxDisplay').textContent = formatCurrency(salesTaxAmount);
-            document.getElementById('totalCostWithTax').textContent = formatCurrency(totalCost);
-            document.getElementById('netIncomeDisplay').textContent = formatCurrency(netHourlyIncome);
-            document.getElementById('hoursWorked').textContent = formatNumber(hoursWorked, 1);
+            elements.resultsSection.classList.remove('hidden');
+            elements.resultItemName.textContent = itemName;
+            elements.totalCostWithTax.textContent = formatCurrency(totalCost);
+            elements.netIncomeDisplay.textContent = formatCurrency(netHourlyIncome);
+            elements.hoursWorked.textContent = formatNumber(hoursWorked, 1);
+            elements.daysWorked.textContent = formatNumber(hoursWorked / 16, 1);
+            elements.hoursLeft.textContent = formatNumber(hoursLeftInLife, 0);
+            elements.lifePercentage.textContent = `${formatNumber(lifePercentage, 6)}%`;
             
-            document.getElementById('hoursLeft').textContent = formatNumber(hoursLeftInLife, 0);
-            document.getElementById('lifePercentage').textContent = `${formatNumber(lifePercentage, 6)}%`;
-            
-            updateChart('alternativesChart', buildAlternativesChartConfig(totalCost, state));
             updateChart('futureValueChart', buildFutureValueChartConfig(totalCost));
-            updateChart('purchasingPowerChart', buildPurchasingPowerChartConfig(totalCost));
-            updateGoalTracker();
-            document.getElementById('happinessScale').dispatchEvent(new Event('input'));
-            displayDynamicFact('calculator');
+            updateGoalTracker(elements);
+            displayDynamicFact('calculator', elements);
+            
+            calculatePaycheckPower(totalCost, preTaxHourlyIncome, totalTaxRate, elements);
+            calculateFreedomFund(totalCost, elements);
+        }
+
+        // --- New Metric Functions ---
+        function calculatePaycheckPower(cost, hourly, taxRate, elements) {
+            const freq = elements.paycheckFrequency.value;
+            const hoursPerPaycheck = { weekly: 40, biweekly: 80, monthly: 173.33 };
+            const netPaycheck = (hourly * hoursPerPaycheck[freq]) * (1 - taxRate);
+            if (netPaycheck > 0) {
+                const percentage = (cost / netPaycheck) * 100;
+                elements.paycheckPercentage.textContent = formatNumber(percentage, 1);
+            }
+        }
+
+        function calculateFreedomFund(cost, elements) {
+            const savings = parseFloat(elements.currentSavings.value) || 0;
+            const expenses = parseFloat(elements.monthlyExpenses.value) || 0;
+            const card = document.getElementById('freedom-fund-card');
+            if (savings > 0 && expenses > 0) {
+                const runwayMonths = savings / expenses;
+                const daysAdded = (cost / expenses) * 30;
+                document.getElementById('runwayMonths').textContent = formatNumber(runwayMonths, 1);
+                document.getElementById('runwayAdded').textContent = formatNumber(daysAdded, 1);
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
         }
 
         // --- Charting Functions ---
@@ -422,27 +462,6 @@
             if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
             const ctx = document.getElementById(canvasId).getContext('2d');
             chartInstances[canvasId] = new Chart(ctx, config);
-        }
-
-        function buildAlternativesChartConfig(cost, state) {
-            const stateInfo = stateData[state];
-            return {
-                type: 'bar',
-                data: {
-                    labels: ['This Item', 'Avg. Monthly Rent', 'Avg. Monthly Utilities', 'Weekly Groceries', 'Weekend Getaway'],
-                    datasets: [{
-                        label: `Cost Comparison in ${stateInfo.name}`,
-                        data: [cost, stateInfo.avgRent, stateInfo.avgUtils, stateInfo.avgGrocery, stateInfo.avgWeekend],
-                        backgroundColor: ['#ef4444', '#3b82f6', '#14b8a6', '#f97316', '#8b5cf6'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    scales: { x: { beginAtZero: true, ticks: { callback: (value) => formatCurrency(value) } } },
-                    plugins: { legend: { display: false } }
-                }
-            };
         }
 
         function buildFutureValueChartConfig(initialCost) {
@@ -453,9 +472,9 @@
                 data: {
                     labels: years,
                     datasets: [
-                        { label: 'S&P 500 (8%)', data: createProjection(0.08), borderColor: '#22c55e', tension: 0.1, fill: false },
+                        { label: 'S&P 500 (10%)', data: createProjection(0.10), borderColor: '#22c55e', tension: 0.1, fill: false },
                         { label: 'BTC (15%)', data: createProjection(0.15), borderColor: '#f97316', tension: 0.1, fill: false },
-                        { label: 'Gold (4%)', data: createProjection(0.04), borderColor: '#eab308', tension: 0.1, fill: false }
+                        { label: 'Gold (5%)', data: createProjection(0.05), borderColor: '#eab308', tension: 0.1, fill: false }
                     ]
                 },
                 options: {
@@ -466,51 +485,27 @@
             };
         }
         
-        function buildPurchasingPowerChartConfig(initialCost) {
-            const years = Array.from({length: 21}, (_, i) => i);
-            const ppData = years.map(y => initialCost * Math.pow(1 - 0.03, y));
-            return {
-                type: 'line',
-                data: {
-                    labels: years,
-                    datasets: [{
-                        label: 'Declining Purchasing Power',
-                        data: ppData,
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        fill: true,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: { y: { ticks: { callback: (value) => formatCurrency(value) } }, x: { title: { display: true, text: 'Years' } } },
-                    plugins: { legend: { display: false } }
-                }
-            };
-        }
-        
         // --- Goal Logic ---
-        function setGoal() {
-            const goalName = document.getElementById('goalName').value;
-            const goalAmount = parseFloat(document.getElementById('goalAmount').value);
-            const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
+        function setGoal(elements) {
+            const goalName = elements.goalName.value;
+            const goalAmount = parseFloat(elements.goalAmount.value);
+            const currentSavings = parseFloat(elements.currentGoalSavings.value) || 0;
             if (!goalName || goalAmount <= 0) {
                 alert("Please enter a valid goal name and amount.");
                 return;
             }
             currentGoal = { name: goalName, amount: goalAmount, saved: currentSavings };
             alert(`Goal Set: ${goalName} for ${formatCurrency(goalAmount)}`);
-            updateGoalTracker();
-            displayDynamicFact('goals');
+            updateGoalTracker(elements);
+            displayDynamicFact('goals', elements);
         }
 
-        function updateGoalTracker() {
+        function updateGoalTracker(elements) {
             if (currentGoal.amount <= 0) return;
-            goalTrackerSection.classList.remove('hidden');
-            document.getElementById('goalResultName').textContent = currentGoal.name;
-            document.getElementById('goalItemName').textContent = document.getElementById('itemName').value || "purchase";
-            document.getElementById('goalContribution').textContent = formatCurrency(lastCalculatedCost);
+            elements.goalTrackerSection.classList.remove('hidden');
+            elements.goalResultName.textContent = currentGoal.name;
+            elements.goalItemName.textContent = elements.itemName.value || "purchase";
+            elements.goalContribution.textContent = formatCurrency(lastCalculatedCost);
             updateChart('goalDonutChart', buildGoalDonutChartConfig());
         }
 
@@ -546,13 +541,13 @@
             return years;
         }
 
-        function handleRetirementCalculation() {
-            const age = parseInt(document.getElementById('retireAge').value) || 0;
-            const annualIncome = parseFloat(document.getElementById('annualIncome').value) || 0;
-            const currentRetireSavings = parseFloat(document.getElementById('currentRetireSavings').value) || 0;
-            const savingsRate = parseFloat(document.getElementById('savingsRate').value) / 100 || 0;
-            const annualExpenses = parseFloat(document.getElementById('annualExpenses').value) || 0;
-            const retirementDream = document.getElementById('retirementDream').value || "achieving your dream";
+        function handleRetirementCalculation(elements) {
+            const age = parseInt(elements.retireAge.value) || 0;
+            const annualIncome = parseFloat(elements.annualIncome.value) || 0;
+            const currentRetireSavings = parseFloat(elements.currentRetireSavings.value) || 0;
+            const savingsRate = parseFloat(elements.savingsRate.value) / 100 || 0;
+            const annualExpenses = parseFloat(elements.annualExpenses.value) || 0;
+            const retirementDream = elements.retirementDream.value || "achieving your dream";
 
             if (age <= 0 || annualIncome <= 0 || savingsRate <= 0 || annualExpenses <= 0) {
                 alert("Please fill in all retirement fields with valid numbers.");
@@ -564,28 +559,26 @@
             const yearsToRetire = calculateYearsToRetire(currentRetireSavings, annualSavings, fiNumber);
             const retirementAge = age + yearsToRetire;
 
-            // Update UI
-            retirementResultsSection.classList.remove('hidden');
-            document.getElementById('dreamDisplay').textContent = retirementDream;
-            document.getElementById('retirementAgeResult').textContent = retirementAge;
-            document.getElementById('fiNumberResult').textContent = formatCurrency(fiNumber);
-            document.getElementById('withdrawalResult').textContent = formatCurrency(fiNumber * 0.04);
-            document.getElementById('retireItemName').textContent = document.getElementById('itemName').value || 'purchase';
+            elements.retirementResultsSection.classList.remove('hidden');
+            elements.dreamDisplay.textContent = retirementDream;
+            elements.retirementAgeResult.textContent = retirementAge;
+            elements.fiNumberResult.textContent = formatCurrency(fiNumber);
+            elements.withdrawalResult.textContent = formatCurrency(fiNumber * 0.04);
+            elements.retireItemName.textContent = elements.itemName.value || 'purchase';
             
             const baseScenario = { years: yearsToRetire, age: retirementAge };
-            updatePurchaseImpact(baseScenario, annualExpenses);
-            updateTimeValueTable(baseScenario);
-            displayDynamicFact('retirement');
+            updatePurchaseImpact(baseScenario, annualExpenses, elements);
+            updateTimeValueTable(baseScenario, elements);
+            displayDynamicFact('retirement', elements);
         }
         
-        function updatePurchaseImpact(baseScenario, annualExpenses) {
-            const container = document.getElementById('purchaseImpactResult');
+        function updatePurchaseImpact(baseScenario, annualExpenses, elements) {
             const hourlyRetirementCost = annualExpenses / WAKING_HOURS_PER_YEAR;
             const futureValue = lastCalculatedCost * Math.pow(1 + AVG_MARKET_RETURN, baseScenario.years);
             const hoursBought = futureValue / hourlyRetirementCost;
             const daysBought = hoursBought / 16;
             
-            container.innerHTML = `
+            elements.purchaseImpactResult.innerHTML = `
                 <p class="font-bold text-2xl text-green-600">+ ${formatNumber(hoursBought, 0)} hours</p>
                 <p class="text-sm text-green-700">(${formatNumber(daysBought, 1)} days of freedom)</p>
                 <p class="text-xs text-gray-500 mt-2">
@@ -593,28 +586,25 @@
                 </p>
             `;
             
-            updateRetirementMeaning(hoursBought);
+            updateRetirementMeaning(hoursBought, elements);
         }
 
-        function updateRetirementMeaning(hours) {
-            const container = document.getElementById('retirementMeaning');
+        function updateRetirementMeaning(hours, elements) {
             let message = '';
             if (hours > 1000) {
                 message = `With over <strong class="text-indigo-600">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
-            } else if (hours > 160) { // More than two weeks
+            } else if (hours > 160) {
                 message = `Those <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
-            } else if (hours > 40) { // More than a work week
+            } else if (hours > 40) {
                 message = `What could you do with an extra <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
             } else {
                 message = `Even <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
             }
-            container.innerHTML = message;
+            elements.retirementMeaning.innerHTML = message;
         }
 
-        function updateTimeValueTable(scenario) {
-            const container = document.getElementById('timeValueTable');
-            container.innerHTML = '';
-            const gender = document.getElementById('gender').value;
+        function updateTimeValueTable(scenario, elements) {
+            const gender = elements.gender.value;
             const lifeExpectancy = LIFE_EXPECTANCY[gender];
             
             const yearsWorking = scenario.years;
@@ -626,7 +616,7 @@
             const birthdaysWorking = yearsWorking;
             const birthdaysRetired = yearsRetired;
 
-            container.innerHTML = `
+            elements.timeValueTable.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="p-4 rounded-lg bg-gray-100 text-center">
                         <h4 class="font-bold text-lg text-gray-800 flex items-center justify-center"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>The Working Years</h4>
@@ -669,61 +659,60 @@
         let currentQuestionIndex = 0;
         let motiveScores = {};
 
-        function startQuiz() {
+        function startQuiz(elements) {
             currentQuestionIndex = 0;
             motiveScores = { Security: 0, Experience: 0, Generous: 0, Status: 0 };
-            document.getElementById('quiz-container').classList.remove('hidden');
-            document.getElementById('motive-result-container').classList.add('hidden');
-            displayQuestion();
+            elements.quizContainer.classList.remove('hidden');
+            elements.motiveResultContainer.classList.add('hidden');
+            displayQuestion(elements);
         }
 
-        function displayQuestion() {
+        function displayQuestion(elements) {
             const questionData = quizData[currentQuestionIndex];
-            document.getElementById('quizQuestion').textContent = questionData.question;
-            const optionsContainer = document.getElementById('quizOptions');
-            optionsContainer.innerHTML = '';
+            elements.quizQuestion.textContent = questionData.question;
+            elements.quizOptions.innerHTML = '';
             questionData.answers.forEach(answer => {
                 const button = document.createElement('button');
                 button.className = 'quiz-option p-4 border-2 border-gray-200 rounded-lg text-left hover:bg-indigo-50 hover:border-indigo-300';
                 button.textContent = answer.text;
-                button.onclick = () => selectAnswer(answer.motive);
-                optionsContainer.appendChild(button);
+                button.onclick = () => selectAnswer(answer.motive, elements);
+                elements.quizOptions.appendChild(button);
             });
             const progress = ((currentQuestionIndex) / quizData.length) * 100;
-            document.getElementById('quiz-progress').style.width = `${progress}%`;
+            elements.quizProgress.style.width = `${progress}%`;
         }
 
-        function selectAnswer(motive) {
+        function selectAnswer(motive, elements) {
             motiveScores[motive]++;
             currentQuestionIndex++;
             if (currentQuestionIndex < quizData.length) {
-                displayQuestion();
+                displayQuestion(elements);
             } else {
-                showResults();
+                showResults(elements);
             }
         }
 
-        function showResults() {
+        function showResults(elements) {
             const finalMotive = Object.keys(motiveScores).reduce((a, b) => motiveScores[a] > motiveScores[b] ? a : b);
             userMotive = finalMotive;
             const archetype = archetypes[finalMotive];
             
-            document.getElementById('archetypeIcon').innerHTML = archetype.icon;
-            document.getElementById('archetypeTitle').textContent = archetype.title;
-            document.getElementById('archetypeDescription').textContent = archetype.description;
-            document.getElementById('archetypeStrengths').textContent = archetype.strengths;
-            document.getElementById('archetypeBlinds').textContent = archetype.blinds;
-            document.getElementById('archetypeMantra').textContent = `"${archetype.mantra}"`;
+            elements.archetypeIcon.innerHTML = archetype.icon;
+            elements.archetypeTitle.textContent = archetype.title;
+            elements.archetypeDescription.textContent = archetype.description;
+            elements.archetypeStrengths.textContent = archetype.strengths;
+            elements.archetypeBlinds.textContent = archetype.blinds;
+            elements.archetypeMantra.textContent = `"${archetype.mantra}"`;
             
-            document.getElementById('quiz-container').classList.add('hidden');
-            document.getElementById('motive-result-container').classList.remove('hidden');
+            elements.quizContainer.classList.add('hidden');
+            elements.motiveResultContainer.classList.remove('hidden');
             lucide.createIcons();
         }
 
         // --- Dynamic Facts Logic ---
-        function displayDynamicFact(tab) {
-            const age = parseInt(document.getElementById('age').value) || 30;
-            const gender = document.getElementById('gender').value;
+        function displayDynamicFact(tab, elements) {
+            const age = parseInt(elements.age.value) || 30;
+            const gender = elements.gender.value;
             const factContainer = document.getElementById(`${tab}-fact`);
             if (!factContainer) return;
 
@@ -765,38 +754,86 @@
         }
 
 
-        // --- Event Listeners ---
-        calculateBtn.addEventListener('click', calculatePurchase);
-        setGoalBtn.addEventListener('click', setGoal);
-        calculateRetireBtn.addEventListener('click', handleRetirementCalculation);
-        retakeQuizBtn.addEventListener('click', startQuiz);
-        document.getElementById('happinessScale').addEventListener('input', (e) => {
-            const value = e.target.value;
-            document.getElementById('happinessValue').textContent = value;
-            const hours = parseFloat(document.getElementById('hoursWorked').textContent) || 0;
-            if (hours === 0) {
-                document.getElementById('happinessVerdict').textContent = "Calculate a cost first!";
-                return;
-            }
-            const ratio = value / (hours / 4);
-            const verdictEl = document.getElementById('happinessVerdict');
-            if (ratio > 2) {
-                verdictEl.textContent = "Great value for the happiness it brings!";
-                verdictEl.className = "text-center mt-2 font-medium text-green-600";
-            } else if (ratio > 1) {
-                verdictEl.textContent = "A reasonable trade-off.";
-                verdictEl.className = "text-center mt-2 font-medium text-yellow-600";
-            } else {
-                verdictEl.textContent = "The time cost seems high for the happiness gained.";
-                verdictEl.className = "text-center mt-2 font-medium text-red-600";
-            }
-        });
+        // --- Event Listeners and Initial Load ---
+        function initializeApp() {
+            // --- DOM Elements ---
+            const elements = {
+                // Main Inputs
+                age: document.getElementById('age'),
+                gender: document.getElementById('gender'),
+                itemName: document.getElementById('itemName'),
+                itemCost: document.getElementById('itemCost'),
+                preTaxHourlyIncome: document.getElementById('preTaxHourlyIncome'),
+                location: document.getElementById('location'),
+                paycheckFrequency: document.getElementById('paycheckFrequency'),
+                currentSavings: document.getElementById('currentSavings'),
+                monthlyExpenses: document.getElementById('monthlyExpenses'),
+                // Results Display
+                resultsSection: document.getElementById('results-section'),
+                resultItemName: document.getElementById('resultItemName'),
+                totalCostWithTax: document.getElementById('totalCostWithTax'),
+                netIncomeDisplay: document.getElementById('netIncomeDisplay'),
+                hoursWorked: document.getElementById('hoursWorked'),
+                daysWorked: document.getElementById('daysWorked'),
+                hoursLeft: document.getElementById('hoursLeft'),
+                lifePercentage: document.getElementById('lifePercentage'),
+                paycheckPercentage: document.getElementById('paycheckPercentage'),
+                freedomFundCard: document.getElementById('freedom-fund-card'),
+                runwayMonths: document.getElementById('runwayMonths'),
+                runwayAdded: document.getElementById('runwayAdded'),
+                // Quiz
+                quizContainer: document.getElementById('quiz-container'),
+                motiveResultContainer: document.getElementById('motive-result-container'),
+                quizQuestion: document.getElementById('quizQuestion'),
+                quizOptions: document.getElementById('quizOptions'),
+                quizProgress: document.getElementById('quiz-progress'),
+                archetypeIcon: document.getElementById('archetypeIcon'),
+                archetypeTitle: document.getElementById('archetypeTitle'),
+                archetypeDescription: document.getElementById('archetypeDescription'),
+                archetypeStrengths: document.getElementById('archetypeStrengths'),
+                archetypeBlinds: document.getElementById('archetypeBlinds'),
+                archetypeMantra: document.getElementById('archetypeMantra'),
+                // Goals
+                goalName: document.getElementById('goalName'),
+                goalAmount: document.getElementById('goalAmount'),
+                currentGoalSavings: document.getElementById('currentGoalSavings'),
+                goalTrackerSection: document.getElementById('goal-tracker-section'),
+                goalResultName: document.getElementById('goalResultName'),
+                goalItemName: document.getElementById('goalItemName'),
+                goalContribution: document.getElementById('goalContribution'),
+                // Retirement
+                retireAge: document.getElementById('retireAge'),
+                annualIncome: document.getElementById('annualIncome'),
+                currentRetireSavings: document.getElementById('currentRetireSavings'),
+                savingsRate: document.getElementById('savingsRate'),
+                annualExpenses: document.getElementById('annualExpenses'),
+                retirementDream: document.getElementById('retirementDream'),
+                retirementResultsSection: document.getElementById('retirement-results-section'),
+                dreamDisplay: document.getElementById('dreamDisplay'),
+                retirementAgeResult: document.getElementById('retirementAgeResult'),
+                fiNumberResult: document.getElementById('fiNumberResult'),
+                withdrawalResult: document.getElementById('withdrawalResult'),
+                retireItemName: document.getElementById('retireItemName'),
+                purchaseImpactResult: document.getElementById('purchaseImpactResult'),
+                retirementMeaning: document.getElementById('retirementMeaning'),
+                timeValueTable: document.getElementById('timeValueTable')
+            };
 
-        // --- Initial Load ---
-        window.onload = () => {
+            // --- Event Listeners ---
+            document.getElementById('calculateBtn').addEventListener('click', () => calculatePurchase(elements));
+            document.getElementById('setGoalBtn').addEventListener('click', () => setGoal(elements));
+            document.getElementById('calculateRetireBtn').addEventListener('click', () => handleRetirementCalculation(elements));
+            document.getElementById('retakeQuizBtn').addEventListener('click', () => startQuiz(elements));
+            
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    switchTab(button.dataset.tab);
+                });
+            });
+
             lucide.createIcons();
-            startQuiz(); // Start the quiz when the motive tab is first loaded
-        };
+            startQuiz(elements); 
+        }
     </script>
 </body>
 </html>
