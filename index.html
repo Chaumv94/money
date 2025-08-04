@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -58,24 +59,140 @@
         .gradient-bg {
             background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
         }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .health-score {
+            background: conic-gradient(#4f46e5 0% var(--score), #e5e7eb var(--score) 100%);
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .health-score::before {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: white;
+        }
+        .health-score-text {
+            position: relative;
+            z-index: 1;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            stroke: #4f46e5;
+            stroke-width: 4;
+            fill: transparent;
+        }
+        .mobile-optimized {
+            touch-action: manipulation;
+        }
+        .mobile-optimized input, .mobile-optimized button {
+            min-height: 44px;
+        }
+        @media (max-width: 768px) {
+            .mobile-optimized .grid {
+                grid-template-columns: 1fr;
+            }
+            .mobile-optimized .text-4xl {
+                font-size: 2rem;
+            }
+            .mobile-optimized .text-3xl {
+                font-size: 1.75rem;
+            }
+            .mobile-optimized .text-2xl {
+                font-size: 1.5rem;
+            }
+        }
+        .asset-allocation {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .asset-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .asset-info {
+            flex: 1;
+        }
+        .asset-name {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        .asset-return {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .asset-value {
+            font-weight: 500;
+            font-size: 0.875rem;
+            min-width: 45px;
+            text-align: right;
+        }
     </style>
 </head>
-<body class="gradient-bg text-gray-800">
-
+<body class="gradient-bg text-gray-800 mobile-optimized">
     <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">The True Cost Calculator</h1>
-            <p class="mt-2 text-lg text-gray-600">A new perspective on your time, money, and life.</p>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">The True Cost Calculator</h1>
+                <p class="mt-2 text-lg text-gray-600">A new perspective on your time, money, and life.</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="exportBtn" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export
+                </button>
+            </div>
         </header>
-
+        
         <!-- Tabs -->
-        <div class="mb-8 flex justify-center border-b border-gray-200">
+        <div class="mb-8 flex flex-wrap justify-center border-b border-gray-200">
             <button data-tab="calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Purchase Calculator</button>
+            <button data-tab="debt" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Debt Impact</button>
+            <button data-tab="investment" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Investment Builder</button>
             <button data-tab="motive" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">My Money Motive</button>
             <button data-tab="goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Financial Goals</button>
             <button data-tab="retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Retirement</button>
+            <button data-tab="health" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Financial Health</button>
         </div>
-
+        
         <main id="app-container">
             <!-- Purchase Calculator Tab -->
             <div id="calculator-content">
@@ -147,11 +264,18 @@
                                     <label for="monthlyExpenses" class="block text-sm font-medium text-gray-700">Monthly Expenses</label>
                                     <input type="number" id="monthlyExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 3000">
                                 </div>
+                                <div>
+                                    <label for="debtAmount" class="block text-sm font-medium text-gray-700">Total Debt</label>
+                                    <input type="number" id="debtAmount" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                                </div>
+                                <div>
+                                    <label for="debtInterestRate" class="block text-sm font-medium text-gray-700">Debt Interest Rate (%)</label>
+                                    <input type="number" id="debtInterestRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 18">
+                                </div>
                             </div>
                         </div>
                         <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
                     </div>
-
                     <!-- Results Section -->
                     <div id="results-section" class="lg:col-span-2 space-y-6 hidden">
                         <div class="text-center p-4 bg-white rounded-lg shadow-md">
@@ -163,43 +287,289 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Time Cost -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                                <div class="flex items-center mb-3"><i data-lucide="clock" class="w-8 h-8 text-indigo-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Time Cost</h3></div>
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="clock" class="w-8 h-8 text-indigo-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Time Cost</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows how many hours you need to work to afford this purchase after taxes.</span>
+                                    </div>
+                                </div>
                                 <p class="text-gray-600">This purchase will cost you</p>
                                 <p class="text-3xl font-bold text-indigo-600 my-2"><span id="hoursWorked">0</span> hours</p>
                                 <p class="text-gray-600">(<span id="daysWorked">0</span> waking days)</p>
                             </div>
                             <!-- Paycheck Power -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                                <div class="flex items-center mb-3"><i data-lucide="receipt" class="w-8 h-8 text-orange-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Paycheck Power</h3></div>
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="receipt" class="w-8 h-8 text-orange-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Paycheck Power</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows what percentage of your paycheck this purchase represents.</span>
+                                    </div>
+                                </div>
                                 <p class="text-gray-600">This purchase is equal to</p>
                                 <p class="text-3xl font-bold text-orange-600 my-2"><span id="paycheckPercentage">0</span>%</p>
                                 <p class="text-gray-600">of one net paycheck.</p>
                             </div>
                              <!-- Freedom Fund -->
                             <div id="freedom-fund-card" class="result-card bg-white p-6 rounded-xl shadow-md hidden">
-                                <div class="flex items-center mb-3"><i data-lucide="shield-half" class="w-8 h-8 text-sky-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Freedom Fund</h3></div>
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="shield-half" class="w-8 h-8 text-sky-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Freedom Fund</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows how much additional financial security this money could provide.</span>
+                                    </div>
+                                </div>
                                 <p class="text-gray-600">Your current runway is <strong id="runwayMonths" class="text-sky-600"></strong> months. Saving this adds</p>
                                 <p class="text-3xl font-bold text-sky-600 my-2">+<span id="runwayAdded">0</span> days</p>
                                 <p class="text-gray-600">to your financial safety net.</p>
                             </div>
                             <!-- Lifetime Perspective -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Lifetime Perspective</h3></div>
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Lifetime Perspective</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows what portion of your remaining waking years this purchase represents.</span>
+                                    </div>
+                                </div>
                                 <p class="text-gray-600">You have approx. <strong id="hoursLeft" class="text-teal-600"></strong> waking hours left in your healthy life.</p>
                                 <p class="text-gray-600 mt-2">This purchase consumes <strong id="lifePercentage" class="text-teal-600"></strong> of one of those precious years.</p>
                             </div>
                             <!-- Opportunity Cost -->
                             <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                                <div class="flex items-center mb-3"><i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i><h3 class="text-xl font-bold text-gray-800">Future Value Projection</h3></div>
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Future Value Projection</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows how much this money could grow if invested instead of spent.</span>
+                                    </div>
+                                </div>
                                 <p class="text-gray-600 mb-4">If invested, this money could grow significantly over 20 years:</p>
                                 <canvas id="futureValueChart"></canvas>
                                 <p class="text-xs text-center mt-2 text-gray-500">Based on updated long-term avg. annual returns: S&P 500 (10%), BTC (15% speculative), Gold (5%). Not financial advice.</p>
+                            </div>
+                            <!-- Debt Impact -->
+                            <div id="debt-impact-card" class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2 hidden">
+                                <div class="flex items-center mb-3">
+                                    <i data-lucide="credit-card" class="w-8 h-8 text-red-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold text-gray-800">Debt Impact</h3>
+                                    <div class="tooltip ml-2">
+                                        <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                        <span class="tooltiptext">This shows how much you could save by using this money to pay down debt instead.</span>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600">Using this money to pay down debt would save you</p>
+                                <p class="text-3xl font-bold text-red-600 my-2"><span id="debtInterestSaved">0</span></p>
+                                <p class="text-gray-600">in interest payments and reduce your debt payoff time by <span id="debtTimeSaved" class="font-semibold">0</span> months.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            
+            <!-- Debt Impact Tab -->
+            <div id="debt-content" class="hidden max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Debt Impact Calculator</h2>
+                    <p class="text-gray-600 mb-6">See how using purchase money to pay down debt can save you money and time.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="debtTotal" class="block text-sm font-medium text-gray-700">Total Debt Amount</label>
+                            <input type="number" id="debtTotal" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                        </div>
+                        <div>
+                            <label for="debtRate" class="block text-sm font-medium text-gray-700">Interest Rate (%)</label>
+                            <input type="number" id="debtRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 18">
+                        </div>
+                        <div>
+                            <label for="debtPayment" class="block text-sm font-medium text-gray-700">Monthly Payment</label>
+                            <input type="number" id="debtPayment" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 300">
+                        </div>
+                        <div>
+                            <label for="debtExtra" class="block text-sm font-medium text-gray-700">Extra Payment (from purchase)</label>
+                            <input type="number" id="debtExtra" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 500">
+                        </div>
+                    </div>
+                    
+                    <button id="debtBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Debt Impact</button>
+                </div>
+                
+                <div id="debt-results" class="hidden">
+                    <h3 class="text-xl font-bold mb-4 text-center">Debt Payoff Comparison</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">Current Plan</h4>
+                            <p class="text-gray-600">Payoff Time: <span id="currentPayoff" class="font-semibold">0</span> months</p>
+                            <p class="text-gray-600">Total Interest: <span id="currentInterest" class="font-semibold">0</span></p>
+                        </div>
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">With Extra Payment</h4>
+                            <p class="text-gray-600">Payoff Time: <span id="newPayoff" class="font-semibold">0</span> months</p>
+                            <p class="text-gray-600">Total Interest: <span id="newInterest" class="font-semibold">0</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-lg font-bold text-gray-800 mb-2">Your Savings</h4>
+                        <p class="text-gray-600">Time Saved: <span id="timeSaved" class="font-semibold text-green-600">0</span> months</p>
+                        <p class="text-gray-600">Interest Saved: <span id="interestSaved" class="font-semibold text-green-600">0</span></p>
+                        <p class="text-gray-600">That's <span id="hoursSaved" class="font-semibold">0</span> hours of work you won't need to do!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Investment Builder Tab -->
+            <div id="investment-content" class="hidden max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Investment Scenario Builder</h2>
+                    <p class="text-gray-600 mb-6">Experiment with different investment scenarios to see how small changes can significantly impact your long-term wealth.</p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Scenario Inputs -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Scenario Parameters</h3>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label for="initialInvestment" class="block text-sm font-medium text-gray-700">Initial Investment</label>
+                                    <input type="number" id="initialInvestment" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 1000">
+                                </div>
+                                
+                                <div>
+                                    <label for="monthlyContribution" class="block text-sm font-medium text-gray-700">Monthly Contribution</label>
+                                    <input type="number" id="monthlyContribution" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 100">
+                                </div>
+                                
+                                <div>
+                                    <label for="timeHorizon" class="block text-sm font-medium text-gray-700">Time Horizon (years)</label>
+                                    <input type="range" id="timeHorizon" min="1" max="40" value="20" class="mt-1 block w-full">
+                                    <div class="flex justify-between text-sm text-gray-500">
+                                        <span>1 year</span>
+                                        <span id="timeHorizonValue" class="font-medium text-gray-700">20 years</span>
+                                        <span>40 years</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Asset Allocation</label>
+                                    
+                                    <div class="mb-3">
+                                        <div class="asset-allocation">
+                                            <div class="asset-color" style="background-color: #4f46e5;"></div>
+                                            <div class="asset-info">
+                                                <div class="asset-name">Stocks</div>
+                                                <div class="asset-return">Est. Annual Return: 8.0%</div>
+                                            </div>
+                                            <div class="asset-value" id="stocksValue">60%</div>
+                                        </div>
+                                        <input type="range" id="stocksAllocation" min="0" max="100" value="60" class="mt-1 block w-full">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="asset-allocation">
+                                            <div class="asset-color" style="background-color: #10b981;"></div>
+                                            <div class="asset-info">
+                                                <div class="asset-name">Bonds</div>
+                                                <div class="asset-return">Est. Annual Return: 4.0%</div>
+                                            </div>
+                                            <div class="asset-value" id="bondsValue">20%</div>
+                                        </div>
+                                        <input type="range" id="bondsAllocation" min="0" max="100" value="20" class="mt-1 block w-full">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="asset-allocation">
+                                            <div class="asset-color" style="background-color: #f59e0b;"></div>
+                                            <div class="asset-info">
+                                                <div class="asset-name">Gold</div>
+                                                <div class="asset-return">Est. Annual Return: 7.5%</div>
+                                            </div>
+                                            <div class="asset-value" id="goldValue">5%</div>
+                                        </div>
+                                        <input type="range" id="goldAllocation" min="0" max="100" value="5" class="mt-1 block w-full">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="asset-allocation">
+                                            <div class="asset-color" style="background-color: #f97316;"></div>
+                                            <div class="asset-info">
+                                                <div class="asset-name">Bitcoin</div>
+                                                <div class="asset-return">Est. Annual Return: 15.0%</div>
+                                            </div>
+                                            <div class="asset-value" id="btcValue">5%</div>
+                                        </div>
+                                        <input type="range" id="btcAllocation" min="0" max="100" value="5" class="mt-1 block w-full">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="asset-allocation">
+                                            <div class="asset-color" style="background-color: #8b5cf6;"></div>
+                                            <div class="asset-info">
+                                                <div class="asset-name">Other (Real Estate, Commodities)</div>
+                                                <div class="asset-return">Est. Annual Return: 6.0%</div>
+                                            </div>
+                                            <div class="asset-value" id="otherValue">10%</div>
+                                        </div>
+                                        <input type="range" id="otherAllocation" min="0" max="100" value="10" class="mt-1 block w-full">
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-indigo-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm font-medium text-gray-700">Expected Annual Return</span>
+                                        <span id="expectedReturn" class="text-lg font-bold text-indigo-700">7.0%</span>
+                                    </div>
+                                    <div class="mt-2 text-xs text-gray-500">
+                                        Based on historical averages and conservative projections
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <button id="addScenarioBtn" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add Scenario
+                                </button>
+                                <button id="resetScenariosBtn" class="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 transition flex items-center justify-center">
+                                    <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Results -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Projection Results</h3>
+                            
+                            <div class="mb-6">
+                                <canvas id="investmentChart" height="300"></canvas>
+                            </div>
+                            
+                            <div id="scenariosSummary" class="space-y-4">
+                                <div class="result-card bg-white p-4 rounded-xl shadow-md">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h4 class="font-bold text-gray-800">Scenario 1</h4>
+                                            <p class="text-sm text-gray-600">Final Value: <span id="scenario1FinalValue" class="font-semibold text-green-600">$0</span></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm text-gray-600">Total Contributions: <span id="scenario1Contributions" class="font-semibold">$0</span></p>
+                                            <p class="text-sm text-gray-600">Interest Earned: <span id="scenario1Interest" class="font-semibold text-green-600">$0</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Money Motive Tab -->
             <div id="motive-content" class="hidden max-w-2xl mx-auto">
                 <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg">
@@ -267,7 +637,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- Retirement Tab -->
             <div id="retirement-content" class="hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -316,7 +686,7 @@
                             <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
                             <p class="text-xs text-gray-500 mt-1">Your portfolio is designed to last for a <strong class="font-semibold">30-year retirement</strong>.</p>
                         </div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
                             <h3 class="text-xl font-bold text-center mb-4">The Impact of This Purchase</h3>
                             <p class="text-center text-gray-600 mb-4">Investing the <strong id="retireItemName" class="text-green-600"></strong> instead of spending it could buy you more time in retirement.</p>
                             <div id="purchaseImpactResult" class="p-4 rounded-lg bg-green-50 text-center">
@@ -335,15 +705,134 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Financial Health Tab -->
+            <div id="health-content" class="hidden max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Financial Health Dashboard</h2>
+                    <p class="text-gray-600 mb-6">Get a comprehensive view of your financial health and personalized recommendations.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="healthIncome" class="block text-sm font-medium text-gray-700">Monthly Income</label>
+                            <input type="number" id="healthIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                        </div>
+                        <div>
+                            <label for="healthExpenses" class="block text-sm font-medium text-gray-700">Monthly Expenses</label>
+                            <input type="number" id="healthExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 3500">
+                        </div>
+                        <div>
+                            <label for="healthSavings" class="block text-sm font-medium text-gray-700">Emergency Savings</label>
+                            <input type="number" id="healthSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                        </div>
+                        <div>
+                            <label for="healthDebt" class="block text-sm font-medium text-gray-700">Total Debt</label>
+                            <input type="number" id="healthDebt" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 15000">
+                        </div>
+                    </div>
+                    
+                    <button id="healthBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Financial Health</button>
+                </div>
+                
+                <div id="health-results" class="hidden">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Your Financial Health Score</h3>
+                        <div class="flex justify-center mb-4">
+                            <div class="health-score" id="healthScoreCircle">
+                                <div class="health-score-text" id="healthScoreText">0</div>
+                            </div>
+                        </div>
+                        <p id="healthScoreDescription" class="text-lg text-gray-600"></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">Financial Metrics</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-gray-600">Savings Rate</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="savingsRateBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="savingsRateValue">0</span>%</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600">Debt-to-Income Ratio</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="debtRatioBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="debtRatioValue">0</span>%</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-600">Emergency Fund Coverage</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="emergencyFundBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="emergencyFundValue">0</span> months</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">Personalized Recommendations</h4>
+                            <div id="healthRecommendations" class="space-y-3">
+                                <!-- Recommendations will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">Financial Milestones</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-800">Establish Emergency Fund</p>
+                                    <p class="text-sm text-gray-500">3-6 months of expenses</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <span id="emergencyFundStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-800">Pay Off High-Interest Debt</p>
+                                    <p class="text-sm text-gray-500">Debt with interest > 10%</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <span id="debtStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-800">Save for Retirement</p>
+                                    <p class="text-sm text-gray-500">15% of income recommended</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <span id="retirementStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
-
+    
     <script>
         // --- App Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             initializeApp();
         });
-
+        
         // --- State, Config, and Chart Instances ---
         const stateData = {
             'CA': { name: 'California', salesTax: 0.0725, incomeTaxRate: 0.06 },
@@ -358,11 +847,25 @@
         const LIFE_EXPECTANCY = { male: 76, female: 81 }; 
         const WAKING_HOURS_PER_YEAR = 16 * 365;
         const AVG_MARKET_RETURN = 0.07; 
-
         let currentGoal = { name: '', amount: 0, saved: 0 };
         let lastCalculatedCost = 0;
         let chartInstances = {};
         let userMotive = null;
+        
+        // Investment scenario state
+        let investmentScenarios = [
+            { id: 1, name: "Scenario 1", initialInvestment: 1000, monthlyContribution: 100, timeHorizon: 20, stocks: 60, bonds: 20, gold: 5, btc: 5, other: 10 }
+        ];
+        let maxScenarios = 2;
+        
+        // Asset return rates based on historical data and conservative projections
+        const ASSET_RETURNS = {
+            stocks: 0.08,    // S&P 500 historical average
+            bonds: 0.04,     // Typical bond returns
+            gold: 0.075,    // Historical average since 1971
+            btc: 0.15,      // Conservative estimate for Bitcoin
+            other: 0.06      // Real estate and commodities
+        };
         
         // --- Utility Functions ---
         const formatCurrency = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
@@ -370,7 +873,7 @@
         
         // --- Tab Switching ---
         function switchTab(tabName) {
-            ['calculator', 'motive', 'goals', 'retirement'].forEach(name => {
+            ['calculator', 'debt', 'investment', 'motive', 'goals', 'retirement', 'health'].forEach(name => {
                 const content = document.getElementById(`${name}-content`);
                 const tab = document.querySelector(`[data-tab="${name}"]`);
                 if (content && tab) {
@@ -384,8 +887,53 @@
                 activeContent.classList.remove('hidden');
                 activeTab.classList.add('tab-active');
             }
+            
+            // Initialize investment chart when switching to investment tab
+            if (tabName === 'investment') {
+                initializeInvestmentChart();
+            }
         }
-
+        
+        // --- Export to PDF ---
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.text('True Cost Calculator Results', 105, 15, { align: 'center' });
+            
+            // Add date
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, { align: 'center' });
+            
+            // Add purchase details
+            doc.setFontSize(16);
+            doc.text('Purchase Details', 20, 40);
+            doc.setFontSize(12);
+            doc.text(`Item: ${document.getElementById('resultItemName').textContent}`, 20, 50);
+            doc.text(`Total Cost: ${document.getElementById('totalCostWithTax').textContent}`, 20, 60);
+            doc.text(`Net Hourly Wage: ${document.getElementById('netIncomeDisplay').textContent}`, 20, 70);
+            
+            // Add time cost
+            doc.text(`Time Cost: ${document.getElementById('hoursWorked').textContent} hours (${document.getElementById('daysWorked').textContent} days)`, 20, 80);
+            
+            // Add paycheck power
+            doc.text(`Paycheck Power: ${document.getElementById('paycheckPercentage').textContent}% of one paycheck`, 20, 90);
+            
+            // Add opportunity cost
+            doc.setFontSize(16);
+            doc.text('Opportunity Cost', 20, 110);
+            doc.setFontSize(12);
+            doc.text('If invested, this money could grow to:', 20, 120);
+            doc.text(`S&P 500 (10%): ${formatNumber(lastCalculatedCost * Math.pow(1.10, 20))}`, 20, 130);
+            doc.text(`BTC (15%): ${formatNumber(lastCalculatedCost * Math.pow(1.15, 20))}`, 20, 140);
+            doc.text(`Gold (5%): ${formatNumber(lastCalculatedCost * Math.pow(1.05, 20))}`, 20, 150);
+            
+            // Save the PDF
+            doc.save('true-cost-calculator-results.pdf');
+        }
+        
         // --- Core Calculation Logic ---
         function calculatePurchase(elements) {
             const age = parseInt(elements.age.value) || 0;
@@ -393,6 +941,8 @@
             const itemName = elements.itemName.value || "this item";
             const itemCost = parseFloat(elements.itemCost.value) || 0;
             const preTaxHourlyIncome = parseFloat(elements.preTaxHourlyIncome.value) || 0;
+            const debtAmount = parseFloat(elements.debtAmount.value) || 0;
+            const debtInterestRate = parseFloat(elements.debtInterestRate.value) || 0;
             
             if (itemCost <= 0 || preTaxHourlyIncome <= 0 || age <= 0) {
                 alert("Please enter a valid age, cost, and pre-tax hourly income.");
@@ -401,7 +951,6 @@
             
             elements.retireAge.value = age;
             elements.annualIncome.value = preTaxHourlyIncome * 40 * 52;
-
             const selectedState = stateData[elements.location.value];
             const totalTaxRate = FEDERAL_TAX_RATE + FICA_RATE + selectedState.incomeTaxRate;
             const netHourlyIncome = preTaxHourlyIncome * (1 - totalTaxRate);
@@ -409,11 +958,10 @@
             const totalCost = itemCost + salesTaxAmount;
             lastCalculatedCost = totalCost;
             const hoursWorked = totalCost / netHourlyIncome;
-
             const yearsLeft = LIFE_EXPECTANCY[gender] - age;
             const hoursLeftInLife = yearsLeft > 0 ? yearsLeft * WAKING_HOURS_PER_YEAR : 0;
             const lifePercentage = hoursLeftInLife > 0 ? (hoursWorked / WAKING_HOURS_PER_YEAR) * 100 : 0;
-
+            
             elements.resultsSection.classList.remove('hidden');
             elements.resultItemName.textContent = itemName;
             elements.totalCostWithTax.textContent = formatCurrency(totalCost);
@@ -429,8 +977,9 @@
             
             calculatePaycheckPower(totalCost, preTaxHourlyIncome, totalTaxRate, elements);
             calculateFreedomFund(totalCost, elements);
+            calculateDebtImpact(totalCost, debtAmount, debtInterestRate, elements);
         }
-
+        
         // --- New Metric Functions ---
         function calculatePaycheckPower(cost, hourly, taxRate, elements) {
             const freq = elements.paycheckFrequency.value;
@@ -441,7 +990,7 @@
                 elements.paycheckPercentage.textContent = formatNumber(percentage, 1);
             }
         }
-
+        
         function calculateFreedomFund(cost, elements) {
             const savings = parseFloat(elements.currentSavings.value) || 0;
             const expenses = parseFloat(elements.monthlyExpenses.value) || 0;
@@ -456,14 +1005,30 @@
                 card.classList.add('hidden');
             }
         }
-
+        
+        function calculateDebtImpact(cost, debtAmount, interestRate, elements) {
+            const card = document.getElementById('debt-impact-card');
+            if (debtAmount > 0 && interestRate > 0) {
+                const monthlyInterestRate = interestRate / 100 / 12;
+                const currentMonthlyPayment = debtAmount * monthlyInterestRate / (1 - Math.pow(1 + monthlyInterestRate, -60)); // Assuming 5 years term
+                const interestSaved = cost * (interestRate / 100);
+                const timeSaved = Math.round(cost / currentMonthlyPayment);
+                
+                document.getElementById('debtInterestSaved').textContent = formatCurrency(interestSaved);
+                document.getElementById('debtTimeSaved').textContent = timeSaved;
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        }
+        
         // --- Charting Functions ---
         function updateChart(canvasId, config) {
             if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
             const ctx = document.getElementById(canvasId).getContext('2d');
             chartInstances[canvasId] = new Chart(ctx, config);
         }
-
+        
         function buildFutureValueChartConfig(initialCost) {
             const years = Array.from({length: 21}, (_, i) => i);
             const createProjection = (rate) => years.map(y => initialCost * Math.pow(1 + rate, y));
@@ -479,10 +1044,510 @@
                 },
                 options: {
                     responsive: true,
-                    scales: { y: { ticks: { callback: (value) => formatCurrency(value) } }, x: { title: { display: true, text: 'Years' } } },
-                    plugins: { legend: { position: 'top' } }
+                    scales: { 
+                        y: { 
+                            ticks: { callback: (value) => formatCurrency(value) },
+                            grid: { color: '#e5e7eb' }
+                        }, 
+                        x: { 
+                            title: { display: true, text: 'Years' },
+                            grid: { color: '#e5e7eb' }
+                        } 
+                    },
+                    plugins: { 
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Future Value of Investment' }
+                    }
                 }
             };
+        }
+        
+        // --- Debt Impact Logic ---
+        function calculateDebtPayoff(elements) {
+            const total = parseFloat(elements.debtTotal.value) || 0;
+            const rate = parseFloat(elements.debtRate.value) || 0;
+            const payment = parseFloat(elements.debtPayment.value) || 0;
+            const extra = parseFloat(elements.debtExtra.value) || 0;
+            
+            if (total <= 0 || rate <= 0 || payment <= 0) {
+                alert("Please enter valid debt details.");
+                return;
+            }
+            
+            const monthlyRate = rate / 100 / 12;
+            
+            // Calculate current payoff
+            let currentBalance = total;
+            let currentMonths = 0;
+            let currentInterest = 0;
+            
+            while (currentBalance > 0 && currentMonths < 600) { // 50 years max
+                const interestPayment = currentBalance * monthlyRate;
+                currentInterest += interestPayment;
+                const principalPayment = Math.min(payment - interestPayment, currentBalance);
+                currentBalance -= principalPayment;
+                currentMonths++;
+            }
+            
+            // Calculate new payoff with extra payment
+            let newBalance = total;
+            let newMonths = 0;
+            let newInterest = 0;
+            
+            while (newBalance > 0 && newMonths < 600) {
+                const interestPayment = newBalance * monthlyRate;
+                newInterest += interestPayment;
+                const principalPayment = Math.min(payment + extra - interestPayment, newBalance);
+                newBalance -= principalPayment;
+                newMonths++;
+            }
+            
+            const timeSaved = currentMonths - newMonths;
+            const interestSaved = currentInterest - newInterest;
+            const hourlyIncome = parseFloat(elements.preTaxHourlyIncome.value) || 0;
+            const selectedState = stateData[elements.location.value];
+            const totalTaxRate = FEDERAL_TAX_RATE + FICA_RATE + selectedState.incomeTaxRate;
+            const netHourlyIncome = hourlyIncome * (1 - totalTaxRate);
+            const hoursSaved = interestSaved / netHourlyIncome;
+            
+            document.getElementById('currentPayoff').textContent = currentMonths;
+            document.getElementById('currentInterest').textContent = formatCurrency(currentInterest);
+            
+            document.getElementById('newPayoff').textContent = newMonths;
+            document.getElementById('newInterest').textContent = formatCurrency(newInterest);
+            
+            document.getElementById('timeSaved').textContent = timeSaved;
+            document.getElementById('interestSaved').textContent = formatCurrency(interestSaved);
+            document.getElementById('hoursSaved').textContent = formatNumber(hoursSaved, 0);
+            
+            document.getElementById('debt-results').classList.remove('hidden');
+        }
+        
+        // --- Investment Scenario Builder Logic ---
+        function initializeInvestmentChart() {
+            // Set initial investment to last calculated cost if available
+            if (lastCalculatedCost > 0) {
+                document.getElementById('initialInvestment').value = lastCalculatedCost;
+                investmentScenarios[0].initialInvestment = lastCalculatedCost;
+            }
+            
+            updateInvestmentChart();
+            updateScenarioInputs();
+        }
+        
+        function updateScenarioInputs() {
+            // Update allocation values display
+            const stocks = parseInt(document.getElementById('stocksAllocation').value);
+            const bonds = parseInt(document.getElementById('bondsAllocation').value);
+            const gold = parseInt(document.getElementById('goldAllocation').value);
+            const btc = parseInt(document.getElementById('btcAllocation').value);
+            const other = parseInt(document.getElementById('otherAllocation').value);
+            
+            // Ensure total is 100%
+            const total = stocks + bonds + gold + btc + other;
+            if (total !== 100) {
+                // Adjust other to make total 100%
+                const adjustedOther = 100 - stocks - bonds - gold - btc;
+                document.getElementById('otherAllocation').value = adjustedOther;
+                document.getElementById('otherValue').textContent = `${adjustedOther}%`;
+            }
+            
+            document.getElementById('stocksValue').textContent = `${stocks}%`;
+            document.getElementById('bondsValue').textContent = `${bonds}%`;
+            document.getElementById('goldValue').textContent = `${gold}%`;
+            document.getElementById('btcValue').textContent = `${btc}%`;
+            document.getElementById('otherValue').textContent = `${document.getElementById('otherAllocation').value}%`;
+            
+            // Calculate expected return
+            const expectedReturn = (stocks/100 * ASSET_RETURNS.stocks) + 
+                                 (bonds/100 * ASSET_RETURNS.bonds) + 
+                                 (gold/100 * ASSET_RETURNS.gold) + 
+                                 (parseInt(document.getElementById('btcAllocation').value)/100 * ASSET_RETURNS.btc) + 
+                                 (parseInt(document.getElementById('otherAllocation').value)/100 * ASSET_RETURNS.other);
+            
+            document.getElementById('expectedReturn').textContent = `${(expectedReturn * 100).toFixed(1)}%`;
+            
+            // Update time horizon display
+            const timeHorizon = document.getElementById('timeHorizon').value;
+            document.getElementById('timeHorizonValue').textContent = `${timeHorizon} years`;
+            
+            // Update scenario data
+            investmentScenarios[0].initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
+            investmentScenarios[0].monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            investmentScenarios[0].timeHorizon = parseInt(timeHorizon);
+            investmentScenarios[0].stocks = stocks;
+            investmentScenarios[0].bonds = bonds;
+            investmentScenarios[0].gold = gold;
+            investmentScenarios[0].btc = btc;
+            investmentScenarios[0].other = parseInt(document.getElementById('otherAllocation').value);
+            
+            updateInvestmentChart();
+        }
+        
+        function updateInvestmentChart() {
+            const ctx = document.getElementById('investmentChart').getContext('2d');
+            
+            if (chartInstances['investmentChart']) {
+                chartInstances['investmentChart'].destroy();
+            }
+            
+            // Generate data for each scenario
+            const datasets = [];
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#f97316', '#8b5cf6'];
+            
+            investmentScenarios.forEach((scenario, index) => {
+                const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                     (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                     (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                     (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                     (scenario.other/100 * ASSET_RETURNS.other);
+                
+                const monthlyRate = expectedReturn / 12;
+                const months = scenario.timeHorizon * 12;
+                
+                // Calculate year-by-year values
+                const data = [];
+                let value = scenario.initialInvestment;
+                
+                for (let year = 0; year <= scenario.timeHorizon; year++) {
+                    data.push(value);
+                    
+                    // Calculate value at end of year
+                    for (let month = 1; month <= 12; month++) {
+                        if ((year * 12 + month) > months) break;
+                        value = value * (1 + monthlyRate) + scenario.monthlyContribution;
+                    }
+                }
+                
+                datasets.push({
+                    label: scenario.name,
+                    data: data,
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: `${colors[index % colors.length]}20`,
+                    tension: 0.1,
+                    fill: false
+                });
+            });
+            
+            // Generate labels (years)
+            const labels = [];
+            const maxYears = Math.max(...investmentScenarios.map(s => s.timeHorizon));
+            for (let i = 0; i <= maxYears; i++) {
+                labels.push(i.toString());
+            }
+            
+            chartInstances['investmentChart'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: (value) => formatCurrency(value)
+                            },
+                            grid: {
+                                color: '#e5e7eb'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years'
+                            },
+                            grid: {
+                                color: '#e5e7eb'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Investment Growth Projection'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update scenario summaries
+            updateScenarioSummaries();
+        }
+        
+        function updateScenarioSummaries() {
+            const container = document.getElementById('scenariosSummary');
+            container.innerHTML = '';
+            
+            investmentScenarios.forEach((scenario, index) => {
+                const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                     (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                     (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                     (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                     (scenario.other/100 * ASSET_RETURNS.other);
+                
+                const monthlyRate = expectedReturn / 12;
+                const months = scenario.timeHorizon * 12;
+                
+                // Calculate final value
+                let value = scenario.initialInvestment;
+                for (let month = 1; month <= months; month++) {
+                    value = value * (1 + monthlyRate) + scenario.monthlyContribution;
+                }
+                
+                const totalContributions = scenario.initialInvestment + (scenario.monthlyContribution * months);
+                const interestEarned = value - totalContributions;
+                
+                const scenarioDiv = document.createElement('div');
+                scenarioDiv.className = 'result-card bg-white p-4 rounded-xl shadow-md';
+                scenarioDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${scenario.name}</h4>
+                            <p class="text-sm text-gray-600">Final Value: <span class="font-semibold text-green-600">${formatCurrency(value)}</span></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Total Contributions: <span class="font-semibold">${formatCurrency(totalContributions)}</span></p>
+                            <p class="text-sm text-gray-600">Interest Earned: <span class="font-semibold text-green-600">${formatCurrency(interestEarned)}</span></p>
+                        </div>
+                        ${index > 0 ? `<button class="ml-4 text-red-500 hover:text-red-700" onclick="removeScenario(${index})"><i data-lucide="x" class="w-5 h-5"></i></button>` : ''}
+                    </div>
+                `;
+                container.appendChild(scenarioDiv);
+            });
+            
+            lucide.createIcons();
+        }
+        
+        function addScenario() {
+            if (investmentScenarios.length >= maxScenarios) {
+                alert(`You can only compare up to ${maxScenarios} scenarios.`);
+                return;
+            }
+            
+            const newId = investmentScenarios.length + 1;
+            investmentScenarios.push({
+                id: newId,
+                name: `Scenario ${newId}`,
+                initialInvestment: parseFloat(document.getElementById('initialInvestment').value) || 1000,
+                monthlyContribution: parseFloat(document.getElementById('monthlyContribution').value) || 100,
+                timeHorizon: parseInt(document.getElementById('timeHorizon').value) || 20,
+                stocks: parseInt(document.getElementById('stocksAllocation').value) || 60,
+                bonds: parseInt(document.getElementById('bondsAllocation').value) || 20,
+                gold: parseInt(document.getElementById('goldAllocation').value) || 5,
+                btc: parseInt(document.getElementById('btcAllocation').value) || 5,
+                other: parseInt(document.getElementById('otherAllocation').value) || 10
+            });
+            
+            updateInvestmentChart();
+        }
+        
+        function removeScenario(index) {
+            if (investmentScenarios.length <= 1) {
+                alert("You must have at least one scenario.");
+                return;
+            }
+            
+            investmentScenarios.splice(index, 1);
+            
+            // Rename scenarios
+            investmentScenarios.forEach((scenario, i) => {
+                scenario.id = i + 1;
+                scenario.name = `Scenario ${i + 1}`;
+            });
+            
+            updateInvestmentChart();
+        }
+        
+        function resetScenarios() {
+            investmentScenarios = [
+                { id: 1, name: "Scenario 1", initialInvestment: 1000, monthlyContribution: 100, timeHorizon: 20, stocks: 60, bonds: 20, gold: 5, btc: 5, other: 10 }
+            ];
+            
+            // Reset form values
+            document.getElementById('initialInvestment').value = 1000;
+            document.getElementById('monthlyContribution').value = 100;
+            document.getElementById('timeHorizon').value = 20;
+            document.getElementById('stocksAllocation').value = 60;
+            document.getElementById('bondsAllocation').value = 20;
+            document.getElementById('goldAllocation').value = 5;
+            document.getElementById('btcAllocation').value = 5;
+            document.getElementById('otherAllocation').value = 10;
+            
+            updateScenarioInputs();
+        }
+        
+        // --- Financial Health Logic ---
+        function calculateFinancialHealth(elements) {
+            const income = parseFloat(elements.healthIncome.value) || 0;
+            const expenses = parseFloat(elements.healthExpenses.value) || 0;
+            const savings = parseFloat(elements.healthSavings.value) || 0;
+            const debt = parseFloat(elements.healthDebt.value) || 0;
+            
+            if (income <= 0) {
+                alert("Please enter a valid monthly income.");
+                return;
+            }
+            
+            // Calculate metrics
+            const savingsRate = ((income - expenses) / income) * 100;
+            const debtRatio = (debt / income) * 100;
+            const emergencyFundMonths = savings / expenses;
+            
+            // Calculate health score (0-100)
+            let score = 0;
+            
+            // Savings rate (30 points)
+            if (savingsRate >= 20) score += 30;
+            else if (savingsRate >= 15) score += 25;
+            else if (savingsRate >= 10) score += 20;
+            else if (savingsRate >= 5) score += 15;
+            else score += Math.max(0, savingsRate * 3);
+            
+            // Debt ratio (30 points)
+            if (debtRatio <= 10) score += 30;
+            else if (debtRatio <= 20) score += 25;
+            else if (debtRatio <= 30) score += 20;
+            else if (debtRatio <= 40) score += 15;
+            else score += Math.max(0, 30 - (debtRatio - 40) * 0.5);
+            
+            // Emergency fund (40 points)
+            if (emergencyFundMonths >= 6) score += 40;
+            else if (emergencyFundMonths >= 3) score += 30;
+            else if (emergencyFundMonths >= 1) score += 20;
+            else score += Math.max(0, emergencyFundMonths * 20);
+            
+            // Update UI
+            document.getElementById('healthScoreText').textContent = Math.round(score);
+            document.getElementById('healthScoreCircle').style.setProperty('--score', `${score}%`);
+            
+            // Update description
+            let description = "";
+            if (score >= 80) {
+                description = "Excellent! Your financial health is in great shape. Keep up the good work!";
+            } else if (score >= 60) {
+                description = "Good! You're on the right track, but there's room for improvement.";
+            } else if (score >= 40) {
+                description = "Fair. Your financial health needs attention. Focus on building savings and reducing debt.";
+            } else {
+                description = "Needs improvement. It's time to take action and make changes to your financial habits.";
+            }
+            document.getElementById('healthScoreDescription').textContent = description;
+            
+            // Update metrics bars
+            document.getElementById('savingsRateBar').style.width = `${Math.min(100, savingsRate * 2)}%`;
+            document.getElementById('savingsRateValue').textContent = formatNumber(savingsRate, 1);
+            
+            document.getElementById('debtRatioBar').style.width = `${Math.min(100, debtRatio)}%`;
+            document.getElementById('debtRatioValue').textContent = formatNumber(debtRatio, 1);
+            
+            document.getElementById('emergencyFundBar').style.width = `${Math.min(100, emergencyFundMonths * 16.67)}%`;
+            document.getElementById('emergencyFundValue').textContent = formatNumber(emergencyFundMonths, 1);
+            
+            // Generate recommendations
+            const recommendations = [];
+            
+            if (savingsRate < 10) {
+                recommendations.push({
+                    icon: 'piggy-bank',
+                    title: 'Increase Your Savings Rate',
+                    description: 'Aim to save at least 10-15% of your income. Start by cutting small expenses and automating savings.'
+                });
+            }
+            
+            if (debtRatio > 30) {
+                recommendations.push({
+                    icon: 'credit-card',
+                    title: 'Reduce Your Debt',
+                    description: 'Focus on paying down high-interest debt first. Consider the debt avalanche or snowball method.'
+                });
+            }
+            
+            if (emergencyFundMonths < 3) {
+                recommendations.push({
+                    icon: 'shield',
+                    title: 'Build Your Emergency Fund',
+                    description: 'Aim to save 3-6 months of expenses. Start with a small goal of $500 and build from there.'
+                });
+            }
+            
+            if (savingsRate >= 15 && debtRatio <= 20 && emergencyFundMonths >= 3) {
+                recommendations.push({
+                    icon: 'trending-up',
+                    title: 'Invest for the Future',
+                    description: 'Consider opening an investment account to grow your wealth over time.'
+                });
+            }
+            
+            const recommendationsContainer = document.getElementById('healthRecommendations');
+            recommendationsContainer.innerHTML = '';
+            
+            recommendations.forEach(rec => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start';
+                div.innerHTML = `
+                    <div class="flex-shrink-0 mt-1">
+                        <i data-lucide="${rec.icon}" class="w-5 h-5 text-indigo-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h5 class="font-medium text-gray-800">${rec.title}</h5>
+                        <p class="text-sm text-gray-600">${rec.description}</p>
+                    </div>
+                `;
+                recommendationsContainer.appendChild(div);
+            });
+            
+            // Update milestone statuses
+            const emergencyStatus = document.getElementById('emergencyFundStatus');
+            if (emergencyFundMonths >= 6) {
+                emergencyStatus.textContent = 'Complete';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+            } else if (emergencyFundMonths >= 3) {
+                emergencyStatus.textContent = 'In Progress';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+            } else {
+                emergencyStatus.textContent = 'Not Started';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+            }
+            
+            const debtStatus = document.getElementById('debtStatus');
+            if (debtRatio <= 10) {
+                debtStatus.textContent = 'Complete';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+            } else if (debtRatio <= 20) {
+                debtStatus.textContent = 'In Progress';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+            } else {
+                debtStatus.textContent = 'Not Started';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+            }
+            
+            const retirementStatus = document.getElementById('retirementStatus');
+            const retirementSavingsRate = 15; // Assuming 15% is the target
+            if (savingsRate >= retirementSavingsRate) {
+                retirementStatus.textContent = 'On Track';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+            } else if (savingsRate >= retirementSavingsRate * 0.7) {
+                retirementStatus.textContent = 'In Progress';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+            } else {
+                retirementStatus.textContent = 'Needs Attention';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+            }
+            
+            document.getElementById('health-results').classList.remove('hidden');
+            lucide.createIcons();
         }
         
         // --- Goal Logic ---
@@ -499,7 +1564,7 @@
             updateGoalTracker(elements);
             displayDynamicFact('goals', elements);
         }
-
+        
         function updateGoalTracker(elements) {
             if (currentGoal.amount <= 0) return;
             elements.goalTrackerSection.classList.remove('hidden');
@@ -508,7 +1573,7 @@
             elements.goalContribution.textContent = formatCurrency(lastCalculatedCost);
             updateChart('goalDonutChart', buildGoalDonutChartConfig());
         }
-
+        
         function buildGoalDonutChartConfig() {
             const { amount, saved } = currentGoal;
             const potentialSave = lastCalculatedCost > 0 ? lastCalculatedCost : 0;
@@ -525,11 +1590,14 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { position: 'top' }, title: { display: true, text: `Goal: ${formatCurrency(amount)}` } }
+                    plugins: { 
+                        legend: { position: 'top' }, 
+                        title: { display: true, text: `Goal: ${formatCurrency(amount)}` }
+                    }
                 }
             };
         }
-
+        
         // --- Retirement Logic ---
         function calculateYearsToRetire(startSavings, annualSavings, fiNumber) {
             let currentSavings = startSavings;
@@ -540,7 +1608,7 @@
             }
             return years;
         }
-
+        
         function handleRetirementCalculation(elements) {
             const age = parseInt(elements.retireAge.value) || 0;
             const annualIncome = parseFloat(elements.annualIncome.value) || 0;
@@ -548,17 +1616,14 @@
             const savingsRate = parseFloat(elements.savingsRate.value) / 100 || 0;
             const annualExpenses = parseFloat(elements.annualExpenses.value) || 0;
             const retirementDream = elements.retirementDream.value || "achieving your dream";
-
             if (age <= 0 || annualIncome <= 0 || savingsRate <= 0 || annualExpenses <= 0) {
                 alert("Please fill in all retirement fields with valid numbers.");
                 return;
             }
-
             const fiNumber = annualExpenses * 25;
             const annualSavings = annualIncome * savingsRate;
             const yearsToRetire = calculateYearsToRetire(currentRetireSavings, annualSavings, fiNumber);
             const retirementAge = age + yearsToRetire;
-
             elements.retirementResultsSection.classList.remove('hidden');
             elements.dreamDisplay.textContent = retirementDream;
             elements.retirementAgeResult.textContent = retirementAge;
@@ -588,7 +1653,7 @@
             
             updateRetirementMeaning(hoursBought, elements);
         }
-
+        
         function updateRetirementMeaning(hours, elements) {
             let message = '';
             if (hours > 1000) {
@@ -602,7 +1667,7 @@
             }
             elements.retirementMeaning.innerHTML = message;
         }
-
+        
         function updateTimeValueTable(scenario, elements) {
             const gender = elements.gender.value;
             const lifeExpectancy = LIFE_EXPECTANCY[gender];
@@ -615,7 +1680,7 @@
             const daysRetired = hoursRetired / 16;
             const birthdaysWorking = yearsWorking;
             const birthdaysRetired = yearsRetired;
-
+            
             elements.timeValueTable.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="p-4 rounded-lg bg-gray-100 text-center">
@@ -638,7 +1703,7 @@
             `;
             lucide.createIcons();
         }
-
+        
         // --- Money Motive Quiz Logic ---
         const quizData = [
             { question: "When you get an unexpected bonus, your first thought is:", answers: [ { text: "Put it straight into savings or investments.", motive: "Security" }, { text: "Book a flight for a spontaneous trip.", motive: "Experience" }, { text: "Treat your friends or family to a nice dinner.", motive: "Generous" }, { text: "Buy that designer item you've been eyeing.", motive: "Status" } ] },
@@ -648,17 +1713,17 @@
             { question: "Which phrase resonates with you most?", answers: [ { text: "Slow and steady wins the race.", motive: "Security" }, { text: "Collect moments, not things.", motive: "Experience" }, { text: "It's better to give than to receive.", motive: "Generous" }, { text: "You get what you pay for.", motive: "Status" } ] },
             { question: "A 'rich life' to you means:", answers: [ { text: "Never having to worry about money.", motive: "Security" }, { text: "Freedom to travel and explore.", motive: "Experience" }, { text: "The ability to support your community.", motive: "Generous" }, { text: "Enjoying the best of everything.", motive: "Status" } ] }
         ];
-
+        
         const archetypes = {
             Security: { title: "The Security Seeker", icon: '<i data-lucide="shield-check" class="w-16 h-16 text-green-500"></i>', description: "You are motivated by stability and peace of mind. You find comfort in planning, saving, and knowing you're prepared for the future.", strengths: "Excellent at saving, disciplined, and great at long-term planning.", blinds: "May be overly risk-averse, potentially missing out on growth opportunities. Can sometimes delay gratification to an extent that they forget to enjoy the present.", mantra: "My financial plan gives me the freedom to be secure today and enjoy tomorrow." },
             Experience: { title: "The Experience Chaser", icon: '<i data-lucide="map" class="w-16 h-16 text-yellow-500"></i>', description: "You believe life is about the memories you make, not the things you own. You prioritize spending on travel, events, and activities that enrich your life.", strengths: "Lives a rich and fulfilling life full of stories. Understands that value isn't always monetary.", blinds: "Can struggle with long-term savings goals. May prioritize a short-term adventure over a long-term need, like retirement savings.", mantra: "I can build a future that funds my adventures and secures my peace." },
             Generous: { title: "The Generous Giver", icon: '<i data-lucide="heart-handshake" class="w-16 h-16 text-pink-500"></i>', description: "You find the greatest joy in using your resources to help others. Your financial decisions are often guided by your heart.", strengths: "Deeply empathetic and builds strong community bonds. Finds immense fulfillment in helping others.", blinds: "May neglect their own financial needs, a classic 'put your own oxygen mask on first' scenario. Can sometimes be taken advantage of financially.", mantra: "Securing my own finances is the most powerful way I can continue to help others." },
             Status: { title: "The Status Symbolist", icon: '<i data-lucide="gem" class="w-16 h-16 text-purple-500"></i>', description: "You appreciate quality, craftsmanship, and the finer things in life. You see money as a tool to achieve a certain lifestyle.", strengths: "Often highly driven and successful. Has a clear vision for the life they want to build.", blinds: "Susceptible to lifestyle inflation. May tie self-worth too closely to material possessions, leading to a never-ending cycle of spending.", mantra: "I define my success; my possessions do not. True wealth is freedom." }
         };
-
+        
         let currentQuestionIndex = 0;
         let motiveScores = {};
-
+        
         function startQuiz(elements) {
             currentQuestionIndex = 0;
             motiveScores = { Security: 0, Experience: 0, Generous: 0, Status: 0 };
@@ -666,7 +1731,7 @@
             elements.motiveResultContainer.classList.add('hidden');
             displayQuestion(elements);
         }
-
+        
         function displayQuestion(elements) {
             const questionData = quizData[currentQuestionIndex];
             elements.quizQuestion.textContent = questionData.question;
@@ -681,7 +1746,7 @@
             const progress = ((currentQuestionIndex) / quizData.length) * 100;
             elements.quizProgress.style.width = `${progress}%`;
         }
-
+        
         function selectAnswer(motive, elements) {
             motiveScores[motive]++;
             currentQuestionIndex++;
@@ -691,7 +1756,7 @@
                 showResults(elements);
             }
         }
-
+        
         function showResults(elements) {
             const finalMotive = Object.keys(motiveScores).reduce((a, b) => motiveScores[a] > motiveScores[b] ? a : b);
             userMotive = finalMotive;
@@ -708,14 +1773,13 @@
             elements.motiveResultContainer.classList.remove('hidden');
             lucide.createIcons();
         }
-
+        
         // --- Dynamic Facts Logic ---
         function displayDynamicFact(tab, elements) {
             const age = parseInt(elements.age.value) || 30;
             const gender = elements.gender.value;
             const factContainer = document.getElementById(`${tab}-fact`);
             if (!factContainer) return;
-
             let facts = [];
             
             // Age-based facts
@@ -724,12 +1788,12 @@
             } else if (age >= 50) {
                 facts.push("Food for thought: The average healthcare cost for a retired couple is over $300,000. Planning for this now creates peace of mind for later.");
             }
-
+            
             // Gender-based facts
             if (gender === 'female') {
                 facts.push("On average, women live longer than men, meaning retirement savings need to last longer. Every dollar invested today is an investment in your future independence.");
             }
-
+            
             // Motive-based facts
             if (userMotive === 'Security') {
                 facts.push("A study found that people with a stocked emergency fund report significantly lower stress levels, regardless of their income.");
@@ -740,19 +1804,18 @@
             } else if (userMotive === 'Status') {
                 facts.push("The average new car loses about 20% of its value in the first year. Investing that difference could be worth tens of thousands in the future.");
             }
-
+            
             // Default facts if no specific ones match
             if (facts.length === 0) {
                 facts.push("The S&P 500 has historically returned an average of about 10% per year. Investing is one of the most powerful tools for building wealth.");
                 facts.push("A 'latte factor' of $5 a day adds up to $1,825 a year. Invested, that could be over $100,000 in 30 years.");
             }
-
+            
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
             factContainer.innerHTML = `<p class="text-indigo-800"><i class="inline-block" data-lucide="lightbulb"></i> <strong>Food for Thought:</strong> ${randomFact}</p>`;
             factContainer.classList.remove('hidden');
             lucide.createIcons();
         }
-
 
         // --- Event Listeners and Initial Load ---
         function initializeApp() {
@@ -768,6 +1831,8 @@
                 paycheckFrequency: document.getElementById('paycheckFrequency'),
                 currentSavings: document.getElementById('currentSavings'),
                 monthlyExpenses: document.getElementById('monthlyExpenses'),
+                debtAmount: document.getElementById('debtAmount'),
+                debtInterestRate: document.getElementById('debtInterestRate'),
                 // Results Display
                 resultsSection: document.getElementById('results-section'),
                 resultItemName: document.getElementById('resultItemName'),
@@ -781,6 +1846,25 @@
                 freedomFundCard: document.getElementById('freedom-fund-card'),
                 runwayMonths: document.getElementById('runwayMonths'),
                 runwayAdded: document.getElementById('runwayAdded'),
+                // Debt
+                debtTotal: document.getElementById('debtTotal'),
+                debtRate: document.getElementById('debtRate'),
+                debtPayment: document.getElementById('debtPayment'),
+                debtExtra: document.getElementById('debtExtra'),
+                // Investment
+                initialInvestment: document.getElementById('initialInvestment'),
+                monthlyContribution: document.getElementById('monthlyContribution'),
+                timeHorizon: document.getElementById('timeHorizon'),
+                stocksAllocation: document.getElementById('stocksAllocation'),
+                bondsAllocation: document.getElementById('bondsAllocation'),
+                goldAllocation: document.getElementById('goldAllocation'),
+                btcAllocation: document.getElementById('btcAllocation'),
+                otherAllocation: document.getElementById('otherAllocation'),
+                // Financial Health
+                healthIncome: document.getElementById('healthIncome'),
+                healthExpenses: document.getElementById('healthExpenses'),
+                healthSavings: document.getElementById('healthSavings'),
+                healthDebt: document.getElementById('healthDebt'),
                 // Quiz
                 quizContainer: document.getElementById('quiz-container'),
                 motiveResultContainer: document.getElementById('motive-result-container'),
@@ -818,19 +1902,37 @@
                 retirementMeaning: document.getElementById('retirementMeaning'),
                 timeValueTable: document.getElementById('timeValueTable')
             };
-
+            
             // --- Event Listeners ---
             document.getElementById('calculateBtn').addEventListener('click', () => calculatePurchase(elements));
+            document.getElementById('debtBtn').addEventListener('click', () => calculateDebtPayoff(elements));
+            document.getElementById('healthBtn').addEventListener('click', () => calculateFinancialHealth(elements));
             document.getElementById('setGoalBtn').addEventListener('click', () => setGoal(elements));
             document.getElementById('calculateRetireBtn').addEventListener('click', () => handleRetirementCalculation(elements));
             document.getElementById('retakeQuizBtn').addEventListener('click', () => startQuiz(elements));
+            document.getElementById('exportBtn').addEventListener('click', exportToPDF);
+            
+            // Investment scenario event listeners
+            document.getElementById('initialInvestment').addEventListener('input', updateScenarioInputs);
+            document.getElementById('monthlyContribution').addEventListener('input', updateScenarioInputs);
+            document.getElementById('timeHorizon').addEventListener('input', updateScenarioInputs);
+            document.getElementById('stocksAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('bondsAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('goldAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('btcAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('otherAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('addScenarioBtn').addEventListener('click', addScenario);
+            document.getElementById('resetScenariosBtn').addEventListener('click', resetScenarios);
+            
+            // Make removeScenario globally accessible
+            window.removeScenario = removeScenario;
             
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => {
                     switchTab(button.dataset.tab);
                 });
             });
-
+            
             lucide.createIcons();
             startQuiz(elements); 
         }
