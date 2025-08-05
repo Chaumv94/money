@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-dark: #0a0e1a;
@@ -23,53 +22,43 @@
             --success-green: #10b981;
             --danger-red: #ef4444;
         }
-
         * {
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
             color: var(--text-primary);
             min-height: 100vh;
         }
-
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
         }
-
         .premium-gradient {
             background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--accent-dark) 100%);
         }
-
         .gold-gradient {
             background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
         }
-
         .tab-active {
             border-color: var(--gold-accent);
             color: var(--gold-accent);
             background-color: rgba(212, 175, 55, 0.1);
         }
-
         .result-card {
             background: rgba(26, 31, 46, 0.8);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 175, 55, 0.2);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .result-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.25);
             border-color: rgba(212, 175, 55, 0.4);
         }
-
         .hidden {
             display: none;
         }
-
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -81,11 +70,9 @@
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-
         input[type="range"]:hover {
             opacity: 1;
         }
-
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -96,7 +83,6 @@
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
-
         input[type="range"]::-moz-range-thumb {
             width: 24px;
             height: 24px;
@@ -105,24 +91,20 @@
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
-
         .quiz-option {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
-
         .quiz-option:hover {
             transform: scale(1.03);
             border-color: var(--gold-accent);
             background: rgba(212, 175, 55, 0.05);
         }
-
         .tooltip {
             position: relative;
             display: inline-block;
             cursor: help;
         }
-
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 300px;
@@ -141,12 +123,10 @@
             font-size: 14px;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-
         .tooltip:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
-
         .health-score {
             background: conic-gradient(var(--gold-accent) 0% var(--score), rgba(212, 175, 55, 0.2) var(--score) 100%);
             border-radius: 50%;
@@ -157,7 +137,6 @@
             justify-content: center;
             position: relative;
         }
-
         .health-score::before {
             content: "";
             position: absolute;
@@ -166,33 +145,27 @@
             border-radius: 50%;
             background-color: var(--secondary-dark);
         }
-
         .health-score-text {
             position: relative;
             z-index: 1;
             font-size: 24px;
             font-weight: bold;
         }
-
         .progress-ring {
             transform: rotate(-90deg);
         }
-
         .progress-ring-circle {
             transition: stroke-dashoffset 0.35s;
             stroke: var(--gold-accent);
             stroke-width: 4;
             fill: transparent;
         }
-
         .mobile-optimized {
             touch-action: manipulation;
         }
-
         .mobile-optimized input, .mobile-optimized button {
             min-height: 44px;
         }
-
         @media (max-width: 768px) {
             .mobile-optimized .grid {
                 grid-template-columns: 1fr;
@@ -207,41 +180,34 @@
                 font-size: 1.5rem;
             }
         }
-
         .asset-allocation {
             display: flex;
             align-items: center;
             margin-bottom: 0.75rem;
         }
-
         .asset-color {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             margin-right: 8px;
         }
-
         .asset-info {
             flex: 1;
         }
-
         .asset-name {
             font-weight: 500;
             font-size: 0.875rem;
         }
-
         .asset-return {
             font-size: 0.75rem;
             color: var(--text-secondary);
         }
-
         .asset-value {
             font-weight: 500;
             font-size: 0.875rem;
             min-width: 45px;
             text-align: right;
         }
-
         /* Premium Animations */
         @keyframes fadeInUp {
             from {
@@ -253,11 +219,9 @@
                 transform: translateY(0);
             }
         }
-
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out;
         }
-
         @keyframes goldGlow {
             0%, 100% {
                 box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
@@ -266,11 +230,9 @@
                 box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
             }
         }
-
         .gold-glow {
             animation: goldGlow 3s ease-in-out infinite;
         }
-
         /* Premium Form Styles */
         .premium-input {
             background: rgba(26, 31, 46, 0.6);
@@ -278,13 +240,11 @@
             color: var(--text-primary);
             transition: all 0.3s;
         }
-
         .premium-input:focus {
             outline: none;
             border-color: var(--gold-accent);
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
         }
-
         .premium-button {
             background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
             color: var(--primary-dark);
@@ -293,7 +253,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .premium-button::before {
             content: '';
             position: absolute;
@@ -304,23 +263,19 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: left 0.5s;
         }
-
         .premium-button:hover::before {
             left: 100%;
         }
-
         .premium-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
         }
-
         /* Educational Tooltip Styles */
         .edu-tooltip {
             position: relative;
             display: inline-block;
             cursor: pointer;
         }
-
         .edu-tooltip .edu-tooltip-content {
             visibility: hidden;
             width: 350px;
@@ -340,12 +295,10 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
-
         .edu-tooltip:hover .edu-tooltip-content {
             visibility: visible;
             opacity: 1;
         }
-
         /* Scenario Comparison Table */
         .scenario-table {
             background: rgba(26, 31, 46, 0.6);
@@ -353,7 +306,6 @@
             overflow: hidden;
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
-
         .scenario-table th {
             background: rgba(212, 175, 55, 0.1);
             padding: 12px;
@@ -361,16 +313,13 @@
             font-weight: 600;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
-
         .scenario-table td {
             padding: 12px;
             border-bottom: 1px solid rgba(212, 175, 55, 0.1);
         }
-
         .scenario-table tr:last-child td {
             border-bottom: none;
         }
-
         /* Chart Container Styles */
         .chart-container {
             position: relative;
@@ -379,7 +328,6 @@
             padding: 20px;
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
-
         /* Loading Animation */
         .loading-spinner {
             border: 3px solid rgba(212, 175, 55, 0.2);
@@ -389,12 +337,10 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* Exclusive Badge */
         .exclusive-badge {
             background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
@@ -405,6 +351,467 @@
             font-weight: 600;
             display: inline-block;
             margin-left: 8px;
+        }
+        /* Footer Styles */
+        .premium-footer {
+            background: rgba(10, 14, 26, 0.8);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .disclaimer {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            border-left: 3px solid var(--gold-accent);
+            padding-left: 1rem;
+            margin-top: 1rem;
+        }
+        
+        /* Debt Progress Timeline Styles - MODIFIED */
+        .debt-timeline {
+            position: relative;
+            padding: 40px 0; /* Increased padding to prevent title overlap */
+            margin-top: 20px; /* Added margin top for additional space */
+        }
+        .timeline-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+            transform: translateY(-50%);
+        }
+        .timeline-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--gold-accent), #f4e19c);
+            border-radius: 4px;
+            transform: translateY(-50%);
+            transition: width 0.5s ease;
+        }
+        .timeline-milestone {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: var(--secondary-dark);
+            border: 3px solid var(--gold-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--gold-accent);
+        }
+        .timeline-milestone.completed {
+            background: var(--gold-accent);
+            color: var(--primary-dark);
+        }
+        .milestone-label {
+            position: absolute;
+            top: -40px;
+            transform: translateX(-50%);
+            background: var(--accent-dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .milestone-date {
+            position: absolute;
+            bottom: -30px;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        /* Debt Strategy Comparison Styles */
+        .strategy-card {
+            background: rgba(26, 31, 46, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .strategy-card:hover {
+            border-color: var(--gold-accent);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+        }
+        .strategy-card.selected {
+            border-color: var(--gold-accent);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .strategy-card.recommended {
+            border-color: var(--success-green);
+            position: relative;
+        }
+        .strategy-card.recommended::before {
+            content: "RECOMMENDED";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--success-green);
+            color: var(--primary-dark);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .strategy-card.recommended .view-details-btn {
+            display: none;
+        }
+        
+        /* Debt Analysis Dashboard Styles - MODIFIED */
+        .metric-card {
+            background: rgba(26, 31, 46, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .metric-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold-accent);
+            margin: 8px 0;
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metric-change {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        .metric-change.positive {
+            color: var(--success-green);
+        }
+        .metric-change.negative {
+            color: var(--danger-red);
+        }
+        .metric-info-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gold-accent);
+        }
+        .metric-info-btn:hover {
+            background: rgba(212, 175, 55, 0.4);
+        }
+        .metric-tooltip {
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            width: 250px;
+            background: var(--accent-dark);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            color: var(--text-primary);
+            z-index: 100;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        /* Fixed CSS selector to target child tooltip */
+        .metric-info-btn:hover .metric-tooltip {
+            display: block;
+        }
+        
+        /* Individual Loan Styles - NEW */
+        .loan-item {
+            background: rgba(26, 31, 46, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .loan-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .loan-item-title {
+            font-weight: 600;
+            color: var(--gold-accent);
+        }
+        .loan-item-remove {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-red);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .loan-item-remove:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
+        .loan-item-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .loan-item-detail {
+            display: flex;
+            flex-direction: column;
+        }
+        .loan-item-detail label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .loan-item-detail input {
+            background: rgba(26, 31, 46, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+            padding: 6px 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .add-loan-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            background: rgba(26, 31, 46, 0.6);
+            border: 1px dashed rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            color: var(--gold-accent);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .add-loan-btn:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-style: solid;
+        }
+        
+        /* Strategy Details Modal */
+        .strategy-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .strategy-details-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .strategy-details-content {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+        }
+        .strategy-details-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+            transition: color 0.2s;
+        }
+        .strategy-details-close:hover {
+            color: var(--text-primary);
+        }
+        .strategy-details-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--gold-accent);
+        }
+        .strategy-details-description {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .strategy-details-calculation {
+            background: rgba(26, 31, 46, 0.6);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .strategy-details-calculation h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--gold-accent);
+        }
+        .strategy-details-calculation ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .strategy-details-calculation li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .strategy-details-calculation li:before {
+            content: "•";
+            color: var(--gold-accent);
+            position: absolute;
+            left: 0;
+        }
+        .strategy-details-pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .strategy-details-pros, .strategy-details-cons {
+            background: rgba(26, 31, 46, 0.6);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .strategy-details-pros h4, .strategy-details-cons h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .strategy-details-pros h4 {
+            color: var(--success-green);
+        }
+        .strategy-details-cons h4 {
+            color: var(--danger-red);
+        }
+        .strategy-details-pros ul, .strategy-details-cons ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .strategy-details-pros li, .strategy-details-cons li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .strategy-details-pros li:before {
+            content: "+";
+            color: var(--success-green);
+            position: absolute;
+            left: 0;
+        }
+        .strategy-details-cons li:before {
+            content: "-";
+            color: var(--danger-red);
+            position: absolute;
+            left: 0;
+        }
+        .view-details-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold-accent);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .view-details-btn:hover {
+            background: rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Celebration Animation */
+        @keyframes celebrate {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+        .celebration {
+            animation: celebrate 2s ease-in-out;
+        }
+        
+        /* Debt-Free Countdown */
+        .countdown-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .countdown-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--success-green);
+            margin-bottom: 16px;
+        }
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .countdown-item {
+            background: rgba(26, 31, 46, 0.6);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--success-green);
+        }
+        .countdown-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -419,9 +826,6 @@
             </div>
             <div class="flex items-center space-x-4">
                 <span class="exclusive-badge">PREMIUM ACCESS</span>
-                <button id="exportBtn" class="premium-button py-2 px-6 rounded-lg flex items-center">
-                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export Report
-                </button>
             </div>
         </header>
         
@@ -618,55 +1022,254 @@
                 </div>
             </div>
             
-            <!-- Debt Impact Tab -->
-            <div id="debt-content" class="hidden max-w-4xl mx-auto">
+            <!-- Enhanced Debt Impact Tab -->
+            <div id="debt-content" class="hidden max-w-7xl mx-auto">
+                <!-- Debt Input Section -->
                 <div class="result-card p-6 rounded-xl mb-6">
                     <h2 class="text-2xl font-bold mb-4">Debt Impact Calculator</h2>
-                    <p class="text-gray-400 mb-6">See how using purchase money to pay down debt can save you money and time.</p>
+                    <p class="text-gray-400 mb-6">Analyze your debt payoff journey with visual timelines, multiple strategies, and comprehensive insights.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label for="debtTotal" class="block text-sm font-medium text-gray-300">Total Debt Amount</label>
-                            <input type="number" id="debtTotal" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 10000">
+                            <label for="monthlyIncome" class="block text-sm font-medium text-gray-300">Monthly Income</label>
+                            <input type="number" id="monthlyIncome" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
                         </div>
                         <div>
-                            <label for="debtRate" class="block text-sm font-medium text-gray-300">Interest Rate (%)</label>
-                            <input type="number" id="debtRate" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 18">
+                            <label for="creditScore" class="block text-sm font-medium text-gray-300">Current Credit Score</label>
+                            <input type="number" id="creditScore" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 680">
                         </div>
-                        <div>
-                            <label for="debtPayment" class="block text-sm font-medium text-gray-300">Monthly Payment</label>
-                            <input type="number" id="debtPayment" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 300">
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-bold mb-3">Your Debts</h3>
+                        <div id="loans-container">
+                            <!-- Individual loans will be added here -->
                         </div>
+                        <div class="add-loan-btn" id="add-loan-btn">
+                            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add Another Loan
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                         <div>
-                            <label for="debtExtra" class="block text-sm font-medium text-gray-300">Extra Payment (from purchase)</label>
+                            <label for="debtExtra" class="block text-sm font-medium text-gray-300">Extra Monthly Payment (from purchase)</label>
                             <input type="number" id="debtExtra" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 500">
                         </div>
+                        <div>
+                            <label for="totalMonthlyPayment" class="block text-sm font-medium text-gray-300">Total Monthly Payment</label>
+                            <input type="number" id="totalMonthlyPayment" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 1000">
+                        </div>
                     </div>
                     
-                    <button id="debtBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate Debt Impact</button>
+                    <button id="debtBtn" class="w-full premium-button py-3 px-4 rounded-lg mt-6">Analyze Debt Impact</button>
                 </div>
                 
-                <div id="debt-results" class="hidden">
-                    <h3 class="text-xl font-bold mb-4 text-center">Debt Payoff Comparison</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="result-card p-6 rounded-xl">
-                            <h4 class="text-lg font-bold mb-2">Current Plan</h4>
-                            <p class="text-gray-400">Payoff Time: <span id="currentPayoff" class="font-semibold">0</span> months</p>
-                            <p class="text-gray-400">Total Interest: <span id="currentInterest" class="font-semibold">0</span></p>
+                <!-- Debt Results Section -->
+                <div id="debt-results" class="hidden space-y-6">
+                    <!-- Visual Timeline Section -->
+                    <div class="result-card p-6 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4">Debt Payoff Timeline</h3>
+                        <div class="debt-timeline" id="debtTimeline">
+                            <div class="timeline-track"></div>
+                            <div class="timeline-progress" id="timelineProgress" style="width: 0%"></div>
+                            <!-- Milestones will be added dynamically -->
                         </div>
-                        <div class="result-card p-6 rounded-xl">
-                            <h4 class="text-lg font-bold mb-2">With Extra Payment</h4>
-                            <p class="text-gray-400">Payoff Time: <span id="newPayoff" class="font-semibold">0</span> months</p>
-                            <p class="text-gray-400">Total Interest: <span id="newInterest" class="font-semibold">0</span></p>
+                        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="countdown-container">
+                                <div class="countdown-title">🎉 Debt-Free Countdown</div>
+                                <div class="countdown-grid">
+                                    <div class="countdown-item">
+                                        <div id="countdownMonths" class="countdown-value">0</div>
+                                        <div class="countdown-label">Months</div>
+                                    </div>
+                                    <div class="countdown-item">
+                                        <div id="countdownDays" class="countdown-value">0</div>
+                                        <div class="countdown-label">Days</div>
+                                    </div>
+                                    <div class="countdown-item">
+                                        <div id="countdownHours" class="countdown-value">0</div>
+                                        <div class="countdown-label">Hours</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-card p-4 rounded-xl">
+                                <h4 class="text-lg font-bold mb-2">Debt Freedom Date</h4>
+                                <p id="debtFreeDate" class="text-2xl font-bold text-green-500">--</p>
+                                <p class="text-sm text-gray-400 mt-2">You'll be debt-free on this date with your current plan!</p>
+                            </div>
                         </div>
                     </div>
                     
+                    <!-- Multiple Strategy Comparison -->
                     <div class="result-card p-6 rounded-xl">
-                        <h4 class="text-lg font-bold mb-2">Your Savings</h4>
-                        <p class="text-gray-400">Time Saved: <span id="timeSaved" class="font-semibold text-green-500">0</span> months</p>
-                        <p class="text-gray-400">Interest Saved: <span id="interestSaved" class="font-semibold text-green-500">0</span></p>
-                        <p class="text-gray-400">That's <span id="hoursSaved" class="font-semibold">0</span> hours of work you won't need to do!</p>
+                        <h3 class="text-xl font-bold mb-4">Debt Payoff Strategies</h3>
+                        <p class="text-gray-400 mb-6">Compare different debt payoff methods to find the best strategy for you.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            <div class="strategy-card" data-strategy="current">
+                                <h4 class="font-bold mb-2">Current Plan</h4>
+                                <p class="text-sm text-gray-400 mb-2">Your existing payment schedule</p>
+                                <div class="space-y-1">
+                                    <p class="text-xs">Time: <span class="strategy-time font-semibold">0</span> months</p>
+                                    <p class="text-xs">Interest: <span class="strategy-interest font-semibold">$0</span></p>
+                                </div>
+                                <button class="view-details-btn" data-strategy="current">View Details</button>
+                            </div>
+                            <div class="strategy-card" data-strategy="avalanche">
+                                <h4 class="font-bold mb-2">Debt Avalanche</h4>
+                                <p class="text-sm text-gray-400 mb-2">Highest interest rate first</p>
+                                <div class="space-y-1">
+                                    <p class="text-xs">Time: <span class="strategy-time font-semibold">0</span> months</p>
+                                    <p class="text-xs">Interest: <span class="strategy-interest font-semibold">$0</span></p>
+                                </div>
+                                <button class="view-details-btn" data-strategy="avalanche">View Details</button>
+                            </div>
+                            <div class="strategy-card" data-strategy="snowball">
+                                <h4 class="font-bold mb-2">Debt Snowball</h4>
+                                <p class="text-sm text-gray-400 mb-2">Smallest balance first</p>
+                                <div class="space-y-1">
+                                    <p class="text-xs">Time: <span class="strategy-time font-semibold">0</span> months</p>
+                                    <p class="text-xs">Interest: <span class="strategy-interest font-semibold">$0</span></p>
+                                </div>
+                                <button class="view-details-btn" data-strategy="snowball">View Details</button>
+                            </div>
+                            <div class="strategy-card" data-strategy="consolidation">
+                                <h4 class="font-bold mb-2">Consolidation</h4>
+                                <p class="text-sm text-gray-400 mb-2">Lower rate loan</p>
+                                <div class="space-y-1">
+                                    <p class="text-xs">Time: <span class="strategy-time font-semibold">0</span> months</p>
+                                    <p class="text-xs">Interest: <span class="strategy-interest font-semibold">$0</span></p>
+                                </div>
+                                <button class="view-details-btn" data-strategy="consolidation">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div id="strategyRecommendation" class="hidden p-4 rounded-lg bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30">
+                            <h4 class="font-bold text-green-500 mb-2">💡 Recommended Strategy</h4>
+                            <p id="recommendationText" class="text-sm"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Comprehensive Analysis Dashboard -->
+                    <div class="result-card p-6 rounded-xl">
+                        <h3 class="text-xl font-bold mb-4">Comprehensive Debt Analysis</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                            <div class="metric-card">
+                                <i data-lucide="trending-down" class="w-8 h-8 text-yellow-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Debt-to-Income Ratio
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The percentage of your monthly income that goes toward debt payments. Lenders typically prefer this to be below 36%. Lower ratios indicate better financial health.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="debtToIncomeRatio" class="metric-value">0%</div>
+                                <div class="metric-change">Industry standard: < 36%</div>
+                            </div>
+                            <div class="metric-card">
+                                <i data-lucide="percent" class="w-8 h-8 text-red-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Interest vs Principal
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The percentage of your payments that goes toward interest rather than reducing your principal balance. Lower percentages mean more of your money is actually reducing your debt.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="interestVsPrincipal" class="metric-value">0%</div>
+                                <div class="metric-change negative">Interest: <span id="totalInterestAmount">$0</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <i data-lucide="award" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Credit Score Impact
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The estimated improvement to your credit score from paying down your debt. Higher credit scores can lead to better interest rates on future loans and credit cards.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="creditScoreImpact" class="metric-value">+0</div>
+                                <div class="metric-change positive">Estimated improvement</div>
+                            </div>
+                            <div class="metric-card">
+                                <i data-lucide="calendar" class="w-8 h-8 text-blue-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Debt Freedom Date
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The date when you'll be completely debt-free based on your current payment plan. This can motivate you to stick to your payoff strategy.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="freedomDateMetric" class="metric-value">--</div>
+                                <div class="metric-change">Months remaining: <span id="monthsRemaining">0</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <i data-lucide="dollar-sign" class="w-8 h-8 text-purple-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Opportunity Cost
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The potential growth your money could achieve if invested instead of used for debt payments. This helps you understand the true cost of your debt.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="opportunityCost" class="metric-value">$0</div>
+                                <div class="metric-change negative">If invested instead</div>
+                            </div>
+                            <div class="metric-card">
+                                <i data-lucide="trending-up" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                                <div class="metric-label">
+                                    Monthly Cash Flow
+                                    <div class="metric-info-btn">
+                                        <i data-lucide="info" class="w-3 h-3"></i>
+                                        <div class="metric-tooltip">
+                                            The additional monthly income you'll have available once your debt is paid off. This money can be redirected toward savings, investments, or other financial goals.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="cashFlowImprovement" class="metric-value">+$0</div>
+                                <div class="metric-change positive">When debt-free</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Interest vs Principal Chart -->
+                        <div class="chart-container mb-6">
+                            <canvas id="interestPrincipalChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Strategy Details Modal -->
+            <div id="strategy-details-modal" class="strategy-details-modal">
+                <div class="strategy-details-content">
+                    <button class="strategy-details-close">&times;</button>
+                    <h3 id="strategy-details-title" class="strategy-details-title"></h3>
+                    <p id="strategy-details-description" class="strategy-details-description"></p>
+                    
+                    <div class="strategy-details-calculation">
+                        <h4>How It Works</h4>
+                        <ul id="strategy-details-calculation-steps"></ul>
+                    </div>
+                    
+                    <div class="strategy-details-pros-cons">
+                        <div class="strategy-details-pros">
+                            <h4>Pros</h4>
+                            <ul id="strategy-details-pros-list"></ul>
+                        </div>
+                        <div class="strategy-details-cons">
+                            <h4>Cons</h4>
+                            <ul id="strategy-details-cons-list"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -707,14 +1310,12 @@
                                         <span>40 years</span>
                                     </div>
                                 </div>
-
                                 <!-- Inflation Adjustment -->
                                 <div>
                                     <label for="inflationRate" class="block text-sm font-medium text-gray-300">Inflation Rate (%)</label>
                                     <input type="number" id="inflationRate" value="3.3" step="0.1" class="mt-1 block w-full px-3 py-2 premium-input rounded-md">
                                     <p class="text-xs text-gray-500 mt-1">Historical average: 3.3%</p>
                                 </div>
-
                                 <div class="flex items-center space-x-2">
                                     <input type="checkbox" id="showRealReturns" class="w-4 h-4 text-yellow-500">
                                     <label for="showRealReturns" class="text-sm font-medium text-gray-300">Show Real (Inflation-Adjusted) Returns</label>
@@ -831,7 +1432,7 @@
                                 </div>
                                 
                                 <div class="p-4 bg-gradient-to-r from-blue-900/20 to-blue-800/20 rounded-lg border border-blue-700/30">
-                                    <div class="flex justify-between items-center">
+                                    <div class="flex justify-between">
                                         <span class="text-sm font-medium text-gray-300">Expected Annual Return</span>
                                         <span id="expectedReturn" class="text-lg font-bold text-yellow-500">7.0%</span>
                                     </div>
@@ -1193,6 +1794,30 @@
                 </div>
             </div>
         </main>
+        <!-- Footer with Disclaimer and Branding -->
+        <footer class="premium-footer">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <div class="brand-logo">MyDailyAgency</div>
+                        <p class="text-sm text-gray-500 mt-2">Premium Financial Tools</p>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <p class="text-sm text-gray-500">© 2025 MyDailyAgency. All rights reserved.</p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <div class="disclaimer">
+                        <strong>Disclaimer:</strong> The True Cost Calculator is an educational tool designed to provide insights into financial decisions. 
+                        The information provided by this tool is for educational purposes only and should not be considered financial advice. 
+                        All calculations are based on the inputs provided and certain assumptions about market conditions, tax rates, and other factors. 
+                        Past performance does not guarantee future results. Before making any financial decisions, please consult with a qualified 
+                        financial advisor who can provide advice tailored to your individual circumstances. MyDailyAgency is not responsible for 
+                        any decisions made based on the use of this tool.
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
     
     <script>
@@ -1236,9 +1861,113 @@
             other: 0.06      // Real estate and commodities
         };
         
+        // Debt analysis state
+        let debtAnalysisData = {
+            current: { months: 0, interest: 0 },
+            avalanche: { months: 0, interest: 0 },
+            snowball: { months: 0, interest: 0 },
+            consolidation: { months: 0, interest: 0 }
+        };
+        
+        // Individual loans state
+        let individualLoans = [
+            { id: 1, name: "Loan 1", amount: 5000, interestRate: 18, minPayment: 150 }
+        ];
+        let nextLoanId = 2;
+        
+        // Strategy details data
+        const strategyDetails = {
+            current: {
+                title: "Current Plan",
+                description: "Your current payment plan maintains your existing payment schedule with the addition of any extra payments you've specified. This approach keeps your payment structure the same while accelerating your debt payoff with additional funds.",
+                calculation: [
+                    "Total monthly payment is the sum of your minimum payments plus any extra payment",
+                    "Each loan receives at least its minimum payment",
+                    "Extra payments are distributed proportionally across all loans",
+                    "As loans are paid off, their minimum payments are reallocated to remaining loans"
+                ],
+                pros: [
+                    "Maintains your current payment structure",
+                    "Simple to implement and track",
+                    "Accelerates payoff with extra payments",
+                    "No need to change payment habits"
+                ],
+                cons: [
+                    "May not optimize for interest savings",
+                    "Takes longer to pay off high-interest debt",
+                    "Less psychological motivation from quick wins"
+                ]
+            },
+            avalanche: {
+                title: "Debt Avalanche",
+                description: "The Debt Avalanche method focuses on paying off debts with the highest interest rates first, while making minimum payments on all other debts. This approach minimizes the total interest paid over time.",
+                calculation: [
+                    "Make minimum payments on all debts",
+                    "Apply all extra payments to the debt with the highest interest rate",
+                    "Once the highest-interest debt is paid off, focus on the next highest",
+                    "Continue until all debts are paid off"
+                ],
+                pros: [
+                    "Minimizes total interest paid",
+                    "Mathematically optimal approach",
+                    "Faster overall debt payoff",
+                    "Good for disciplined individuals"
+                ],
+                cons: [
+                    "May take longer to see progress on large balances",
+                    "Requires discipline to stick with the plan",
+                    "Less psychological motivation from quick wins"
+                ]
+            },
+            snowball: {
+                title: "Debt Snowball",
+                description: "The Debt Snowball method focuses on paying off debts with the smallest balances first, while making minimum payments on all other debts. This approach creates psychological momentum as you eliminate individual debts.",
+                calculation: [
+                    "Make minimum payments on all debts",
+                    "Apply all extra payments to the debt with the smallest balance",
+                    "Once the smallest debt is paid off, focus on the next smallest",
+                    "Add the payment from the paid-off debt to the next target"
+                ],
+                pros: [
+                    "Creates psychological momentum",
+                    "Provides quick wins that motivate continued progress",
+                    "Simplifies your financial life over time",
+                    "Good for those who need motivation boosts"
+                ],
+                cons: [
+                    "May pay more in interest compared to avalanche",
+                    "Not mathematically optimal",
+                    "Takes longer to address high-interest debts"
+                ]
+            },
+            consolidation: {
+                title: "Debt Consolidation",
+                description: "Debt consolidation involves combining multiple debts into a single loan with a lower interest rate. This simplifies your payments and can reduce the total interest paid.",
+                calculation: [
+                    "Take out a new loan at a lower interest rate",
+                    "Use the funds to pay off all existing debts",
+                    "Make a single monthly payment on the new loan",
+                    "The payment amount is typically lower than the sum of previous payments"
+                ],
+                pros: [
+                    "Simplifies multiple payments into one",
+                    "Potentially lowers interest rate",
+                    "May reduce monthly payment amount",
+                    "Fixed payoff timeline"
+                ],
+                cons: [
+                    "May require good credit to qualify",
+                    "Could extend repayment period",
+                    "Fees may apply for the new loan",
+                    "Risk of accumulating new debt if spending habits don't change"
+                ]
+            }
+        };
+        
         // --- Utility Functions ---
         const formatCurrency = (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v);
         const formatNumber = (v, d = 2) => Number(v).toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+        const formatDate = (date) => new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
         
         // --- Tab Switching ---
         function switchTab(tabName) {
@@ -1261,48 +1990,11 @@
             if (tabName === 'investment') {
                 initializeInvestmentChart();
             }
-        }
-        
-        // --- Export to PDF ---
-        function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
             
-            // Add title
-            doc.setFontSize(20);
-            doc.setTextColor(212, 175, 55);
-            doc.text('True Cost Calculator Results', 105, 15, { align: 'center' });
-            
-            // Add date
-            doc.setFontSize(12);
-            doc.setTextColor(255, 255, 255);
-            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, { align: 'center' });
-            
-            // Add purchase details
-            doc.setFontSize(16);
-            doc.text('Purchase Details', 20, 40);
-            doc.setFontSize(12);
-            doc.text(`Item: ${document.getElementById('resultItemName').textContent}`, 20, 50);
-            doc.text(`Total Cost: ${document.getElementById('totalCostWithTax').textContent}`, 20, 60);
-            doc.text(`Net Hourly Wage: ${document.getElementById('netIncomeDisplay').textContent}`, 20, 70);
-            
-            // Add time cost
-            doc.text(`Time Cost: ${document.getElementById('hoursWorked').textContent} hours (${document.getElementById('daysWorked').textContent} days)`, 20, 80);
-            
-            // Add paycheck power
-            doc.text(`Paycheck Power: ${document.getElementById('paycheckPercentage').textContent}% of one paycheck`, 20, 90);
-            
-            // Add opportunity cost
-            doc.setFontSize(16);
-            doc.text('Opportunity Cost', 20, 110);
-            doc.setFontSize(12);
-            doc.text('If invested, this money could grow to:', 20, 120);
-            doc.text(`S&P 500 (10%): ${formatNumber(lastCalculatedCost * Math.pow(1.10, 20))}`, 20, 130);
-            doc.text(`BTC (15%): ${formatNumber(lastCalculatedCost * Math.pow(1.15, 20))}`, 20, 140);
-            doc.text(`Gold (5%): ${formatNumber(lastCalculatedCost * Math.pow(1.05, 20))}`, 20, 150);
-            
-            // Save the PDF
-            doc.save('true-cost-calculator-results.pdf');
+            // Initialize debt loans when switching to debt tab
+            if (tabName === 'debt') {
+                initializeDebtLoans();
+            }
         }
         
         // --- Core Calculation Logic ---
@@ -1446,65 +2138,472 @@
             };
         }
         
-        // --- Debt Impact Logic ---
-        function calculateDebtPayoff(elements) {
-            const total = parseFloat(elements.debtTotal.value) || 0;
-            const rate = parseFloat(elements.debtRate.value) || 0;
-            const payment = parseFloat(elements.debtPayment.value) || 0;
-            const extra = parseFloat(elements.debtExtra.value) || 0;
+        // --- Individual Loans Functions ---
+        function initializeDebtLoans() {
+            const loansContainer = document.getElementById('loans-container');
+            loansContainer.innerHTML = '';
             
-            if (total <= 0 || rate <= 0 || payment <= 0) {
-                alert("Please enter valid debt details.");
+            // Add existing loans
+            individualLoans.forEach(loan => {
+                addLoanToUI(loan);
+            });
+            
+            // Add event listener for adding new loans
+            document.getElementById('add-loan-btn').addEventListener('click', addNewLoan);
+            
+            // Add event listeners for strategy details buttons
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const strategy = this.getAttribute('data-strategy');
+                    showStrategyDetails(strategy);
+                });
+            });
+            
+            // Add event listener for closing strategy details modal
+            document.querySelector('.strategy-details-close').addEventListener('click', function() {
+                document.getElementById('strategy-details-modal').classList.remove('active');
+            });
+        }
+        
+        function addNewLoan() {
+            const newLoan = {
+                id: nextLoanId++,
+                name: `Loan ${nextLoanId - 1}`,
+                amount: 5000,
+                interestRate: 18,
+                minPayment: 150
+            };
+            
+            individualLoans.push(newLoan);
+            addLoanToUI(newLoan);
+        }
+        
+        function addLoanToUI(loan) {
+            const loansContainer = document.getElementById('loans-container');
+            const loanElement = document.createElement('div');
+            loanElement.className = 'loan-item';
+            loanElement.id = `loan-${loan.id}`;
+            
+            loanElement.innerHTML = `
+                <div class="loan-item-header">
+                    <div class="loan-item-title">${loan.name}</div>
+                    <button class="loan-item-remove" onclick="removeLoan(${loan.id})">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="loan-item-details">
+                    <div class="loan-item-detail">
+                        <label>Loan Name</label>
+                        <input type="text" value="${loan.name}" onchange="updateLoan(${loan.id}, 'name', this.value)">
+                    </div>
+                    <div class="loan-item-detail">
+                        <label>Amount ($)</label>
+                        <input type="number" value="${loan.amount}" onchange="updateLoan(${loan.id}, 'amount', parseFloat(this.value))">
+                    </div>
+                    <div class="loan-item-detail">
+                        <label>Interest Rate (%)</label>
+                        <input type="number" value="${loan.interestRate}" step="0.1" onchange="updateLoan(${loan.id}, 'interestRate', parseFloat(this.value))">
+                    </div>
+                    <div class="loan-item-detail">
+                        <label>Min. Payment ($)</label>
+                        <input type="number" value="${loan.minPayment}" onchange="updateLoan(${loan.id}, 'minPayment', parseFloat(this.value))">
+                    </div>
+                </div>
+            `;
+            
+            loansContainer.appendChild(loanElement);
+            lucide.createIcons();
+        }
+        
+        function updateLoan(loanId, property, value) {
+            const loan = individualLoans.find(l => l.id === loanId);
+            if (loan) {
+                loan[property] = value;
+                
+                // Update the loan name in the UI if it was changed
+                if (property === 'name') {
+                    document.querySelector(`#loan-${loanId} .loan-item-title`).textContent = value;
+                }
+            }
+        }
+        
+        function removeLoan(loanId) {
+            if (individualLoans.length <= 1) {
+                alert("You must have at least one loan.");
                 return;
             }
             
-            const monthlyRate = rate / 100 / 12;
+            individualLoans = individualLoans.filter(loan => loan.id !== loanId);
+            document.getElementById(`loan-${loanId}`).remove();
+        }
+        
+        // --- Strategy Details Modal ---
+        function showStrategyDetails(strategy) {
+            const modal = document.getElementById('strategy-details-modal');
+            const details = strategyDetails[strategy];
             
-            // Calculate current payoff
-            let currentBalance = total;
-            let currentMonths = 0;
-            let currentInterest = 0;
+            // Update modal content
+            document.getElementById('strategy-details-title').textContent = details.title;
+            document.getElementById('strategy-details-description').textContent = details.description;
             
-            while (currentBalance > 0 && currentMonths < 600) { // 50 years max
-                const interestPayment = currentBalance * monthlyRate;
-                currentInterest += interestPayment;
-                const principalPayment = Math.min(payment - interestPayment, currentBalance);
-                currentBalance -= principalPayment;
-                currentMonths++;
+            // Update calculation steps
+            const calculationSteps = document.getElementById('strategy-details-calculation-steps');
+            calculationSteps.innerHTML = '';
+            details.calculation.forEach(step => {
+                const li = document.createElement('li');
+                li.textContent = step;
+                calculationSteps.appendChild(li);
+            });
+            
+            // Update pros
+            const prosList = document.getElementById('strategy-details-pros-list');
+            prosList.innerHTML = '';
+            details.pros.forEach(pro => {
+                const li = document.createElement('li');
+                li.textContent = pro;
+                prosList.appendChild(li);
+            });
+            
+            // Update cons
+            const consList = document.getElementById('strategy-details-cons-list');
+            consList.innerHTML = '';
+            details.cons.forEach(con => {
+                const li = document.createElement('li');
+                li.textContent = con;
+                consList.appendChild(li);
+            });
+            
+            // Show modal
+            modal.classList.add('active');
+        }
+        
+        // --- Enhanced Debt Impact Logic ---
+        function calculateDebtPayoff(elements) {
+            const monthlyIncome = parseFloat(elements.monthlyIncome.value) || 0;
+            const creditScore = parseFloat(elements.creditScore.value) || 0;
+            const extraPayment = parseFloat(elements.debtExtra.value) || 0;
+            const totalMonthlyPayment = parseFloat(elements.totalMonthlyPayment.value) || 0;
+            
+            // Validate individual loans
+            if (individualLoans.length === 0 || individualLoans.some(loan => loan.amount <= 0 || loan.interestRate <= 0)) {
+                alert("Please enter valid loan details.");
+                return;
             }
             
-            // Calculate new payoff with extra payment
-            let newBalance = total;
-            let newMonths = 0;
-            let newInterest = 0;
+            // Calculate different strategies
+            calculateDebtStrategies(extraPayment, totalMonthlyPayment);
             
-            while (newBalance > 0 && newMonths < 600) {
-                const interestPayment = newBalance * monthlyRate;
-                newInterest += interestPayment;
-                const principalPayment = Math.min(payment + extra - interestPayment, newBalance);
-                newBalance -= principalPayment;
-                newMonths++;
-            }
+            // Update timeline
+            updateDebtTimeline(debtAnalysisData.current.months, debtAnalysisData.current.months);
             
-            const timeSaved = currentMonths - newMonths;
-            const interestSaved = currentInterest - newInterest;
-            const hourlyIncome = parseFloat(elements.preTaxHourlyIncome.value) || 0;
-            const selectedState = stateData[elements.location.value];
-            const totalTaxRate = FEDERAL_TAX_RATE + FICA_RATE + selectedState.incomeTaxRate;
-            const netHourlyIncome = hourlyIncome * (1 - totalTaxRate);
-            const hoursSaved = interestSaved / netHourlyIncome;
+            // Update countdown
+            updateDebtCountdown(debtAnalysisData.current.months);
             
-            document.getElementById('currentPayoff').textContent = currentMonths;
-            document.getElementById('currentInterest').textContent = formatCurrency(currentInterest);
+            // Update strategy comparison
+            updateStrategyComparison();
             
-            document.getElementById('newPayoff').textContent = newMonths;
-            document.getElementById('newInterest').textContent = formatCurrency(newInterest);
+            // Update comprehensive analysis
+            updateComprehensiveAnalysis(monthlyIncome, creditScore);
             
-            document.getElementById('timeSaved').textContent = timeSaved;
-            document.getElementById('interestSaved').textContent = formatCurrency(interestSaved);
-            document.getElementById('hoursSaved').textContent = formatNumber(hoursSaved, 0);
-            
+            // Show results
             document.getElementById('debt-results').classList.remove('hidden');
+            
+            // Trigger celebration if debt is paid off
+            if (debtAnalysisData.current.months <= 0) {
+                triggerDebtFreeCelebration();
+            }
+            
+            // Re-initialize strategy details buttons
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const strategy = this.getAttribute('data-strategy');
+                    showStrategyDetails(strategy);
+                });
+            });
+        }
+        
+        function calculateDebtStrategies(extraPayment, totalMonthlyPayment) {
+            // Sort loans by interest rate (highest first) for avalanche
+            const loansByInterest = [...individualLoans].sort((a, b) => b.interestRate - a.interestRate);
+            
+            // Sort loans by balance (lowest first) for snowball
+            const loansByBalance = [...individualLoans].sort((a, b) => a.amount - b.amount);
+            
+            // Current strategy (with extra payment)
+            debtAnalysisData.current = calculateMultipleLoanPayoff(individualLoans, totalMonthlyPayment + extraPayment);
+            
+            // Debt Avalanche (highest interest first)
+            debtAnalysisData.avalanche = calculateMultipleLoanPayoff(loansByInterest, totalMonthlyPayment + extraPayment);
+            
+            // Debt Snowball (smallest balance first)
+            debtAnalysisData.snowball = calculateMultipleLoanPayoff(loansByBalance, totalMonthlyPayment + extraPayment);
+            
+            // Debt Consolidation (assume 5% lower rate)
+            const consolidationRate = Math.max(0, Math.max(...individualLoans.map(l => l.interestRate)) - 5);
+            const consolidationLoans = individualLoans.map(loan => ({
+                ...loan,
+                interestRate: consolidationRate
+            }));
+            debtAnalysisData.consolidation = calculateMultipleLoanPayoff(consolidationLoans, totalMonthlyPayment);
+        }
+        
+        function calculateMultipleLoanPayoff(loans, totalMonthlyPayment) {
+            // Create a copy of the loans array to avoid modifying the original
+            const activeLoans = loans.map(loan => ({
+                ...loan,
+                balance: loan.amount,
+                monthlyRate: loan.interestRate / 100 / 12
+            }));
+            
+            let months = 0;
+            let totalInterest = 0;
+            let remainingPayment = totalMonthlyPayment;
+            
+            while (activeLoans.length > 0 && months < 600) { // 50 years max
+                months++;
+                
+                // Calculate minimum payments for all loans
+                let totalMinPayment = 0;
+                activeLoans.forEach(loan => {
+                    const minPayment = Math.max(loan.minPayment, loan.balance * loan.monthlyRate);
+                    totalMinPayment += minPayment;
+                });
+                
+                // If total payment is less than minimum required, use minimum
+                const paymentAmount = Math.max(totalMonthlyPayment, totalMinPayment);
+                
+                // Reset remaining payment for this month
+                remainingPayment = paymentAmount;
+                
+                // Process each loan
+                for (let i = 0; i < activeLoans.length; i++) {
+                    const loan = activeLoans[i];
+                    
+                    if (loan.balance <= 0) continue;
+                    
+                    // Calculate interest for this month
+                    const interestPayment = loan.balance * loan.monthlyRate;
+                    totalInterest += interestPayment;
+                    
+                    // Determine payment for this loan
+                    let loanPayment = Math.min(loan.minPayment, remainingPayment);
+                    
+                    // If this is the last loan or we have extra payment, apply remaining payment
+                    if (i === activeLoans.length - 1 || activeLoans.every(l => l.balance <= 0 || l === loan)) {
+                        loanPayment = Math.min(loan.balance + interestPayment, remainingPayment);
+                    }
+                    
+                    // Apply payment
+                    const principalPayment = Math.min(loanPayment - interestPayment, loan.balance);
+                    loan.balance -= principalPayment;
+                    remainingPayment -= loanPayment;
+                    
+                    // Remove loan if paid off
+                    if (loan.balance <= 0.01) { // Small threshold to avoid floating point issues
+                        activeLoans.splice(i, 1);
+                        i--; // Adjust index since we removed an element
+                    }
+                }
+            }
+            
+            return { months, interest: totalInterest };
+        }
+        
+        function updateDebtTimeline(currentMonths, newMonths) {
+            const timeline = document.getElementById('debtTimeline');
+            const timelineProgress = document.getElementById('timelineProgress');
+            
+            // Clear existing milestones
+            timeline.querySelectorAll('.timeline-milestone').forEach(el => el.remove());
+            
+            // Calculate milestone positions
+            const milestones = [
+                { percentage: 0, label: 'Start', date: 'Today' },
+                { percentage: 25, label: '25% Paid', date: calculateMilestoneDate(newMonths, 0.25) },
+                { percentage: 50, label: '50% Paid', date: calculateMilestoneDate(newMonths, 0.5) },
+                { percentage: 75, label: '75% Paid', date: calculateMilestoneDate(newMonths, 0.75) },
+                { percentage: 100, label: 'Debt Free!', date: calculateMilestoneDate(newMonths, 1) }
+            ];
+            
+            // Add milestones
+            milestones.forEach((milestone, index) => {
+                const milestoneEl = document.createElement('div');
+                milestoneEl.className = 'timeline-milestone';
+                milestoneEl.style.left = `${milestone.percentage}%`;
+                
+                if (milestone.percentage === 100 && newMonths < currentMonths) {
+                    milestoneEl.classList.add('completed');
+                }
+                
+                milestoneEl.innerHTML = `
+                    <div class="milestone-label">${milestone.label}</div>
+                    <div class="milestone-date">${milestone.date}</div>
+                `;
+                
+                timeline.appendChild(milestoneEl);
+            });
+            
+            // Update progress bar
+            timelineProgress.style.width = '0%'; // Will be animated
+            setTimeout(() => {
+                timelineProgress.style.width = '100%';
+            }, 100);
+        }
+        
+        function calculateMilestoneDate(totalMonths, percentage) {
+            const milestoneMonths = totalMonths * percentage;
+            const milestoneDate = new Date();
+            milestoneDate.setMonth(milestoneDate.getMonth() + Math.floor(milestoneMonths));
+            return formatDate(milestoneDate);
+        }
+        
+        function updateDebtCountdown(months) {
+            const now = new Date();
+            const debtFreeDate = new Date(now);
+            debtFreeDate.setMonth(debtFreeDate.getMonth() + months);
+            
+            const timeDiff = debtFreeDate - now;
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            document.getElementById('countdownMonths').textContent = months;
+            document.getElementById('countdownDays').textContent = days;
+            document.getElementById('countdownHours').textContent = hours;
+            document.getElementById('debtFreeDate').textContent = formatDate(debtFreeDate);
+        }
+        
+        function updateStrategyComparison() {
+            const strategies = ['current', 'avalanche', 'snowball', 'consolidation'];
+            let bestStrategy = 'current';
+            let lowestInterest = debtAnalysisData.current.interest;
+            let shortestTime = debtAnalysisData.current.months;
+            
+            strategies.forEach(strategy => {
+                const card = document.querySelector(`[data-strategy="${strategy}"]`);
+                const data = debtAnalysisData[strategy];
+                
+                card.querySelector('.strategy-time').textContent = data.months;
+                card.querySelector('.strategy-interest').textContent = formatCurrency(data.interest);
+                
+                // Find best strategy
+                if (data.interest < lowestInterest || (data.interest === lowestInterest && data.months < shortestTime)) {
+                    bestStrategy = strategy;
+                    lowestInterest = data.interest;
+                    shortestTime = data.months;
+                }
+            });
+            
+            // Show recommendation
+            const recommendationEl = document.getElementById('strategyRecommendation');
+            const recommendationText = document.getElementById('recommendationText');
+            
+            recommendationEl.classList.remove('hidden');
+            
+            switch (bestStrategy) {
+                case 'avalanche':
+                    recommendationText.textContent = 'The Debt Avalanche method will save you the most money in interest payments by targeting high-interest debt first.';
+                    break;
+                case 'snowball':
+                    recommendationText.textContent = 'The Debt Snowball method provides quick wins by paying off small balances first, which can help maintain motivation.';
+                    break;
+                case 'consolidation':
+                    recommendationText.textContent = 'Debt consolidation could simplify your payments and potentially lower your interest rate, saving you money over time.';
+                    break;
+                default:
+                    recommendationText.textContent = 'Your current payment plan with extra payments is already optimized for your situation.';
+            }
+            
+            // Highlight recommended strategy
+            document.querySelector(`[data-strategy="${bestStrategy}"]`).classList.add('recommended');
+        }
+        
+        function updateComprehensiveAnalysis(monthlyIncome, creditScore) {
+            // Calculate total debt and total minimum payments
+            const totalDebt = individualLoans.reduce((sum, loan) => sum + loan.amount, 0);
+            const totalMinPayment = individualLoans.reduce((sum, loan) => sum + loan.minPayment, 0);
+            
+            // Debt-to-Income Ratio
+            const debtToIncomeRatio = monthlyIncome > 0 ? ((totalMinPayment / monthlyIncome) * 100) : 0;
+            document.getElementById('debtToIncomeRatio').textContent = formatNumber(debtToIncomeRatio, 1) + '%';
+            
+            // Interest vs Principal
+            const totalInterest = debtAnalysisData.current.interest;
+            const totalPrincipal = totalDebt;
+            const interestPercentage = totalPrincipal > 0 ? (totalInterest / (totalPrincipal + totalInterest)) * 100 : 0;
+            document.getElementById('interestVsPrincipal').textContent = formatNumber(interestPercentage, 1) + '%';
+            document.getElementById('totalInterestAmount').textContent = formatCurrency(totalInterest);
+            
+            // Credit Score Impact (estimated)
+            const creditScoreImprovement = Math.min(100, Math.floor((totalDebt / 10000) * 10));
+            document.getElementById('creditScoreImpact').textContent = `+${creditScoreImprovement}`;
+            
+            // Debt Freedom Date
+            const freedomDate = new Date();
+            freedomDate.setMonth(freedomDate.getMonth() + debtAnalysisData.current.months);
+            document.getElementById('freedomDateMetric').textContent = formatDate(freedomDate);
+            document.getElementById('monthsRemaining').textContent = debtAnalysisData.current.months;
+            
+            // Opportunity Cost
+            const opportunityCost = totalInterest * Math.pow(1 + AVG_MARKET_RETURN, 10);
+            document.getElementById('opportunityCost').textContent = formatCurrency(opportunityCost);
+            
+            // Monthly Cash Flow Improvement
+            document.getElementById('cashFlowImprovement').textContent = `+${formatCurrency(totalMinPayment)}`;
+            
+            // Update interest vs principal chart
+            updateInterestPrincipalChart(totalPrincipal, totalInterest);
+        }
+        
+        function updateInterestPrincipalChart(principal, interest) {
+            const ctx = document.getElementById('interestPrincipalChart').getContext('2d');
+            
+            if (chartInstances['interestPrincipalChart']) {
+                chartInstances['interestPrincipalChart'].destroy();
+            }
+            
+            chartInstances['interestPrincipalChart'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Principal', 'Interest'],
+                    datasets: [{
+                        data: [principal, interest],
+                        backgroundColor: ['#4f46e5', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#a0aec0' }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Interest vs Principal Breakdown',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function triggerDebtFreeCelebration() {
+            const celebrationEl = document.createElement('div');
+            celebrationEl.className = 'fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75';
+            celebrationEl.innerHTML = `
+                <div class="text-center celebration">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h2 class="text-4xl font-bold text-yellow-500 mb-2">Congratulations!</h2>
+                    <p class="text-xl text-white">You're Debt Free!</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="mt-6 premium-button py-2 px-6 rounded-lg">
+                        Continue
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(celebrationEl);
         }
         
         // --- Investment Scenario Builder Logic ---
@@ -2103,7 +3202,7 @@
         
         function updateRecommendedAllocation() {
             const age = parseInt(document.getElementById('age').value) || 30;
-            const retirementYear = parseInt(document.getElementById('retirementAge').value) || 65;
+            const retirementYear = parseInt(document.getElementById('retireAge').value) || 65;
             const yearsToRetirement = retirementYear - age;
             
             let recommendedStocks, recommendedBonds, recommendedGold, recommendedBtc, recommendedOther;
@@ -2693,6 +3792,9 @@
                 debtRate: document.getElementById('debtRate'),
                 debtPayment: document.getElementById('debtPayment'),
                 debtExtra: document.getElementById('debtExtra'),
+                monthlyIncome: document.getElementById('monthlyIncome'),
+                creditScore: document.getElementById('creditScore'),
+                totalMonthlyPayment: document.getElementById('totalMonthlyPayment'),
                 // Investment
                 initialInvestment: document.getElementById('initialInvestment'),
                 monthlyContribution: document.getElementById('monthlyContribution'),
@@ -2754,7 +3856,6 @@
             document.getElementById('setGoalBtn').addEventListener('click', () => setGoal(elements));
             document.getElementById('calculateRetireBtn').addEventListener('click', () => handleRetirementCalculation(elements));
             document.getElementById('retakeQuizBtn').addEventListener('click', () => startQuiz(elements));
-            document.getElementById('exportBtn').addEventListener('click', exportToPDF);
             
             // Investment scenario event listeners
             document.getElementById('initialInvestment').addEventListener('input', updateScenarioInputs);
