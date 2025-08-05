@@ -3,90 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>True Cost Calculator</title>
+    <title>True Cost Calculator | Premium Financial Planning</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        :root {
+            --primary-dark: #0a0e1a;
+            --secondary-dark: #1a1f2e;
+            --accent-dark: #2a3441;
+            --gold-accent: #d4af37;
+            --silver-accent: #c0c0c0;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --success-green: #10b981;
+            --danger-red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
         }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .premium-gradient {
+            background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--accent-dark) 100%);
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
+        }
+
         .tab-active {
-            border-color: #4f46e5;
-            color: #4f46e5;
-            background-color: #eef2ff;
+            border-color: var(--gold-accent);
+            color: var(--gold-accent);
+            background-color: rgba(212, 175, 55, 0.1);
         }
+
         .result-card {
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: rgba(26, 31, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.25);
+            border-color: rgba(212, 175, 55, 0.4);
         }
+
         .hidden {
             display: none;
         }
+
         input[type="range"] {
-            -webkit-appearance: none; appearance: none;
-            width: 100%; height: 8px; background: #e5e7eb;
-            border-radius: 5px; outline: none; opacity: 0.8;
-            transition: opacity .2s;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
         }
-        input[type="range"]:hover { opacity: 1; }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none;
-            width: 24px; height: 24px; background: #4f46e5;
-            cursor: pointer; border-radius: 50%;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--gold-accent);
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
+
         input[type="range"]::-moz-range-thumb {
-            width: 24px; height: 24px; background: #4f46e5;
-            cursor: pointer; border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            background: var(--gold-accent);
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
+
         .quiz-option {
-            transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
+
         .quiz-option:hover {
-            transform: scale(1.02);
+            transform: scale(1.03);
+            border-color: var(--gold-accent);
+            background: rgba(212, 175, 55, 0.05);
         }
-        .gradient-bg {
-            background: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
-        }
+
         .tooltip {
             position: relative;
             display: inline-block;
             cursor: help;
         }
+
         .tooltip .tooltiptext {
             visibility: hidden;
-            width: 250px;
-            background-color: #1e293b;
-            color: #fff;
+            width: 300px;
+            background: var(--accent-dark);
+            color: var(--text-primary);
             text-align: center;
-            border-radius: 6px;
-            padding: 8px;
+            border-radius: 8px;
+            padding: 12px;
             position: absolute;
             z-index: 1;
             bottom: 125%;
             left: 50%;
-            margin-left: -125px;
+            margin-left: -150px;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
             font-size: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
+
         .tooltip:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
+
         .health-score {
-            background: conic-gradient(#4f46e5 0% var(--score), #e5e7eb var(--score) 100%);
+            background: conic-gradient(var(--gold-accent) 0% var(--score), rgba(212, 175, 55, 0.2) var(--score) 100%);
             border-radius: 50%;
             width: 150px;
             height: 150px;
@@ -95,35 +157,42 @@
             justify-content: center;
             position: relative;
         }
+
         .health-score::before {
             content: "";
             position: absolute;
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background-color: white;
+            background-color: var(--secondary-dark);
         }
+
         .health-score-text {
             position: relative;
             z-index: 1;
             font-size: 24px;
             font-weight: bold;
         }
+
         .progress-ring {
             transform: rotate(-90deg);
         }
+
         .progress-ring-circle {
             transition: stroke-dashoffset 0.35s;
-            stroke: #4f46e5;
+            stroke: var(--gold-accent);
             stroke-width: 4;
             fill: transparent;
         }
+
         .mobile-optimized {
             touch-action: manipulation;
         }
+
         .mobile-optimized input, .mobile-optimized button {
             min-height: 44px;
         }
+
         @media (max-width: 768px) {
             .mobile-optimized .grid {
                 grid-template-columns: 1fr;
@@ -138,52 +207,226 @@
                 font-size: 1.5rem;
             }
         }
+
         .asset-allocation {
             display: flex;
             align-items: center;
             margin-bottom: 0.75rem;
         }
+
         .asset-color {
             width: 12px;
             height: 12px;
             border-radius: 50%;
             margin-right: 8px;
         }
+
         .asset-info {
             flex: 1;
         }
+
         .asset-name {
             font-weight: 500;
             font-size: 0.875rem;
         }
+
         .asset-return {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
+
         .asset-value {
             font-weight: 500;
             font-size: 0.875rem;
             min-width: 45px;
             text-align: right;
         }
+
+        /* Premium Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes goldGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        .gold-glow {
+            animation: goldGlow 3s ease-in-out infinite;
+        }
+
+        /* Premium Form Styles */
+        .premium-input {
+            background: rgba(26, 31, 46, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .premium-input:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .premium-button {
+            background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
+            color: var(--primary-dark);
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .premium-button:hover::before {
+            left: 100%;
+        }
+
+        .premium-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Educational Tooltip Styles */
+        .edu-tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .edu-tooltip .edu-tooltip-content {
+            visibility: hidden;
+            width: 350px;
+            background: var(--accent-dark);
+            color: var(--text-primary);
+            text-align: left;
+            border-radius: 12px;
+            padding: 16px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -175px;
+            opacity: 0;
+            transition: all 0.3s;
+            font-size: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .edu-tooltip:hover .edu-tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Scenario Comparison Table */
+        .scenario-table {
+            background: rgba(26, 31, 46, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .scenario-table th {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .scenario-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .scenario-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Chart Container Styles */
+        .chart-container {
+            position: relative;
+            background: rgba(26, 31, 46, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            border: 3px solid rgba(212, 175, 55, 0.2);
+            border-radius: 50%;
+            border-top: 3px solid var(--gold-accent);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Exclusive Badge */
+        .exclusive-badge {
+            background: linear-gradient(135deg, var(--gold-accent) 0%, #f4e19c 100%);
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 8px;
+        }
     </style>
 </head>
-<body class="gradient-bg text-gray-800 mobile-optimized">
+<body class="mobile-optimized">
     <div class="container mx-auto p-4 md:p-8">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 fade-in-up">
             <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">The True Cost Calculator</h1>
-                <p class="mt-2 text-lg text-gray-600">A new perspective on your time, money, and life.</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text gold-gradient tracking-tight">
+                    The True Cost Calculator
+                </h1>
+                <p class="mt-2 text-lg text-gray-400">Exclusive Financial Intelligence for the Discerning Investor</p>
             </div>
             <div class="flex items-center space-x-4">
-                <button id="exportBtn" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center">
-                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export
+                <span class="exclusive-badge">PREMIUM ACCESS</span>
+                <button id="exportBtn" class="premium-button py-2 px-6 rounded-lg flex items-center">
+                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export Report
                 </button>
             </div>
         </header>
         
         <!-- Tabs -->
-        <div class="mb-8 flex flex-wrap justify-center border-b border-gray-200">
+        <div class="mb-8 flex flex-wrap justify-center border-b border-gray-700">
             <button data-tab="calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Purchase Calculator</button>
             <button data-tab="debt" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Debt Impact</button>
             <button data-tab="investment" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Investment Builder</button>
@@ -198,50 +441,50 @@
             <div id="calculator-content">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Input Section -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit space-y-4">
+                    <div class="lg:col-span-1 result-card p-6 rounded-xl h-fit space-y-4">
                         <div>
-                            <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Details</h2>
+                            <h2 class="text-2xl font-bold mb-4">Your Details</h2>
                             <div class="space-y-4">
                                 <div>
-                                    <label for="age" class="block text-sm font-medium text-gray-700">Your Age</label>
-                                    <input type="number" id="age" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 30">
+                                    <label for="age" class="block text-sm font-medium text-gray-300">Your Age</label>
+                                    <input type="number" id="age" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 30">
                                 </div>
                                 <div>
-                                    <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
-                                    <select id="gender" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                    <label for="gender" class="block text-sm font-medium text-gray-300">Gender</label>
+                                    <select id="gender" class="mt-1 block w-full px-3 py-2 premium-input rounded-md">
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <hr>
+                        <hr class="border-gray-700">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-800 pt-2">Your Purchase</h2>
+                            <h2 class="text-xl font-bold pt-2">Your Purchase</h2>
                              <div class="space-y-4 mt-4">
                                 <div>
-                                    <label for="itemName" class="block text-sm font-medium text-gray-700">Item Name</label>
-                                    <input type="text" id="itemName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., New Smartphone">
+                                    <label for="itemName" class="block text-sm font-medium text-gray-300">Item Name</label>
+                                    <input type="text" id="itemName" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., New Smartphone">
                                 </div>
                                 <div>
-                                    <label for="itemCost" class="block text-sm font-medium text-gray-700">Cost (USD)</label>
-                                    <input type="number" id="itemCost" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 999">
+                                    <label for="itemCost" class="block text-sm font-medium text-gray-300">Cost (USD)</label>
+                                    <input type="number" id="itemCost" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 999">
                                 </div>
                                 <div>
-                                    <label for="preTaxHourlyIncome" class="block text-sm font-medium text-gray-700">Pre-Tax Hourly Income</label>
-                                    <input type="number" id="preTaxHourlyIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 35">
+                                    <label for="preTaxHourlyIncome" class="block text-sm font-medium text-gray-300">Pre-Tax Hourly Income</label>
+                                    <input type="number" id="preTaxHourlyIncome" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 35">
                                 </div>
                                 <div>
-                                    <label for="paycheckFrequency" class="block text-sm font-medium text-gray-700">Paycheck Frequency</label>
-                                    <select id="paycheckFrequency" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                    <label for="paycheckFrequency" class="block text-sm font-medium text-gray-300">Paycheck Frequency</label>
+                                    <select id="paycheckFrequency" class="mt-1 block w-full px-3 py-2 premium-input rounded-md">
                                         <option value="weekly">Weekly</option>
                                         <option value="biweekly" selected>Bi-Weekly</option>
                                         <option value="monthly">Monthly</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="location" class="block text-sm font-medium text-gray-700">Your State</label>
-                                    <select id="location" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md">
+                                    <label for="location" class="block text-sm font-medium text-gray-300">Your State</label>
+                                    <select id="location" class="mt-1 block w-full px-3 py-2 premium-input rounded-md">
                                         <option value="CA">California</option>
                                         <option value="OR" selected>Oregon</option>
                                         <option value="WA">Washington</option>
@@ -252,121 +495,123 @@
                                 </div>
                             </div>
                         </div>
-                         <hr>
+                         <hr class="border-gray-700">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-800 pt-2">Financial Snapshot (Optional)</h2>
+                            <h2 class="text-xl font-bold pt-2">Financial Snapshot (Optional)</h2>
                             <div class="space-y-4 mt-4">
                                 <div>
-                                    <label for="currentSavings" class="block text-sm font-medium text-gray-700">Emergency Savings</label>
-                                    <input type="number" id="currentSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                                    <label for="currentSavings" class="block text-sm font-medium text-gray-300">Emergency Savings</label>
+                                    <input type="number" id="currentSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 10000">
                                 </div>
                                 <div>
-                                    <label for="monthlyExpenses" class="block text-sm font-medium text-gray-700">Monthly Expenses</label>
-                                    <input type="number" id="monthlyExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 3000">
+                                    <label for="monthlyExpenses" class="block text-sm font-medium text-gray-300">Monthly Expenses</label>
+                                    <input type="number" id="monthlyExpenses" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 3000">
                                 </div>
                                 <div>
-                                    <label for="debtAmount" class="block text-sm font-medium text-gray-700">Total Debt</label>
-                                    <input type="number" id="debtAmount" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                                    <label for="debtAmount" class="block text-sm font-medium text-gray-300">Total Debt</label>
+                                    <input type="number" id="debtAmount" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
                                 </div>
                                 <div>
-                                    <label for="debtInterestRate" class="block text-sm font-medium text-gray-700">Debt Interest Rate (%)</label>
-                                    <input type="number" id="debtInterestRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 18">
+                                    <label for="debtInterestRate" class="block text-sm font-medium text-gray-300">Debt Interest Rate (%)</label>
+                                    <input type="number" id="debtInterestRate" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 18">
                                 </div>
                             </div>
                         </div>
-                        <button id="calculateBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">Calculate True Cost</button>
+                        <button id="calculateBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate True Cost</button>
                     </div>
                     <!-- Results Section -->
                     <div id="results-section" class="lg:col-span-2 space-y-6 hidden">
-                        <div class="text-center p-4 bg-white rounded-lg shadow-md">
-                             <h2 class="text-3xl font-bold text-gray-900">The True Cost of a <span id="resultItemName" class="text-indigo-600"></span></h2>
-                             <p class="text-gray-600">Total Cost: <span id="totalCostWithTax" class="font-semibold"></span></p>
-                             <p class="text-gray-600 mt-1">Your estimated net hourly wage: <span id="netIncomeDisplay" class="font-semibold"></span></p>
+                        <div class="text-center p-4 result-card rounded-lg">
+                             <h2 class="text-3xl font-bold">The True Cost of a <span id="resultItemName" class="text-transparent bg-clip-text gold-gradient"></span></h2>
+                             <p class="text-gray-400">Total Cost: <span id="totalCostWithTax" class="font-semibold"></span></p>
+                             <p class="text-gray-400 mt-1">Your estimated net hourly wage: <span id="netIncomeDisplay" class="font-semibold"></span></p>
                         </div>
-                        <div id="calculator-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200"></div>
+                        <div id="calculator-fact" class="result-card p-4 rounded-xl text-center bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 border border-yellow-700/30"></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Time Cost -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <div class="result-card p-6 rounded-xl">
                                 <div class="flex items-center mb-3">
-                                    <i data-lucide="clock" class="w-8 h-8 text-indigo-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Time Cost</h3>
+                                    <i data-lucide="clock" class="w-8 h-8 text-yellow-500 mr-3"></i>
+                                    <h3 class="text-xl font-bold">Time Cost</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows how many hours you need to work to afford this purchase after taxes.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600">This purchase will cost you</p>
-                                <p class="text-3xl font-bold text-indigo-600 my-2"><span id="hoursWorked">0</span> hours</p>
-                                <p class="text-gray-600">(<span id="daysWorked">0</span> waking days)</p>
+                                <p class="text-gray-400">This purchase will cost you</p>
+                                <p class="text-3xl font-bold text-yellow-500 my-2"><span id="hoursWorked">0</span> hours</p>
+                                <p class="text-gray-400">(<span id="daysWorked">0</span> waking days)</p>
                             </div>
                             <!-- Paycheck Power -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                            <div class="result-card p-6 rounded-xl">
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="receipt" class="w-8 h-8 text-orange-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Paycheck Power</h3>
+                                    <h3 class="text-xl font-bold">Paycheck Power</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows what percentage of your paycheck this purchase represents.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600">This purchase is equal to</p>
+                                <p class="text-gray-400">This purchase is equal to</p>
                                 <p class="text-3xl font-bold text-orange-600 my-2"><span id="paycheckPercentage">0</span>%</p>
-                                <p class="text-gray-600">of one net paycheck.</p>
+                                <p class="text-gray-400">of one net paycheck.</p>
                             </div>
                              <!-- Freedom Fund -->
-                            <div id="freedom-fund-card" class="result-card bg-white p-6 rounded-xl shadow-md hidden">
+                            <div id="freedom-fund-card" class="result-card p-6 rounded-xl hidden">
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="shield-half" class="w-8 h-8 text-sky-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Freedom Fund</h3>
+                                    <h3 class="text-xl font-bold">Freedom Fund</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows how much additional financial security this money could provide.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600">Your current runway is <strong id="runwayMonths" class="text-sky-600"></strong> months. Saving this adds</p>
-                                <p class="text-3xl font-bold text-sky-600 my-2">+<span id="runwayAdded">0</span> days</p>
-                                <p class="text-gray-600">to your financial safety net.</p>
+                                <p class="text-gray-400">Your current runway is <strong id="runwayMonths" class="text-sky-400"></strong> months. Saving this adds</p>
+                                <p class="text-3xl font-bold text-sky-500 my-2">+<span id="runwayAdded">0</span> days</p>
+                                <p class="text-gray-400">to your financial safety net.</p>
                             </div>
                             <!-- Lifetime Perspective -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
+                            <div class="result-card p-6 rounded-xl md:col-span-2">
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="user-check" class="w-8 h-8 text-teal-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Lifetime Perspective</h3>
+                                    <h3 class="text-xl font-bold">Lifetime Perspective</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows what portion of your remaining waking years this purchase represents.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600">You have approx. <strong id="hoursLeft" class="text-teal-600"></strong> waking hours left in your healthy life.</p>
-                                <p class="text-gray-600 mt-2">This purchase consumes <strong id="lifePercentage" class="text-teal-600"></strong> of one of those precious years.</p>
+                                <p class="text-gray-400">You have approx. <strong id="hoursLeft" class="text-teal-400"></strong> waking hours left in your healthy life.</p>
+                                <p class="text-gray-400 mt-2">This purchase consumes <strong id="lifePercentage" class="text-teal-400"></strong> of one of those precious years.</p>
                             </div>
                             <!-- Opportunity Cost -->
-                            <div class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2">
+                            <div class="result-card p-6 rounded-xl md:col-span-2">
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="trending-up" class="w-8 h-8 text-green-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Future Value Projection</h3>
+                                    <h3 class="text-xl font-bold">Future Value Projection</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows how much this money could grow if invested instead of spent.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600 mb-4">If invested, this money could grow significantly over 20 years:</p>
-                                <canvas id="futureValueChart"></canvas>
+                                <p class="text-gray-400 mb-4">If invested, this money could grow significantly over 20 years:</p>
+                                <div class="chart-container">
+                                    <canvas id="futureValueChart"></canvas>
+                                </div>
                                 <p class="text-xs text-center mt-2 text-gray-500">Based on updated long-term avg. annual returns: S&P 500 (10%), BTC (15% speculative), Gold (5%). Not financial advice.</p>
                             </div>
                             <!-- Debt Impact -->
-                            <div id="debt-impact-card" class="result-card bg-white p-6 rounded-xl shadow-md md:col-span-2 hidden">
+                            <div id="debt-impact-card" class="result-card p-6 rounded-xl md:col-span-2 hidden">
                                 <div class="flex items-center mb-3">
                                     <i data-lucide="credit-card" class="w-8 h-8 text-red-500 mr-3"></i>
-                                    <h3 class="text-xl font-bold text-gray-800">Debt Impact</h3>
+                                    <h3 class="text-xl font-bold">Debt Impact</h3>
                                     <div class="tooltip ml-2">
                                         <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
                                         <span class="tooltiptext">This shows how much you could save by using this money to pay down debt instead.</span>
                                     </div>
                                 </div>
-                                <p class="text-gray-600">Using this money to pay down debt would save you</p>
+                                <p class="text-gray-400">Using this money to pay down debt would save you</p>
                                 <p class="text-3xl font-bold text-red-600 my-2"><span id="debtInterestSaved">0</span></p>
-                                <p class="text-gray-600">in interest payments and reduce your debt payoff time by <span id="debtTimeSaved" class="font-semibold">0</span> months.</p>
+                                <p class="text-gray-400">in interest payments and reduce your debt payoff time by <span id="debtTimeSaved" class="font-semibold">0</span> months.</p>
                             </div>
                         </div>
                     </div>
@@ -375,91 +620,108 @@
             
             <!-- Debt Impact Tab -->
             <div id="debt-content" class="hidden max-w-4xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Debt Impact Calculator</h2>
-                    <p class="text-gray-600 mb-6">See how using purchase money to pay down debt can save you money and time.</p>
+                <div class="result-card p-6 rounded-xl mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Debt Impact Calculator</h2>
+                    <p class="text-gray-400 mb-6">See how using purchase money to pay down debt can save you money and time.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label for="debtTotal" class="block text-sm font-medium text-gray-700">Total Debt Amount</label>
-                            <input type="number" id="debtTotal" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                            <label for="debtTotal" class="block text-sm font-medium text-gray-300">Total Debt Amount</label>
+                            <input type="number" id="debtTotal" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 10000">
                         </div>
                         <div>
-                            <label for="debtRate" class="block text-sm font-medium text-gray-700">Interest Rate (%)</label>
-                            <input type="number" id="debtRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 18">
+                            <label for="debtRate" class="block text-sm font-medium text-gray-300">Interest Rate (%)</label>
+                            <input type="number" id="debtRate" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 18">
                         </div>
                         <div>
-                            <label for="debtPayment" class="block text-sm font-medium text-gray-700">Monthly Payment</label>
-                            <input type="number" id="debtPayment" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 300">
+                            <label for="debtPayment" class="block text-sm font-medium text-gray-300">Monthly Payment</label>
+                            <input type="number" id="debtPayment" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 300">
                         </div>
                         <div>
-                            <label for="debtExtra" class="block text-sm font-medium text-gray-700">Extra Payment (from purchase)</label>
-                            <input type="number" id="debtExtra" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 500">
+                            <label for="debtExtra" class="block text-sm font-medium text-gray-300">Extra Payment (from purchase)</label>
+                            <input type="number" id="debtExtra" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 500">
                         </div>
                     </div>
                     
-                    <button id="debtBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Debt Impact</button>
+                    <button id="debtBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate Debt Impact</button>
                 </div>
                 
                 <div id="debt-results" class="hidden">
                     <h3 class="text-xl font-bold mb-4 text-center">Debt Payoff Comparison</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h4 class="text-lg font-bold text-gray-800 mb-2">Current Plan</h4>
-                            <p class="text-gray-600">Payoff Time: <span id="currentPayoff" class="font-semibold">0</span> months</p>
-                            <p class="text-gray-600">Total Interest: <span id="currentInterest" class="font-semibold">0</span></p>
+                        <div class="result-card p-6 rounded-xl">
+                            <h4 class="text-lg font-bold mb-2">Current Plan</h4>
+                            <p class="text-gray-400">Payoff Time: <span id="currentPayoff" class="font-semibold">0</span> months</p>
+                            <p class="text-gray-400">Total Interest: <span id="currentInterest" class="font-semibold">0</span></p>
                         </div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h4 class="text-lg font-bold text-gray-800 mb-2">With Extra Payment</h4>
-                            <p class="text-gray-600">Payoff Time: <span id="newPayoff" class="font-semibold">0</span> months</p>
-                            <p class="text-gray-600">Total Interest: <span id="newInterest" class="font-semibold">0</span></p>
+                        <div class="result-card p-6 rounded-xl">
+                            <h4 class="text-lg font-bold mb-2">With Extra Payment</h4>
+                            <p class="text-gray-400">Payoff Time: <span id="newPayoff" class="font-semibold">0</span> months</p>
+                            <p class="text-gray-400">Total Interest: <span id="newInterest" class="font-semibold">0</span></p>
                         </div>
                     </div>
                     
-                    <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                        <h4 class="text-lg font-bold text-gray-800 mb-2">Your Savings</h4>
-                        <p class="text-gray-600">Time Saved: <span id="timeSaved" class="font-semibold text-green-600">0</span> months</p>
-                        <p class="text-gray-600">Interest Saved: <span id="interestSaved" class="font-semibold text-green-600">0</span></p>
-                        <p class="text-gray-600">That's <span id="hoursSaved" class="font-semibold">0</span> hours of work you won't need to do!</p>
+                    <div class="result-card p-6 rounded-xl">
+                        <h4 class="text-lg font-bold mb-2">Your Savings</h4>
+                        <p class="text-gray-400">Time Saved: <span id="timeSaved" class="font-semibold text-green-500">0</span> months</p>
+                        <p class="text-gray-400">Interest Saved: <span id="interestSaved" class="font-semibold text-green-500">0</span></p>
+                        <p class="text-gray-400">That's <span id="hoursSaved" class="font-semibold">0</span> hours of work you won't need to do!</p>
                     </div>
                 </div>
             </div>
             
             <!-- Investment Builder Tab -->
-            <div id="investment-content" class="hidden max-w-6xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Investment Scenario Builder</h2>
-                    <p class="text-gray-600 mb-6">Experiment with different investment scenarios to see how small changes can significantly impact your long-term wealth.</p>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Scenario Inputs -->
+            <div id="investment-content" class="hidden max-w-7xl mx-auto">
+                <div class="result-card p-6 rounded-xl mb-6">
+                    <div class="flex justify-between items-center mb-4">
                         <div>
-                            <h3 class="text-xl font-bold mb-4 text-gray-800">Scenario Parameters</h3>
+                            <h2 class="text-2xl font-bold">Investment Scenario Builder</h2>
+                            <p class="text-gray-400">Premium portfolio analysis for sophisticated investors</p>
+                        </div>
+                        <span class="exclusive-badge">PRO FEATURE</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Scenario Inputs -->
+                        <div class="lg:col-span-1">
+                            <h3 class="text-xl font-bold mb-4">Scenario Parameters</h3>
                             
                             <div class="space-y-4 mb-6">
                                 <div>
-                                    <label for="initialInvestment" class="block text-sm font-medium text-gray-700">Initial Investment</label>
-                                    <input type="number" id="initialInvestment" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 1000">
+                                    <label for="initialInvestment" class="block text-sm font-medium text-gray-300">Initial Investment</label>
+                                    <input type="number" id="initialInvestment" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 1000">
                                 </div>
                                 
                                 <div>
-                                    <label for="monthlyContribution" class="block text-sm font-medium text-gray-700">Monthly Contribution</label>
-                                    <input type="number" id="monthlyContribution" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 100">
+                                    <label for="monthlyContribution" class="block text-sm font-medium text-gray-300">Monthly Contribution</label>
+                                    <input type="number" id="monthlyContribution" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 100">
                                 </div>
                                 
                                 <div>
-                                    <label for="timeHorizon" class="block text-sm font-medium text-gray-700">Time Horizon (years)</label>
+                                    <label for="timeHorizon" class="block text-sm font-medium text-gray-300">Time Horizon (years)</label>
                                     <input type="range" id="timeHorizon" min="1" max="40" value="20" class="mt-1 block w-full">
                                     <div class="flex justify-between text-sm text-gray-500">
                                         <span>1 year</span>
-                                        <span id="timeHorizonValue" class="font-medium text-gray-700">20 years</span>
+                                        <span id="timeHorizonValue" class="font-medium text-gray-300">20 years</span>
                                         <span>40 years</span>
                                     </div>
                                 </div>
+
+                                <!-- Inflation Adjustment -->
+                                <div>
+                                    <label for="inflationRate" class="block text-sm font-medium text-gray-300">Inflation Rate (%)</label>
+                                    <input type="number" id="inflationRate" value="3.3" step="0.1" class="mt-1 block w-full px-3 py-2 premium-input rounded-md">
+                                    <p class="text-xs text-gray-500 mt-1">Historical average: 3.3%</p>
+                                </div>
+
+                                <div class="flex items-center space-x-2">
+                                    <input type="checkbox" id="showRealReturns" class="w-4 h-4 text-yellow-500">
+                                    <label for="showRealReturns" class="text-sm font-medium text-gray-300">Show Real (Inflation-Adjusted) Returns</label>
+                                </div>
                                 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Asset Allocation</label>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Asset Allocation</label>
                                     
                                     <div class="mb-3">
                                         <div class="asset-allocation">
@@ -469,6 +731,13 @@
                                                 <div class="asset-return">Est. Annual Return: 8.0%</div>
                                             </div>
                                             <div class="asset-value" id="stocksValue">60%</div>
+                                            <div class="edu-tooltip ml-2">
+                                                <i data-lucide="help-circle" class="w-4 h-4 text-gray-400"></i>
+                                                <div class="edu-tooltip-content">
+                                                    <strong>Stocks (Equities)</strong><br>
+                                                    Represent ownership in companies. Historically provide the highest long-term returns but with higher volatility. Includes large-cap, mid-cap, and small-cap stocks across various sectors.
+                                                </div>
+                                            </div>
                                         </div>
                                         <input type="range" id="stocksAllocation" min="0" max="100" value="60" class="mt-1 block w-full">
                                     </div>
@@ -481,6 +750,13 @@
                                                 <div class="asset-return">Est. Annual Return: 4.0%</div>
                                             </div>
                                             <div class="asset-value" id="bondsValue">20%</div>
+                                            <div class="edu-tooltip ml-2">
+                                                <i data-lucide="help-circle" class="w-4 h-4 text-gray-400"></i>
+                                                <div class="edu-tooltip-content">
+                                                    <strong>Bonds (Fixed Income)</strong><br>
+                                                    Loans to governments or corporations that pay interest. Generally lower risk and returns than stocks, providing portfolio stability and income.
+                                                </div>
+                                            </div>
                                         </div>
                                         <input type="range" id="bondsAllocation" min="0" max="100" value="20" class="mt-1 block w-full">
                                     </div>
@@ -493,6 +769,13 @@
                                                 <div class="asset-return">Est. Annual Return: 7.5%</div>
                                             </div>
                                             <div class="asset-value" id="goldValue">5%</div>
+                                            <div class="edu-tooltip ml-2">
+                                                <i data-lucide="help-circle" class="w-4 h-4 text-gray-400"></i>
+                                                <div class="edu-tooltip-content">
+                                                    <strong>Gold (Precious Metals)</strong><br>
+                                                    Traditional safe-haven asset that tends to perform well during economic uncertainty and inflation. Acts as a portfolio diversifier.
+                                                </div>
+                                            </div>
                                         </div>
                                         <input type="range" id="goldAllocation" min="0" max="100" value="5" class="mt-1 block w-full">
                                     </div>
@@ -505,6 +788,13 @@
                                                 <div class="asset-return">Est. Annual Return: 15.0%</div>
                                             </div>
                                             <div class="asset-value" id="btcValue">5%</div>
+                                            <div class="edu-tooltip ml-2">
+                                                <i data-lucide="help-circle" class="w-4 h-4 text-gray-400"></i>
+                                                <div class="edu-tooltip-content">
+                                                    <strong>Bitcoin (Cryptocurrency)</strong><br>
+                                                    Digital asset with high growth potential but extreme volatility. Considered a speculative investment suitable for risk-tolerant investors.
+                                                </div>
+                                            </div>
                                         </div>
                                         <input type="range" id="btcAllocation" min="0" max="100" value="5" class="mt-1 block w-full">
                                     </div>
@@ -517,15 +807,33 @@
                                                 <div class="asset-return">Est. Annual Return: 6.0%</div>
                                             </div>
                                             <div class="asset-value" id="otherValue">10%</div>
+                                            <div class="edu-tooltip ml-2">
+                                                <i data-lucide="help-circle" class="w-4 h-4 text-gray-400"></i>
+                                                <div class="edu-tooltip-content">
+                                                    <strong>Alternative Assets</strong><br>
+                                                    Includes real estate, commodities, and other alternative investments. Provides diversification benefits and inflation protection.
+                                                </div>
+                                            </div>
                                         </div>
                                         <input type="range" id="otherAllocation" min="0" max="100" value="10" class="mt-1 block w-full">
                                     </div>
                                 </div>
                                 
-                                <div class="p-4 bg-indigo-50 rounded-lg">
+                                <!-- Recommended Allocation -->
+                                <div class="p-4 bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 rounded-lg border border-yellow-700/30">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-sm font-medium text-gray-300">Recommended Allocation</span>
+                                        <button id="applyRecommendedBtn" class="text-xs premium-button py-1 px-3 rounded">Apply</button>
+                                    </div>
+                                    <div id="recommendedAllocation" class="text-xs text-gray-400">
+                                        Based on your profile, we recommend a balanced portfolio
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-gradient-to-r from-blue-900/20 to-blue-800/20 rounded-lg border border-blue-700/30">
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-gray-700">Expected Annual Return</span>
-                                        <span id="expectedReturn" class="text-lg font-bold text-indigo-700">7.0%</span>
+                                        <span class="text-sm font-medium text-gray-300">Expected Annual Return</span>
+                                        <span id="expectedReturn" class="text-lg font-bold text-yellow-500">7.0%</span>
                                     </div>
                                     <div class="mt-2 text-xs text-gray-500">
                                         Based on historical averages and conservative projections
@@ -534,34 +842,92 @@
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <button id="addScenarioBtn" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
+                                <button id="addScenarioBtn" class="premium-button py-2 px-4 rounded-lg flex items-center justify-center">
                                     <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add Scenario
                                 </button>
-                                <button id="resetScenariosBtn" class="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 transition flex items-center justify-center">
+                                <button id="resetScenariosBtn" class="bg-gray-700 text-gray-300 font-medium py-2 px-4 rounded-lg hover:bg-gray-600 transition flex items-center justify-center">
                                     <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i> Reset
                                 </button>
                             </div>
                         </div>
                         
                         <!-- Results -->
-                        <div>
-                            <h3 class="text-xl font-bold mb-4 text-gray-800">Projection Results</h3>
+                        <div class="lg:col-span-2">
+                            <h3 class="text-xl font-bold mb-4">Projection Results</h3>
                             
-                            <div class="mb-6">
-                                <canvas id="investmentChart" height="300"></canvas>
+                            <!-- Chart Tabs -->
+                            <div class="flex space-x-2 mb-4">
+                                <button class="chart-tab active px-4 py-2 rounded-lg text-sm font-medium bg-gray-700 text-white" data-chart="growth">Growth Projection</button>
+                                <button class="chart-tab px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 text-gray-400" data-chart="allocation">Asset Allocation</button>
+                                <button class="chart-tab px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 text-gray-400" data-chart="waterfall">Contributions vs Growth</button>
+                                <button class="chart-tab px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 text-gray-400" data-chart="montecarlo">Monte Carlo</button>
+                                <button class="chart-tab px-4 py-2 rounded-lg text-sm font-medium bg-gray-800 text-gray-400" data-chart="timeline">Time to Goal</button>
                             </div>
                             
-                            <div id="scenariosSummary" class="space-y-4">
-                                <div class="result-card bg-white p-4 rounded-xl shadow-md">
-                                    <div class="flex justify-between items-center">
-                                        <div>
-                                            <h4 class="font-bold text-gray-800">Scenario 1</h4>
-                                            <p class="text-sm text-gray-600">Final Value: <span id="scenario1FinalValue" class="font-semibold text-green-600">$0</span></p>
-                                        </div>
-                                        <div class="text-right">
-                                            <p class="text-sm text-gray-600">Total Contributions: <span id="scenario1Contributions" class="font-semibold">$0</span></p>
-                                            <p class="text-sm text-gray-600">Interest Earned: <span id="scenario1Interest" class="font-semibold text-green-600">$0</span></p>
-                                        </div>
+                            <div class="mb-6">
+                                <div class="chart-container">
+                                    <canvas id="investmentChart" height="300"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Scenario Comparison Table -->
+                            <div class="scenario-table mb-6">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Scenario</th>
+                                            <th>Final Value</th>
+                                            <th>Contributions</th>
+                                            <th>Interest</th>
+                                            <th>CAGR</th>
+                                            <th>Risk Score</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scenarioTableBody">
+                                        <!-- Populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- What If Analysis -->
+                            <div class="result-card p-4 rounded-xl mb-6">
+                                <h4 class="text-lg font-bold mb-4">What If Analysis</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-1">+1% Return</label>
+                                        <div id="plusOnePercent" class="text-lg font-bold text-green-500">+$0</div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-1">+$50/Month</label>
+                                        <div id="plusFiftyMonthly" class="text-lg font-bold text-green-500">+$0</div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-1">+5 Years</label>
+                                        <div id="plusFiveYears" class="text-lg font-bold text-green-500">+$0</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Educational Content -->
+                            <div class="result-card p-4 rounded-xl">
+                                <h4 class="text-lg font-bold mb-4">Investment Principles</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h5 class="font-medium text-yellow-500 mb-2">Diversification</h5>
+                                        <p class="text-sm text-gray-400">Spreading investments across different asset classes reduces risk and smooths returns over time.</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-yellow-500 mb-2">Compound Interest</h5>
+                                        <p class="text-sm text-gray-400">Earning returns on your returns creates exponential growth over long periods.</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-yellow-500 mb-2">Dollar-Cost Averaging</h5>
+                                        <p class="text-sm text-gray-400">Regular investments reduce the impact of market volatility and timing risk.</p>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-yellow-500 mb-2">Risk vs Return</h5>
+                                        <p class="text-sm text-gray-400">Higher potential returns typically come with higher risk and volatility.</p>
                                     </div>
                                 </div>
                             </div>
@@ -572,68 +938,70 @@
             
             <!-- Money Motive Tab -->
             <div id="motive-content" class="hidden max-w-2xl mx-auto">
-                <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg">
+                <div id="quiz-container" class="result-card p-8 rounded-xl">
                     <h2 class="text-3xl font-bold text-center mb-2">What's Your Money Motive?</h2>
-                    <p class="text-center text-gray-600 mb-6">Discover the unconscious beliefs that drive your financial decisions.</p>
-                    <div id="quiz-progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-                        <div id="quiz-progress" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    <p class="text-center text-gray-400 mb-6">Discover the unconscious beliefs that drive your financial decisions.</p>
+                    <div id="quiz-progress-bar" class="w-full bg-gray-700 rounded-full h-2.5 mb-6">
+                        <div id="quiz-progress" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
                     </div>
                     <h3 id="quizQuestion" class="text-xl font-semibold text-center mb-6 h-12"></h3>
                     <div id="quizOptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Options will be populated by JS -->
                     </div>
                 </div>
-                <div id="motive-result-container" class="hidden bg-white p-8 rounded-xl shadow-lg text-center">
+                <div id="motive-result-container" class="hidden result-card p-8 rounded-xl text-center">
                     <div id="archetypeIcon" class="mx-auto mb-4"></div>
                     <h2 id="archetypeTitle" class="text-3xl font-bold mb-2"></h2>
                     <div class="text-left space-y-4 mt-6">
                         <div>
-                            <h4 class="font-bold text-lg text-gray-800">Core Motivation:</h4>
-                            <p id="archetypeDescription" class="text-gray-600"></p>
+                            <h4 class="font-bold text-lg">Core Motivation:</h4>
+                            <p id="archetypeDescription" class="text-gray-400"></p>
                         </div>
                         <div>
-                            <h4 class="font-bold text-lg text-gray-800">Potential Strengths:</h4>
-                            <p id="archetypeStrengths" class="text-gray-600"></p>
+                            <h4 class="font-bold text-lg">Potential Strengths:</h4>
+                            <p id="archetypeStrengths" class="text-gray-400"></p>
                         </div>
                         <div>
-                            <h4 class="font-bold text-lg text-gray-800">Potential Blind Spots:</h4>
-                            <p id="archetypeBlinds" class="text-gray-600"></p>
+                            <h4 class="font-bold text-lg">Potential Blind Spots:</h4>
+                            <p id="archetypeBlinds" class="text-gray-400"></p>
                         </div>
                          <div>
-                            <h4 class="font-bold text-lg text-gray-800">Mantra for Growth:</h4>
-                            <p id="archetypeMantra" class="text-indigo-600 italic font-semibold"></p>
+                            <h4 class="font-bold text-lg">Mantra for Growth:</h4>
+                            <p id="archetypeMantra" class="text-yellow-500 italic font-semibold"></p>
                         </div>
                     </div>
-                    <button id="retakeQuizBtn" class="mt-8 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Retake Quiz</button>
+                    <button id="retakeQuizBtn" class="mt-8 premium-button py-2 px-4 rounded-lg">Retake Quiz</button>
                 </div>
             </div>
             
             <!-- Financial Goals Tab -->
             <div id="goals-content" class="hidden max-w-2xl mx-auto space-y-6">
-                <div id="goals-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200 hidden"></div>
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Set Your Financial Goal</h2>
+                <div id="goals-fact" class="result-card p-4 rounded-xl text-center bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 border border-yellow-700/30 hidden"></div>
+                <div class="result-card p-6 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-4">Set Your Financial Goal</h2>
                     <div class="space-y-4">
                         <div>
-                            <label for="goalName" class="block text-sm font-medium text-gray-700">Goal Name</label>
-                            <input type="text" id="goalName" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., Down Payment for House">
+                            <label for="goalName" class="block text-sm font-medium text-gray-300">Goal Name</label>
+                            <input type="text" id="goalName" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., Down Payment for House">
                         </div>
                         <div>
-                            <label for="goalAmount" class="block text-sm font-medium text-gray-700">Goal Amount (USD)</label>
-                            <input type="number" id="goalAmount" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 40000">
+                            <label for="goalAmount" class="block text-sm font-medium text-gray-300">Goal Amount (USD)</label>
+                            <input type="number" id="goalAmount" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 40000">
                         </div>
                         <div>
-                            <label for="currentGoalSavings" class="block text-sm font-medium text-gray-700">Current Savings for this Goal</label>
-                            <input type="number" id="currentGoalSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                            <label for="currentGoalSavings" class="block text-sm font-medium text-gray-300">Current Savings for this Goal</label>
+                            <input type="number" id="currentGoalSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
                         </div>
-                        <button id="setGoalBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Set Goal & See Progress</button>
+                        <button id="setGoalBtn" class="w-full premium-button py-3 px-4 rounded-lg">Set Goal & See Progress</button>
                     </div>
                 </div>
                 <div id="goal-tracker-section" class="mt-8 hidden">
-                    <h3 class="text-2xl font-bold text-center">Progress Towards <span id="goalResultName" class="text-indigo-600"></span></h3>
-                    <div class="bg-white p-6 rounded-lg shadow-lg mt-4">
-                         <canvas id="goalDonutChart" class="max-w-xs mx-auto"></canvas>
-                         <p class="text-center mt-4 text-gray-600">Skipping the <strong id="goalItemName"></strong> would add <strong id="goalContribution" class="text-green-600"></strong> to your goal!</p>
+                    <h3 class="text-2xl font-bold text-center">Progress Towards <span id="goalResultName" class="text-transparent bg-clip-text gold-gradient"></span></h3>
+                    <div class="result-card p-6 rounded-lg mt-4">
+                         <div class="chart-container max-w-xs mx-auto">
+                            <canvas id="goalDonutChart"></canvas>
+                         </div>
+                         <p class="text-center mt-4 text-gray-400">Skipping the <strong id="goalItemName"></strong> would add <strong id="goalContribution" class="text-green-500"></strong> to your goal!</p>
                     </div>
                 </div>
             </div>
@@ -642,64 +1010,64 @@
             <div id="retirement-content" class="hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Retirement Inputs -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg h-fit">
-                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Retirement Details</h2>
+                    <div class="lg:col-span-1 result-card p-6 rounded-xl h-fit">
+                        <h2 class="text-2xl font-bold mb-4">Retirement Details</h2>
                         <div class="space-y-4">
                             <div>
-                                <label for="retireAge" class="block text-sm font-medium text-gray-700">Current Age</label>
-                                <input type="number" id="retireAge" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 30">
+                                <label for="retireAge" class="block text-sm font-medium text-gray-300">Current Age</label>
+                                <input type="number" id="retireAge" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 30">
                             </div>
                             <div>
-                                <label for="annualIncome" class="block text-sm font-medium text-gray-700">Annual Pre-Tax Income</label>
-                                <input type="number" id="annualIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 70000">
+                                <label for="annualIncome" class="block text-sm font-medium text-gray-300">Annual Pre-Tax Income</label>
+                                <input type="number" id="annualIncome" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 70000">
                             </div>
                             <div>
-                                <label for="currentRetireSavings" class="block text-sm font-medium text-gray-700">Current Retirement Savings</label>
-                                <input type="number" id="currentRetireSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 50000">
+                                <label for="currentRetireSavings" class="block text-sm font-medium text-gray-300">Current Retirement Savings</label>
+                                <input type="number" id="currentRetireSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 50000">
                             </div>
                             <div>
-                                <label for="savingsRate" class="block text-sm font-medium text-gray-700">Annual Savings Rate (%)</label>
-                                <input type="number" id="savingsRate" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 15">
+                                <label for="savingsRate" class="block text-sm font-medium text-gray-300">Annual Savings Rate (%)</label>
+                                <input type="number" id="savingsRate" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 15">
                             </div>
                              <div>
-                                <label for="annualExpenses" class="block text-sm font-medium text-gray-700">Est. Annual Retirement Expenses</label>
-                                <input type="number" id="annualExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 40000">
+                                <label for="annualExpenses" class="block text-sm font-medium text-gray-300">Est. Annual Retirement Expenses</label>
+                                <input type="number" id="annualExpenses" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 40000">
                             </div>
                              <div>
-                                <label for="retirementDream" class="block text-sm font-medium text-gray-700">My Retirement Dream Is...</label>
-                                <input type="text" id="retirementDream" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., Traveling the world">
+                                <label for="retirementDream" class="block text-sm font-medium text-gray-300">My Retirement Dream Is...</label>
+                                <input type="text" id="retirementDream" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., Traveling the world">
                             </div>
-                            <button id="calculateRetireBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Retirement</button>
+                            <button id="calculateRetireBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate Retirement</button>
                         </div>
                     </div>
                     <!-- Retirement Results -->
                     <div id="retirement-results-section" class="lg:col-span-2 space-y-6 hidden">
-                        <div id="retirement-fact" class="result-card p-4 rounded-xl shadow-md text-center bg-indigo-50 border border-indigo-200"></div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
-                            <h3 class="text-xl font-bold text-gray-800">Your Retirement Goal</h3>
-                            <p class="text-2xl text-indigo-600 my-2">"<span id="dreamDisplay"></span>"</p>
-                            <p class="text-gray-600">You can achieve this at age <strong id="retirementAgeResult" class="text-indigo-600 text-3xl">0</strong></p>
+                        <div id="retirement-fact" class="result-card p-4 rounded-xl text-center bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 border border-yellow-700/30"></div>
+                        <div class="result-card p-6 rounded-xl text-center">
+                            <h3 class="text-xl font-bold">Your Retirement Goal</h3>
+                            <p class="text-2xl text-transparent bg-clip-text gold-gradient my-2">"<span id="dreamDisplay"></span>"</p>
+                            <p class="text-gray-400">You can achieve this at age <strong id="retirementAgeResult" class="text-transparent bg-clip-text gold-gradient text-3xl">0</strong></p>
                         </div>
-                         <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
-                            <h3 class="text-xl font-bold text-gray-800">Retirement Snapshot</h3>
-                            <p class="text-gray-600 mt-2">FI Number: <strong id="fiNumberResult" class="text-gray-800"></strong></p>
-                            <p class="text-gray-600">4% Withdrawal: <strong id="withdrawalResult" class="text-gray-800"></strong>/yr</p>
+                         <div class="result-card p-6 rounded-xl text-center">
+                            <h3 class="text-xl font-bold text-center mb-4">Retirement Snapshot</h3>
+                            <p class="text-gray-400 mt-2">FI Number: <strong id="fiNumberResult" class="text-white"></strong></p>
+                            <p class="text-gray-400">4% Withdrawal: <strong id="withdrawalResult" class="text-white"></strong>/yr</p>
                             <p class="text-xs text-gray-500 mt-1">Your portfolio is designed to last for a <strong class="font-semibold">30-year retirement</strong>.</p>
                         </div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md text-center">
+                        <div class="result-card p-6 rounded-xl text-center">
                             <h3 class="text-xl font-bold text-center mb-4">The Impact of This Purchase</h3>
-                            <p class="text-center text-gray-600 mb-4">Investing the <strong id="retireItemName" class="text-green-600"></strong> instead of spending it could buy you more time in retirement.</p>
-                            <div id="purchaseImpactResult" class="p-4 rounded-lg bg-green-50 text-center">
+                            <p class="text-center text-gray-400 mb-4">Investing the <strong id="retireItemName" class="text-green-500"></strong> instead of spending it could buy you more time in retirement.</p>
+                            <div id="purchaseImpactResult" class="p-4 rounded-lg bg-gradient-to-r from-green-900/20 to-green-800/20 text-center">
                                 <!-- Content generated by JS -->
                             </div>
                         </div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                        <div class="result-card p-6 rounded-xl">
                             <h3 class="text-xl font-bold text-center mb-4">What Your Extra Retirement Time Means</h3>
-                            <div id="retirementMeaning" class="text-center text-gray-700"></div>
+                            <div id="retirementMeaning" class="text-center text-gray-300"></div>
                         </div>
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
+                        <div class="result-card p-6 rounded-xl">
                             <h3 class="text-xl font-bold text-center mb-4">Your Life's Timeline</h3>
-                            <p class="text-center text-gray-600 mb-4">Based on your current path, here is the breakdown of your life's waking hours.</p>
+                            <p class="text-center text-gray-400 mb-4">Based on your current path, here is the breakdown of your life's waking hours.</p>
                             <div id="timeValueTable" class="space-y-4"></div>
                         </div>
                     </div>
@@ -708,30 +1076,30 @@
             
             <!-- Financial Health Tab -->
             <div id="health-content" class="hidden max-w-4xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Financial Health Dashboard</h2>
-                    <p class="text-gray-600 mb-6">Get a comprehensive view of your financial health and personalized recommendations.</p>
+                <div class="result-card p-6 rounded-xl mb-6">
+                    <h2 class="text-2xl font-bold mb-4">Financial Health Dashboard</h2>
+                    <p class="text-gray-400 mb-6">Get a comprehensive view of your financial health and personalized recommendations.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label for="healthIncome" class="block text-sm font-medium text-gray-700">Monthly Income</label>
-                            <input type="number" id="healthIncome" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 5000">
+                            <label for="healthIncome" class="block text-sm font-medium text-gray-300">Monthly Income</label>
+                            <input type="number" id="healthIncome" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
                         </div>
                         <div>
-                            <label for="healthExpenses" class="block text-sm font-medium text-gray-700">Monthly Expenses</label>
-                            <input type="number" id="healthExpenses" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 3500">
+                            <label for="healthExpenses" class="block text-sm font-medium text-gray-300">Monthly Expenses</label>
+                            <input type="number" id="healthExpenses" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 3500">
                         </div>
                         <div>
-                            <label for="healthSavings" class="block text-sm font-medium text-gray-700">Emergency Savings</label>
-                            <input type="number" id="healthSavings" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 10000">
+                            <label for="healthSavings" class="block text-sm font-medium text-gray-300">Emergency Savings</label>
+                            <input type="number" id="healthSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 10000">
                         </div>
                         <div>
-                            <label for="healthDebt" class="block text-sm font-medium text-gray-700">Total Debt</label>
-                            <input type="number" id="healthDebt" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md" placeholder="e.g., 15000">
+                            <label for="healthDebt" class="block text-sm font-medium text-gray-300">Total Debt</label>
+                            <input type="number" id="healthDebt" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 15000">
                         </div>
                     </div>
                     
-                    <button id="healthBtn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition">Calculate Financial Health</button>
+                    <button id="healthBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate Financial Health</button>
                 </div>
                 
                 <div id="health-results" class="hidden">
@@ -742,82 +1110,82 @@
                                 <div class="health-score-text" id="healthScoreText">0</div>
                             </div>
                         </div>
-                        <p id="healthScoreDescription" class="text-lg text-gray-600"></p>
+                        <p id="healthScoreDescription" class="text-lg text-gray-400"></p>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h4 class="text-lg font-bold text-gray-800 mb-4">Financial Metrics</h4>
+                        <div class="result-card p-6 rounded-xl">
+                            <h4 class="text-lg font-bold mb-4">Financial Metrics</h4>
                             <div class="space-y-3">
                                 <div>
-                                    <p class="text-gray-600">Savings Rate</p>
-                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div id="savingsRateBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    <p class="text-gray-400">Savings Rate</p>
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div id="savingsRateBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
                                     </div>
                                     <p class="text-right text-sm text-gray-500 mt-1"><span id="savingsRateValue">0</span>%</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Debt-to-Income Ratio</p>
-                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div id="debtRatioBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    <p class="text-gray-400">Debt-to-Income Ratio</p>
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div id="debtRatioBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
                                     </div>
                                     <p class="text-right text-sm text-gray-500 mt-1"><span id="debtRatioValue">0</span>%</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-600">Emergency Fund Coverage</p>
-                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div id="emergencyFundBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    <p class="text-gray-400">Emergency Fund Coverage</p>
+                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                        <div id="emergencyFundBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
                                     </div>
                                     <p class="text-right text-sm text-gray-500 mt-1"><span id="emergencyFundValue">0</span> months</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                            <h4 class="text-lg font-bold text-gray-800 mb-4">Personalized Recommendations</h4>
+                        <div class="result-card p-6 rounded-xl">
+                            <h4 class="text-lg font-bold mb-4">Personalized Recommendations</h4>
                             <div id="healthRecommendations" class="space-y-3">
                                 <!-- Recommendations will be populated by JS -->
                             </div>
                         </div>
                     </div>
                     
-                    <div class="result-card bg-white p-6 rounded-xl shadow-md">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Financial Milestones</h4>
+                    <div class="result-card p-6 rounded-xl">
+                        <h4 class="text-lg font-bold mb-4">Financial Milestones</h4>
                         <div class="space-y-4">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
                                 </div>
                                 <div class="ml-4">
-                                    <p class="text-gray-800">Establish Emergency Fund</p>
+                                    <p class="text-white">Establish Emergency Fund</p>
                                     <p class="text-sm text-gray-500">3-6 months of expenses</p>
                                 </div>
                                 <div class="ml-auto">
-                                    <span id="emergencyFundStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                    <span id="emergencyFundStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
                                 </div>
                             </div>
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
                                 </div>
                                 <div class="ml-4">
-                                    <p class="text-gray-800">Pay Off High-Interest Debt</p>
+                                    <p class="text-white">Pay Off High-Interest Debt</p>
                                     <p class="text-sm text-gray-500">Debt with interest > 10%</p>
                                 </div>
                                 <div class="ml-auto">
-                                    <span id="debtStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                    <span id="debtStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
                                 </div>
                             </div>
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-indigo-600"></i>
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
+                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
                                 </div>
                                 <div class="ml-4">
-                                    <p class="text-gray-800">Save for Retirement</p>
+                                    <p class="text-white">Save for Retirement</p>
                                     <p class="text-sm text-gray-500">15% of income recommended</p>
                                 </div>
                                 <div class="ml-auto">
-                                    <span id="retirementStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Not Started</span>
+                                    <span id="retirementStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
                                 </div>
                             </div>
                         </div>
@@ -856,7 +1224,8 @@
         let investmentScenarios = [
             { id: 1, name: "Scenario 1", initialInvestment: 1000, monthlyContribution: 100, timeHorizon: 20, stocks: 60, bonds: 20, gold: 5, btc: 5, other: 10 }
         ];
-        let maxScenarios = 2;
+        let maxScenarios = 5;
+        let currentChartType = 'growth';
         
         // Asset return rates based on historical data and conservative projections
         const ASSET_RETURNS = {
@@ -901,10 +1270,12 @@
             
             // Add title
             doc.setFontSize(20);
+            doc.setTextColor(212, 175, 55);
             doc.text('True Cost Calculator Results', 105, 15, { align: 'center' });
             
             // Add date
             doc.setFontSize(12);
+            doc.setTextColor(255, 255, 255);
             doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 25, { align: 'center' });
             
             // Add purchase details
@@ -1044,19 +1415,32 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: { 
                         y: { 
-                            ticks: { callback: (value) => formatCurrency(value) },
-                            grid: { color: '#e5e7eb' }
+                            ticks: { 
+                                callback: (value) => formatCurrency(value),
+                                color: '#a0aec0'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
                         }, 
                         x: { 
-                            title: { display: true, text: 'Years' },
-                            grid: { color: '#e5e7eb' }
+                            title: { display: true, text: 'Years', color: '#a0aec0' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
                         } 
                     },
                     plugins: { 
-                        legend: { position: 'top' },
-                        title: { display: true, text: 'Future Value of Investment' }
+                        legend: { 
+                            position: 'top',
+                            labels: { color: '#a0aec0' }
+                        },
+                        title: { 
+                            display: true, 
+                            text: 'Future Value of Investment',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        }
                     }
                 }
             };
@@ -1131,8 +1515,23 @@
                 investmentScenarios[0].initialInvestment = lastCalculatedCost;
             }
             
+            // Initialize chart tabs
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.chart-tab').forEach(t => {
+                        t.classList.remove('active', 'bg-gray-700', 'text-white');
+                        t.classList.add('bg-gray-800', 'text-gray-400');
+                    });
+                    tab.classList.add('active', 'bg-gray-700', 'text-white');
+                    tab.classList.remove('bg-gray-800', 'text-gray-400');
+                    currentChartType = tab.dataset.chart;
+                    updateInvestmentChart();
+                });
+            });
+            
             updateInvestmentChart();
             updateScenarioInputs();
+            updateRecommendedAllocation();
         }
         
         function updateScenarioInputs() {
@@ -1182,6 +1581,7 @@
             investmentScenarios[0].other = parseInt(document.getElementById('otherAllocation').value);
             
             updateInvestmentChart();
+            updateWhatIfAnalysis();
         }
         
         function updateInvestmentChart() {
@@ -1190,6 +1590,34 @@
             if (chartInstances['investmentChart']) {
                 chartInstances['investmentChart'].destroy();
             }
+            
+            let config;
+            
+            switch (currentChartType) {
+                case 'growth':
+                    config = buildGrowthChartConfig();
+                    break;
+                case 'allocation':
+                    config = buildAllocationChartConfig();
+                    break;
+                case 'waterfall':
+                    config = buildWaterfallChartConfig();
+                    break;
+                case 'montecarlo':
+                    config = buildMonteCarloChartConfig();
+                    break;
+                case 'timeline':
+                    config = buildTimelineChartConfig();
+                    break;
+            }
+            
+            chartInstances['investmentChart'] = new Chart(ctx, config);
+            updateScenarioTable();
+        }
+        
+        function buildGrowthChartConfig() {
+            const showRealReturns = document.getElementById('showRealReturns').checked;
+            const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
             
             // Generate data for each scenario
             const datasets = [];
@@ -1210,7 +1638,11 @@
                 let value = scenario.initialInvestment;
                 
                 for (let year = 0; year <= scenario.timeHorizon; year++) {
-                    data.push(value);
+                    if (showRealReturns) {
+                        data.push(value / Math.pow(1 + inflationRate, year));
+                    } else {
+                        data.push(value);
+                    }
                     
                     // Calculate value at end of year
                     for (let month = 1; month <= 12; month++) {
@@ -1236,7 +1668,7 @@
                 labels.push(i.toString());
             }
             
-            chartInstances['investmentChart'] = new Chart(ctx, {
+            return {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -1244,32 +1676,35 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             ticks: {
-                                callback: (value) => formatCurrency(value)
+                                callback: (value) => formatCurrency(value),
+                                color: '#a0aec0'
                             },
-                            grid: {
-                                color: '#e5e7eb'
-                            }
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: 'Years'
+                                text: 'Years',
+                                color: '#a0aec0'
                             },
-                            grid: {
-                                color: '#e5e7eb'
-                            }
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
                         }
                     },
                     plugins: {
                         legend: {
-                            position: 'top'
+                            position: 'top',
+                            labels: { color: '#a0aec0' }
                         },
                         title: {
                             display: true,
-                            text: 'Investment Growth Projection'
+                            text: `Investment Growth Projection ${showRealReturns ? '(Real Returns)' : '(Nominal Returns)'}`,
+                            color: '#ffffff',
+                            font: { size: 16 }
                         },
                         tooltip: {
                             callbacks: {
@@ -1280,15 +1715,308 @@
                         }
                     }
                 }
-            });
-            
-            // Update scenario summaries
-            updateScenarioSummaries();
+            };
         }
         
-        function updateScenarioSummaries() {
-            const container = document.getElementById('scenariosSummary');
-            container.innerHTML = '';
+        function buildAllocationChartConfig() {
+            const scenario = investmentScenarios[0];
+            const data = [
+                scenario.stocks,
+                scenario.bonds,
+                scenario.gold,
+                scenario.btc,
+                scenario.other
+            ];
+            const labels = ['Stocks', 'Bonds', 'Gold', 'Bitcoin', 'Other'];
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#f97316', '#8b5cf6'];
+            
+            return {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: 'rgba(26, 31, 46, 0.8)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { color: '#a0aec0' }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Asset Allocation',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        
+        function buildWaterfallChartConfig() {
+            const scenario = investmentScenarios[0];
+            const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                 (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                 (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                 (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                 (scenario.other/100 * ASSET_RETURNS.other);
+            
+            const monthlyRate = expectedReturn / 12;
+            const months = scenario.timeHorizon * 12;
+            
+            let totalContributions = scenario.initialInvestment;
+            let totalGrowth = 0;
+            let value = scenario.initialInvestment;
+            
+            // Calculate final values
+            for (let month = 1; month <= months; month++) {
+                const growth = value * monthlyRate;
+                totalGrowth += growth;
+                value = value * (1 + monthlyRate) + scenario.monthlyContribution;
+                totalContributions += scenario.monthlyContribution;
+            }
+            
+            return {
+                type: 'bar',
+                data: {
+                    labels: ['Initial Investment', 'Monthly Contributions', 'Growth'],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [
+                            scenario.initialInvestment,
+                            totalContributions - scenario.initialInvestment,
+                            totalGrowth
+                        ],
+                        backgroundColor: ['#4f46e5', '#10b981', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: (value) => formatCurrency(value),
+                                color: '#a0aec0'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Contributions vs Growth',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    return `${context.label}: ${formatCurrency(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        
+        function buildMonteCarloChartConfig() {
+            const scenario = investmentScenarios[0];
+            const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                 (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                 (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                 (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                 (scenario.other/100 * ASSET_RETURNS.other);
+            
+            const monthlyRate = expectedReturn / 12;
+            const months = scenario.timeHorizon * 12;
+            const volatility = 0.15; // Annual volatility assumption
+            const simulations = 1000;
+            
+            // Run Monte Carlo simulation
+            const finalValues = [];
+            
+            for (let sim = 0; sim < simulations; sim++) {
+                let value = scenario.initialInvestment;
+                
+                for (let month = 1; month <= months; month++) {
+                    const randomReturn = monthlyRate + (Math.random() - 0.5) * volatility / Math.sqrt(12);
+                    value = value * (1 + randomReturn) + scenario.monthlyContribution;
+                }
+                
+                finalValues.push(value);
+            }
+            
+            // Create percentiles
+            finalValues.sort((a, b) => a - b);
+            const percentiles = [10, 25, 50, 75, 90];
+            const percentileValues = percentiles.map(p => finalValues[Math.floor(simulations * p / 100)]);
+            
+            return {
+                type: 'bar',
+                data: {
+                    labels: percentiles.map(p => `${p}th Percentile`),
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: percentileValues,
+                        backgroundColor: percentiles.map(p => {
+                            if (p <= 25) return '#ef4444';
+                            if (p <= 75) return '#f59e0b';
+                            return '#10b981';
+                        })
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: (value) => formatCurrency(value),
+                                color: '#a0aec0'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Monte Carlo Simulation (1000 runs)',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    return `${context.label}: ${formatCurrency(context.raw)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        
+        function buildTimelineChartConfig() {
+            const scenario = investmentScenarios[0];
+            const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                 (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                 (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                 (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                 (scenario.other/100 * ASSET_RETURNS.other);
+            
+            const monthlyRate = expectedReturn / 12;
+            const targetAmounts = [100000, 250000, 500000, 1000000];
+            const timelineData = [];
+            
+            targetAmounts.forEach(target => {
+                let value = scenario.initialInvestment;
+                let months = 0;
+                
+                while (value < target && months < 600) {
+                    value = value * (1 + monthlyRate) + scenario.monthlyContribution;
+                    months++;
+                }
+                
+                timelineData.push({
+                    target: target,
+                    months: months,
+                    years: months / 12
+                });
+            });
+            
+            return {
+                type: 'bar',
+                data: {
+                    labels: targetAmounts.map(a => formatCurrency(a)),
+                    datasets: [{
+                        label: 'Years to Reach Goal',
+                        data: timelineData.map(d => d.years),
+                        backgroundColor: '#4f46e5'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Years',
+                                color: '#a0aec0'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Target Amount',
+                                color: '#a0aec0'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#a0aec0' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Time to Reach Financial Milestones',
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const data = timelineData[context.dataIndex];
+                                    return [
+                                        `Target: ${formatCurrency(data.target)}`,
+                                        `Years: ${formatNumber(data.years, 1)}`,
+                                        `Months: ${data.months}`
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        
+        function updateScenarioTable() {
+            const tbody = document.getElementById('scenarioTableBody');
+            tbody.innerHTML = '';
             
             investmentScenarios.forEach((scenario, index) => {
                 const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
@@ -1308,26 +2036,131 @@
                 
                 const totalContributions = scenario.initialInvestment + (scenario.monthlyContribution * months);
                 const interestEarned = value - totalContributions;
+                const cagr = Math.pow(value / scenario.initialInvestment, 1 / scenario.timeHorizon) - 1;
                 
-                const scenarioDiv = document.createElement('div');
-                scenarioDiv.className = 'result-card bg-white p-4 rounded-xl shadow-md';
-                scenarioDiv.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-gray-800">${scenario.name}</h4>
-                            <p class="text-sm text-gray-600">Final Value: <span class="font-semibold text-green-600">${formatCurrency(value)}</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-600">Total Contributions: <span class="font-semibold">${formatCurrency(totalContributions)}</span></p>
-                            <p class="text-sm text-gray-600">Interest Earned: <span class="font-semibold text-green-600">${formatCurrency(interestEarned)}</span></p>
-                        </div>
-                        ${index > 0 ? `<button class="ml-4 text-red-500 hover:text-red-700" onclick="removeScenario(${index})"><i data-lucide="x" class="w-5 h-5"></i></button>` : ''}
-                    </div>
+                // Calculate risk score (simplified)
+                const riskScore = (scenario.stocks * 0.8 + scenario.btc * 1.0 + scenario.gold * 0.6 + scenario.other * 0.4) / 100;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${scenario.name}</strong></td>
+                    <td>${formatCurrency(value)}</td>
+                    <td>${formatCurrency(totalContributions)}</td>
+                    <td>${formatCurrency(interestEarned)}</td>
+                    <td>${(cagr * 100).toFixed(1)}%</td>
+                    <td>${riskScore.toFixed(1)}/10</td>
+                    <td>
+                        ${index > 0 ? `<button class="text-red-500 hover:text-red-400" onclick="removeScenario(${index})"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                    </td>
                 `;
-                container.appendChild(scenarioDiv);
+                tbody.appendChild(row);
             });
             
             lucide.createIcons();
+        }
+        
+        function updateWhatIfAnalysis() {
+            const scenario = investmentScenarios[0];
+            const expectedReturn = (scenario.stocks/100 * ASSET_RETURNS.stocks) + 
+                                 (scenario.bonds/100 * ASSET_RETURNS.bonds) + 
+                                 (scenario.gold/100 * ASSET_RETURNS.gold) + 
+                                 (scenario.btc/100 * ASSET_RETURNS.btc) + 
+                                 (scenario.other/100 * ASSET_RETURNS.other);
+            
+            const monthlyRate = expectedReturn / 12;
+            const months = scenario.timeHorizon * 12;
+            
+            // Calculate base value
+            let baseValue = scenario.initialInvestment;
+            for (let month = 1; month <= months; month++) {
+                baseValue = baseValue * (1 + monthlyRate) + scenario.monthlyContribution;
+            }
+            
+            // +1% return
+            let plusOneValue = scenario.initialInvestment;
+            const plusOneRate = (expectedReturn + 0.01) / 12;
+            for (let month = 1; month <= months; month++) {
+                plusOneValue = plusOneValue * (1 + plusOneRate) + scenario.monthlyContribution;
+            }
+            
+            // +$50/month
+            let plusFiftyValue = scenario.initialInvestment;
+            for (let month = 1; month <= months; month++) {
+                plusFiftyValue = plusFiftyValue * (1 + monthlyRate) + (scenario.monthlyContribution + 50);
+            }
+            
+            // +5 years
+            let plusFiveValue = scenario.initialInvestment;
+            const plusFiveMonths = (scenario.timeHorizon + 5) * 12;
+            for (let month = 1; month <= plusFiveMonths; month++) {
+                plusFiveValue = plusFiveValue * (1 + monthlyRate) + scenario.monthlyContribution;
+            }
+            
+            document.getElementById('plusOnePercent').textContent = `+${formatCurrency(plusOneValue - baseValue)}`;
+            document.getElementById('plusFiftyMonthly').textContent = `+${formatCurrency(plusFiftyValue - baseValue)}`;
+            document.getElementById('plusFiveYears').textContent = `+${formatCurrency(plusFiveValue - baseValue)}`;
+        }
+        
+        function updateRecommendedAllocation() {
+            const age = parseInt(document.getElementById('age').value) || 30;
+            const retirementYear = parseInt(document.getElementById('retirementAge').value) || 65;
+            const yearsToRetirement = retirementYear - age;
+            
+            let recommendedStocks, recommendedBonds, recommendedGold, recommendedBtc, recommendedOther;
+            
+            if (yearsToRetirement > 30) {
+                // Aggressive allocation for young investors
+                recommendedStocks = 80;
+                recommendedBonds = 10;
+                recommendedGold = 5;
+                recommendedBtc = 3;
+                recommendedOther = 2;
+            } else if (yearsToRetirement > 20) {
+                // Growth allocation
+                recommendedStocks = 65;
+                recommendedBonds = 20;
+                recommendedGold = 5;
+                recommendedBtc = 5;
+                recommendedOther = 5;
+            } else if (yearsToRetirement > 10) {
+                // Balanced allocation
+                recommendedStocks = 50;
+                recommendedBonds = 35;
+                recommendedGold = 5;
+                recommendedBtc = 2;
+                recommendedOther = 8;
+            } else {
+                // Conservative allocation
+                recommendedStocks = 30;
+                recommendedBonds = 50;
+                recommendedGold = 10;
+                recommendedBtc = 0;
+                recommendedOther = 10;
+            }
+            
+            const recommendedText = `Stocks: ${recommendedStocks}%, Bonds: ${recommendedBonds}%, Gold: ${recommendedGold}%, Bitcoin: ${recommendedBtc}%, Other: ${recommendedOther}%`;
+            document.getElementById('recommendedAllocation').textContent = recommendedText;
+            
+            // Store recommended values for apply button
+            window.recommendedAllocation = {
+                stocks: recommendedStocks,
+                bonds: recommendedBonds,
+                gold: recommendedGold,
+                btc: recommendedBtc,
+                other: recommendedOther
+            };
+        }
+        
+        function applyRecommendedAllocation() {
+            if (window.recommendedAllocation) {
+                const rec = window.recommendedAllocation;
+                document.getElementById('stocksAllocation').value = rec.stocks;
+                document.getElementById('bondsAllocation').value = rec.bonds;
+                document.getElementById('goldAllocation').value = rec.gold;
+                document.getElementById('btcAllocation').value = rec.btc;
+                document.getElementById('otherAllocation').value = rec.other;
+                updateScenarioInputs();
+            }
         }
         
         function addScenario() {
@@ -1498,11 +2331,11 @@
                 div.className = 'flex items-start';
                 div.innerHTML = `
                     <div class="flex-shrink-0 mt-1">
-                        <i data-lucide="${rec.icon}" class="w-5 h-5 text-indigo-600"></i>
+                        <i data-lucide="${rec.icon}" class="w-5 h-5 text-yellow-500"></i>
                     </div>
                     <div class="ml-3">
-                        <h5 class="font-medium text-gray-800">${rec.title}</h5>
-                        <p class="text-sm text-gray-600">${rec.description}</p>
+                        <h5 class="font-medium">${rec.title}</h5>
+                        <p class="text-sm text-gray-400">${rec.description}</p>
                     </div>
                 `;
                 recommendationsContainer.appendChild(div);
@@ -1512,38 +2345,38 @@
             const emergencyStatus = document.getElementById('emergencyFundStatus');
             if (emergencyFundMonths >= 6) {
                 emergencyStatus.textContent = 'Complete';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
             } else if (emergencyFundMonths >= 3) {
                 emergencyStatus.textContent = 'In Progress';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
             } else {
                 emergencyStatus.textContent = 'Not Started';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
             }
             
             const debtStatus = document.getElementById('debtStatus');
             if (debtRatio <= 10) {
                 debtStatus.textContent = 'Complete';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
             } else if (debtRatio <= 20) {
                 debtStatus.textContent = 'In Progress';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
             } else {
                 debtStatus.textContent = 'Not Started';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
             }
             
             const retirementStatus = document.getElementById('retirementStatus');
             const retirementSavingsRate = 15; // Assuming 15% is the target
             if (savingsRate >= retirementSavingsRate) {
                 retirementStatus.textContent = 'On Track';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-100 text-green-800';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
             } else if (savingsRate >= retirementSavingsRate * 0.7) {
                 retirementStatus.textContent = 'In Progress';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
             } else {
                 retirementStatus.textContent = 'Needs Attention';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-100 text-red-800';
+                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
             }
             
             document.getElementById('health-results').classList.remove('hidden');
@@ -1584,15 +2417,24 @@
                     labels: ['Current Savings', 'This Purchase', 'Remaining'],
                     datasets: [{
                         data: [saved, potentialSave, Math.max(0, remaining)],
-                        backgroundColor: ['#4f46e5', '#16a34a', '#e5e7eb'],
+                        backgroundColor: ['#4f46e5', '#10b981', 'rgba(255, 255, 255, 0.1)'],
                         hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { 
-                        legend: { position: 'top' }, 
-                        title: { display: true, text: `Goal: ${formatCurrency(amount)}` }
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: '#a0aec0' }
+                        }, 
+                        title: { 
+                            display: true, 
+                            text: `Goal: ${formatCurrency(amount)}`,
+                            color: '#ffffff',
+                            font: { size: 16 }
+                        }
                     }
                 }
             };
@@ -1644,8 +2486,8 @@
             const daysBought = hoursBought / 16;
             
             elements.purchaseImpactResult.innerHTML = `
-                <p class="font-bold text-2xl text-green-600">+ ${formatNumber(hoursBought, 0)} hours</p>
-                <p class="text-sm text-green-700">(${formatNumber(daysBought, 1)} days of freedom)</p>
+                <p class="font-bold text-2xl text-green-500">+ ${formatNumber(hoursBought, 0)} hours</p>
+                <p class="text-sm text-green-400">(${formatNumber(daysBought, 1)} days of freedom)</p>
                 <p class="text-xs text-gray-500 mt-2">
                     Assumes purchase amount is invested at ${AVG_MARKET_RETURN * 100}% annually until your retirement at age ${baseScenario.age}.
                 </p>
@@ -1657,13 +2499,13 @@
         function updateRetirementMeaning(hours, elements) {
             let message = '';
             if (hours > 1000) {
-                message = `With over <strong class="text-indigo-600">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
+                message = `With over <strong class="text-yellow-500">${formatNumber(hours,0)} extra hours</strong>, you could take a multi-month international trip, write a novel, or dedicate a significant amount of time to a cause you're passionate about. This isn't just a purchase; it's a life-changing amount of freedom.`;
             } else if (hours > 160) {
-                message = `Those <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
+                message = `Those <strong class="text-yellow-500">${formatNumber(hours,0)} hours</strong> are enough for a long vacation, to complete an online certification to boost your skills, or to spend an entire month of afternoons with your family, completely stress-free.`;
             } else if (hours > 40) {
-                message = `What could you do with an extra <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
+                message = `What could you do with an extra <strong class="text-yellow-500">${formatNumber(hours,0)} hours</strong> of your life? That's a full week to learn a new hobby, tackle a home project, or simply relax and recharge.`;
             } else {
-                message = `Even <strong class="text-indigo-600">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
+                message = `Even <strong class="text-yellow-500">${formatNumber(hours,0)} hours</strong> is precious. That's several long weekends, dozens of dinners with friends, or countless moments spent on your own terms, not someone else's.`;
             }
             elements.retirementMeaning.innerHTML = message;
         }
@@ -1683,20 +2525,20 @@
             
             elements.timeValueTable.innerHTML = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-lg bg-gray-100 text-center">
-                        <h4 class="font-bold text-lg text-gray-800 flex items-center justify-center"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>The Working Years</h4>
+                    <div class="p-4 rounded-lg bg-gradient-to-r from-red-900/20 to-red-800/20 text-center">
+                        <h4 class="font-bold text-lg flex items-center justify-center"><i data-lucide="briefcase" class="w-5 h-5 mr-2"></i>The Working Years</h4>
                         <div class="mt-2 space-y-1">
-                            <p><strong class="text-2xl text-red-600">${formatNumber(birthdaysWorking, 0)}</strong> Birthdays</p>
-                            <p><strong class="text-lg text-red-600">${formatNumber(daysWorking, 0)}</strong> Waking Days</p>
-                            <p><strong class="text-lg text-red-600">${formatNumber(hoursWorking, 0)}</strong> Waking Hours</p>
+                            <p><strong class="text-2xl text-red-500">${formatNumber(birthdaysWorking, 0)}</strong> Birthdays</p>
+                            <p><strong class="text-lg text-red-400">${formatNumber(daysWorking, 0)}</strong> Waking Days</p>
+                            <p><strong class="text-lg text-red-400">${formatNumber(hoursWorking, 0)}</strong> Waking Hours</p>
                         </div>
                     </div>
-                    <div class="p-4 rounded-lg bg-indigo-50 text-center">
-                        <h4 class="font-bold text-lg text-indigo-800 flex items-center justify-center"><i data-lucide="sunset" class="w-5 h-5 mr-2"></i>The Freedom Years</h4>
+                    <div class="p-4 rounded-lg bg-gradient-to-r from-green-900/20 to-green-800/20 text-center">
+                        <h4 class="font-bold text-lg flex items-center justify-center"><i data-lucide="sunset" class="w-5 h-5 mr-2"></i>The Freedom Years</h4>
                          <div class="mt-2 space-y-1">
-                            <p><strong class="text-2xl text-green-600">${formatNumber(birthdaysRetired, 0)}</strong> Birthdays</p>
-                            <p><strong class="text-lg text-green-600">${formatNumber(daysRetired, 0)}</strong> Waking Days</p>
-                            <p><strong class="text-lg text-green-600">${formatNumber(hoursRetired, 0)}</strong> Waking Hours</p>
+                            <p><strong class="text-2xl text-green-500">${formatNumber(birthdaysRetired, 0)}</strong> Birthdays</p>
+                            <p><strong class="text-lg text-green-400">${formatNumber(daysRetired, 0)}</strong> Waking Days</p>
+                            <p><strong class="text-lg text-green-400">${formatNumber(hoursRetired, 0)}</strong> Waking Hours</p>
                         </div>
                     </div>
                 </div>
@@ -1738,7 +2580,7 @@
             elements.quizOptions.innerHTML = '';
             questionData.answers.forEach(answer => {
                 const button = document.createElement('button');
-                button.className = 'quiz-option p-4 border-2 border-gray-200 rounded-lg text-left hover:bg-indigo-50 hover:border-indigo-300';
+                button.className = 'quiz-option p-4 rounded-lg text-left';
                 button.textContent = answer.text;
                 button.onclick = () => selectAnswer(answer.motive, elements);
                 elements.quizOptions.appendChild(button);
@@ -1812,11 +2654,11 @@
             }
             
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
-            factContainer.innerHTML = `<p class="text-indigo-800"><i class="inline-block" data-lucide="lightbulb"></i> <strong>Food for Thought:</strong> ${randomFact}</p>`;
+            factContainer.innerHTML = `<p class="text-yellow-200"><i class="inline-block" data-lucide="lightbulb"></i> <strong>Food for Thought:</strong> ${randomFact}</p>`;
             factContainer.classList.remove('hidden');
             lucide.createIcons();
         }
-
+        
         // --- Event Listeners and Initial Load ---
         function initializeApp() {
             // --- DOM Elements ---
@@ -1860,6 +2702,8 @@
                 goldAllocation: document.getElementById('goldAllocation'),
                 btcAllocation: document.getElementById('btcAllocation'),
                 otherAllocation: document.getElementById('otherAllocation'),
+                inflationRate: document.getElementById('inflationRate'),
+                showRealReturns: document.getElementById('showRealReturns'),
                 // Financial Health
                 healthIncome: document.getElementById('healthIncome'),
                 healthExpenses: document.getElementById('healthExpenses'),
@@ -1921,6 +2765,9 @@
             document.getElementById('goldAllocation').addEventListener('input', updateScenarioInputs);
             document.getElementById('btcAllocation').addEventListener('input', updateScenarioInputs);
             document.getElementById('otherAllocation').addEventListener('input', updateScenarioInputs);
+            document.getElementById('inflationRate').addEventListener('input', updateScenarioInputs);
+            document.getElementById('showRealReturns').addEventListener('change', updateScenarioInputs);
+            document.getElementById('applyRecommendedBtn').addEventListener('click', applyRecommendedAllocation);
             document.getElementById('addScenarioBtn').addEventListener('click', addScenario);
             document.getElementById('resetScenariosBtn').addEventListener('click', resetScenarios);
             
@@ -1931,6 +2778,12 @@
                 button.addEventListener('click', () => {
                     switchTab(button.dataset.tab);
                 });
+            });
+            
+            // Add fade-in animation to elements
+            document.querySelectorAll('.result-card').forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in-up');
             });
             
             lucide.createIcons();
