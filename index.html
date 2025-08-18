@@ -834,10 +834,7 @@
             <button data-tab="calculator" class="tab-button tab-active text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Purchase Calculator</button>
             <button data-tab="debt" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Debt Impact</button>
             <button data-tab="investment" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Investment Builder</button>
-            <button data-tab="motive" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">My Money Motive</button>
-            <button data-tab="goals" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Financial Goals</button>
             <button data-tab="retirement" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Retirement</button>
-            <button data-tab="health" class="tab-button text-sm md:text-base font-medium p-4 border-b-2 border-transparent">Financial Health</button>
         </div>
         
         <main id="app-container">
@@ -1537,76 +1534,6 @@
                 </div>
             </div>
             
-            <!-- Money Motive Tab -->
-            <div id="motive-content" class="hidden max-w-2xl mx-auto">
-                <div id="quiz-container" class="result-card p-8 rounded-xl">
-                    <h2 class="text-3xl font-bold text-center mb-2">What's Your Money Motive?</h2>
-                    <p class="text-center text-gray-400 mb-6">Discover the unconscious beliefs that drive your financial decisions.</p>
-                    <div id="quiz-progress-bar" class="w-full bg-gray-700 rounded-full h-2.5 mb-6">
-                        <div id="quiz-progress" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                    <h3 id="quizQuestion" class="text-xl font-semibold text-center mb-6 h-12"></h3>
-                    <div id="quizOptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Options will be populated by JS -->
-                    </div>
-                </div>
-                <div id="motive-result-container" class="hidden result-card p-8 rounded-xl text-center">
-                    <div id="archetypeIcon" class="mx-auto mb-4"></div>
-                    <h2 id="archetypeTitle" class="text-3xl font-bold mb-2"></h2>
-                    <div class="text-left space-y-4 mt-6">
-                        <div>
-                            <h4 class="font-bold text-lg">Core Motivation:</h4>
-                            <p id="archetypeDescription" class="text-gray-400"></p>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-lg">Potential Strengths:</h4>
-                            <p id="archetypeStrengths" class="text-gray-400"></p>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-lg">Potential Blind Spots:</h4>
-                            <p id="archetypeBlinds" class="text-gray-400"></p>
-                        </div>
-                         <div>
-                            <h4 class="font-bold text-lg">Mantra for Growth:</h4>
-                            <p id="archetypeMantra" class="text-yellow-500 italic font-semibold"></p>
-                        </div>
-                    </div>
-                    <button id="retakeQuizBtn" class="mt-8 premium-button py-2 px-4 rounded-lg">Retake Quiz</button>
-                </div>
-            </div>
-            
-            <!-- Financial Goals Tab -->
-            <div id="goals-content" class="hidden max-w-2xl mx-auto space-y-6">
-                <div id="goals-fact" class="result-card p-4 rounded-xl text-center bg-gradient-to-r from-yellow-900/20 to-yellow-800/20 border border-yellow-700/30 hidden"></div>
-                <div class="result-card p-6 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4">Set Your Financial Goal</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="goalName" class="block text-sm font-medium text-gray-300">Goal Name</label>
-                            <input type="text" id="goalName" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., Down Payment for House">
-                        </div>
-                        <div>
-                            <label for="goalAmount" class="block text-sm font-medium text-gray-300">Goal Amount (USD)</label>
-                            <input type="number" id="goalAmount" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 40000">
-                        </div>
-                        <div>
-                            <label for="currentGoalSavings" class="block text-sm font-medium text-gray-300">Current Savings for this Goal</label>
-                            <input type="number" id="currentGoalSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
-                        </div>
-                        <button id="setGoalBtn" class="w-full premium-button py-3 px-4 rounded-lg">Set Goal & See Progress</button>
-                    </div>
-                </div>
-                <div id="goal-tracker-section" class="mt-8 hidden">
-                    <h3 class="text-2xl font-bold text-center">Progress Towards <span id="goalResultName" class="text-transparent bg-clip-text gold-gradient"></span></h3>
-                    <div class="result-card p-6 rounded-lg mt-4">
-                         <div class="chart-container max-w-xs mx-auto">
-                            <canvas id="goalDonutChart"></canvas>
-                         </div>
-                         <p class="text-center mt-4 text-gray-400">Skipping the <strong id="goalItemName"></strong> would add <strong id="goalContribution" class="text-green-500"></strong> to your goal!</p>
-                    </div>
-                </div>
-            </div>
-            
             <!-- Retirement Tab -->
             <div id="retirement-content" class="hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1674,125 +1601,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Financial Health Tab -->
-            <div id="health-content" class="hidden max-w-4xl mx-auto">
-                <div class="result-card p-6 rounded-xl mb-6">
-                    <h2 class="text-2xl font-bold mb-4">Financial Health Dashboard</h2>
-                    <p class="text-gray-400 mb-6">Get a comprehensive view of your financial health and personalized recommendations.</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="healthIncome" class="block text-sm font-medium text-gray-300">Monthly Income</label>
-                            <input type="number" id="healthIncome" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 5000">
-                        </div>
-                        <div>
-                            <label for="healthExpenses" class="block text-sm font-medium text-gray-300">Monthly Expenses</label>
-                            <input type="number" id="healthExpenses" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 3500">
-                        </div>
-                        <div>
-                            <label for="healthSavings" class="block text-sm font-medium text-gray-300">Emergency Savings</label>
-                            <input type="number" id="healthSavings" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 10000">
-                        </div>
-                        <div>
-                            <label for="healthDebt" class="block text-sm font-medium text-gray-300">Total Debt</label>
-                            <input type="number" id="healthDebt" class="mt-1 block w-full px-3 py-2 premium-input rounded-md" placeholder="e.g., 15000">
-                        </div>
-                    </div>
-                    
-                    <button id="healthBtn" class="w-full premium-button py-3 px-4 rounded-lg">Calculate Financial Health</button>
-                </div>
-                
-                <div id="health-results" class="hidden">
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold mb-2">Your Financial Health Score</h3>
-                        <div class="flex justify-center mb-4">
-                            <div class="health-score" id="healthScoreCircle">
-                                <div class="health-score-text" id="healthScoreText">0</div>
-                            </div>
-                        </div>
-                        <p id="healthScoreDescription" class="text-lg text-gray-400"></p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="result-card p-6 rounded-xl">
-                            <h4 class="text-lg font-bold mb-4">Financial Metrics</h4>
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-gray-400">Savings Rate</p>
-                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                        <div id="savingsRateBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
-                                    </div>
-                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="savingsRateValue">0</span>%</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-400">Debt-to-Income Ratio</p>
-                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                        <div id="debtRatioBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
-                                    </div>
-                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="debtRatioValue">0</span>%</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-400">Emergency Fund Coverage</p>
-                                    <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                        <div id="emergencyFundBar" class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2.5 rounded-full" style="width: 0%"></div>
-                                    </div>
-                                    <p class="text-right text-sm text-gray-500 mt-1"><span id="emergencyFundValue">0</span> months</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="result-card p-6 rounded-xl">
-                            <h4 class="text-lg font-bold mb-4">Personalized Recommendations</h4>
-                            <div id="healthRecommendations" class="space-y-3">
-                                <!-- Recommendations will be populated by JS -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-card p-6 rounded-xl">
-                        <h4 class="text-lg font-bold mb-4">Financial Milestones</h4>
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-white">Establish Emergency Fund</p>
-                                    <p class="text-sm text-gray-500">3-6 months of expenses</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <span id="emergencyFundStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-white">Pay Off High-Interest Debt</p>
-                                    <p class="text-sm text-gray-500">Debt with interest > 10%</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <span id="debtStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-900/20 flex items-center justify-center">
-                                    <i data-lucide="check" class="w-5 h-5 text-yellow-500"></i>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-white">Save for Retirement</p>
-                                    <p class="text-sm text-gray-500">15% of income recommended</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <span id="retirementStatus" class="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">Not Started</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </main>
         <!-- Footer with Disclaimer and Branding -->
         <footer class="premium-footer">
@@ -1840,10 +1648,8 @@
         const LIFE_EXPECTANCY = { male: 76, female: 81 }; 
         const WAKING_HOURS_PER_YEAR = 16 * 365;
         const AVG_MARKET_RETURN = 0.07; 
-        let currentGoal = { name: '', amount: 0, saved: 0 };
         let lastCalculatedCost = 0;
         let chartInstances = {};
-        let userMotive = null;
         
         // Investment scenario state
         let investmentScenarios = [
@@ -1971,7 +1777,7 @@
         
         // --- Tab Switching ---
         function switchTab(tabName) {
-            ['calculator', 'debt', 'investment', 'motive', 'goals', 'retirement', 'health'].forEach(name => {
+            ['calculator', 'debt', 'investment', 'retirement'].forEach(name => {
                 const content = document.getElementById(`${name}-content`);
                 const tab = document.querySelector(`[data-tab="${name}"]`);
                 if (content && tab) {
@@ -2035,7 +1841,6 @@
             elements.lifePercentage.textContent = `${formatNumber(lifePercentage, 6)}%`;
             
             updateChart('futureValueChart', buildFutureValueChartConfig(totalCost));
-            updateGoalTracker(elements);
             displayDynamicFact('calculator', elements);
             
             calculatePaycheckPower(totalCost, preTaxHourlyIncome, totalTaxRate, elements);
@@ -3320,225 +3125,6 @@
             updateScenarioInputs();
         }
         
-        // --- Financial Health Logic ---
-        function calculateFinancialHealth(elements) {
-            const income = parseFloat(elements.healthIncome.value) || 0;
-            const expenses = parseFloat(elements.healthExpenses.value) || 0;
-            const savings = parseFloat(elements.healthSavings.value) || 0;
-            const debt = parseFloat(elements.healthDebt.value) || 0;
-            
-            if (income <= 0) {
-                alert("Please enter a valid monthly income.");
-                return;
-            }
-            
-            // Calculate metrics
-            const savingsRate = ((income - expenses) / income) * 100;
-            const debtRatio = (debt / income) * 100;
-            const emergencyFundMonths = savings / expenses;
-            
-            // Calculate health score (0-100)
-            let score = 0;
-            
-            // Savings rate (30 points)
-            if (savingsRate >= 20) score += 30;
-            else if (savingsRate >= 15) score += 25;
-            else if (savingsRate >= 10) score += 20;
-            else if (savingsRate >= 5) score += 15;
-            else score += Math.max(0, savingsRate * 3);
-            
-            // Debt ratio (30 points)
-            if (debtRatio <= 10) score += 30;
-            else if (debtRatio <= 20) score += 25;
-            else if (debtRatio <= 30) score += 20;
-            else if (debtRatio <= 40) score += 15;
-            else score += Math.max(0, 30 - (debtRatio - 40) * 0.5);
-            
-            // Emergency fund (40 points)
-            if (emergencyFundMonths >= 6) score += 40;
-            else if (emergencyFundMonths >= 3) score += 30;
-            else if (emergencyFundMonths >= 1) score += 20;
-            else score += Math.max(0, emergencyFundMonths * 20);
-            
-            // Update UI
-            document.getElementById('healthScoreText').textContent = Math.round(score);
-            document.getElementById('healthScoreCircle').style.setProperty('--score', `${score}%`);
-            
-            // Update description
-            let description = "";
-            if (score >= 80) {
-                description = "Excellent! Your financial health is in great shape. Keep up the good work!";
-            } else if (score >= 60) {
-                description = "Good! You're on the right track, but there's room for improvement.";
-            } else if (score >= 40) {
-                description = "Fair. Your financial health needs attention. Focus on building savings and reducing debt.";
-            } else {
-                description = "Needs improvement. It's time to take action and make changes to your financial habits.";
-            }
-            document.getElementById('healthScoreDescription').textContent = description;
-            
-            // Update metrics bars
-            document.getElementById('savingsRateBar').style.width = `${Math.min(100, savingsRate * 2)}%`;
-            document.getElementById('savingsRateValue').textContent = formatNumber(savingsRate, 1);
-            
-            document.getElementById('debtRatioBar').style.width = `${Math.min(100, debtRatio)}%`;
-            document.getElementById('debtRatioValue').textContent = formatNumber(debtRatio, 1);
-            
-            document.getElementById('emergencyFundBar').style.width = `${Math.min(100, emergencyFundMonths * 16.67)}%`;
-            document.getElementById('emergencyFundValue').textContent = formatNumber(emergencyFundMonths, 1);
-            
-            // Generate recommendations
-            const recommendations = [];
-            
-            if (savingsRate < 10) {
-                recommendations.push({
-                    icon: 'piggy-bank',
-                    title: 'Increase Your Savings Rate',
-                    description: 'Aim to save at least 10-15% of your income. Start by cutting small expenses and automating savings.'
-                });
-            }
-            
-            if (debtRatio > 30) {
-                recommendations.push({
-                    icon: 'credit-card',
-                    title: 'Reduce Your Debt',
-                    description: 'Focus on paying down high-interest debt first. Consider the debt avalanche or snowball method.'
-                });
-            }
-            
-            if (emergencyFundMonths < 3) {
-                recommendations.push({
-                    icon: 'shield',
-                    title: 'Build Your Emergency Fund',
-                    description: 'Aim to save 3-6 months of expenses. Start with a small goal of $500 and build from there.'
-                });
-            }
-            
-            if (savingsRate >= 15 && debtRatio <= 20 && emergencyFundMonths >= 3) {
-                recommendations.push({
-                    icon: 'trending-up',
-                    title: 'Invest for the Future',
-                    description: 'Consider opening an investment account to grow your wealth over time.'
-                });
-            }
-            
-            const recommendationsContainer = document.getElementById('healthRecommendations');
-            recommendationsContainer.innerHTML = '';
-            
-            recommendations.forEach(rec => {
-                const div = document.createElement('div');
-                div.className = 'flex items-start';
-                div.innerHTML = `
-                    <div class="flex-shrink-0 mt-1">
-                        <i data-lucide="${rec.icon}" class="w-5 h-5 text-yellow-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h5 class="font-medium">${rec.title}</h5>
-                        <p class="text-sm text-gray-400">${rec.description}</p>
-                    </div>
-                `;
-                recommendationsContainer.appendChild(div);
-            });
-            
-            // Update milestone statuses
-            const emergencyStatus = document.getElementById('emergencyFundStatus');
-            if (emergencyFundMonths >= 6) {
-                emergencyStatus.textContent = 'Complete';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
-            } else if (emergencyFundMonths >= 3) {
-                emergencyStatus.textContent = 'In Progress';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
-            } else {
-                emergencyStatus.textContent = 'Not Started';
-                emergencyStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
-            }
-            
-            const debtStatus = document.getElementById('debtStatus');
-            if (debtRatio <= 10) {
-                debtStatus.textContent = 'Complete';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
-            } else if (debtRatio <= 20) {
-                debtStatus.textContent = 'In Progress';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
-            } else {
-                debtStatus.textContent = 'Not Started';
-                debtStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
-            }
-            
-            const retirementStatus = document.getElementById('retirementStatus');
-            const retirementSavingsRate = 15; // Assuming 15% is the target
-            if (savingsRate >= retirementSavingsRate) {
-                retirementStatus.textContent = 'On Track';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400';
-            } else if (savingsRate >= retirementSavingsRate * 0.7) {
-                retirementStatus.textContent = 'In Progress';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-yellow-900/30 text-yellow-400';
-            } else {
-                retirementStatus.textContent = 'Needs Attention';
-                retirementStatus.className = 'px-2 py-1 text-xs rounded-full bg-red-900/30 text-red-400';
-            }
-            
-            document.getElementById('health-results').classList.remove('hidden');
-            lucide.createIcons();
-        }
-        
-        // --- Goal Logic ---
-        function setGoal(elements) {
-            const goalName = elements.goalName.value;
-            const goalAmount = parseFloat(elements.goalAmount.value);
-            const currentSavings = parseFloat(elements.currentGoalSavings.value) || 0;
-            if (!goalName || goalAmount <= 0) {
-                alert("Please enter a valid goal name and amount.");
-                return;
-            }
-            currentGoal = { name: goalName, amount: goalAmount, saved: currentSavings };
-            alert(`Goal Set: ${goalName} for ${formatCurrency(goalAmount)}`);
-            updateGoalTracker(elements);
-            displayDynamicFact('goals', elements);
-        }
-        
-        function updateGoalTracker(elements) {
-            if (currentGoal.amount <= 0) return;
-            elements.goalTrackerSection.classList.remove('hidden');
-            elements.goalResultName.textContent = currentGoal.name;
-            elements.goalItemName.textContent = elements.itemName.value || "purchase";
-            elements.goalContribution.textContent = formatCurrency(lastCalculatedCost);
-            updateChart('goalDonutChart', buildGoalDonutChartConfig());
-        }
-        
-        function buildGoalDonutChartConfig() {
-            const { amount, saved } = currentGoal;
-            const potentialSave = lastCalculatedCost > 0 ? lastCalculatedCost : 0;
-            const remaining = amount - saved - potentialSave;
-            return {
-                type: 'doughnut',
-                data: {
-                    labels: ['Current Savings', 'This Purchase', 'Remaining'],
-                    datasets: [{
-                        data: [saved, potentialSave, Math.max(0, remaining)],
-                        backgroundColor: ['#4f46e5', '#10b981', 'rgba(255, 255, 255, 0.1)'],
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { 
-                            position: 'bottom',
-                            labels: { color: '#a0aec0' }
-                        }, 
-                        title: { 
-                            display: true, 
-                            text: `Goal: ${formatCurrency(amount)}`,
-                            color: '#ffffff',
-                            font: { size: 16 }
-                        }
-                    }
-                }
-            };
-        }
-        
         // --- Retirement Logic ---
         function calculateYearsToRetire(startSavings, annualSavings, fiNumber) {
             let currentSavings = startSavings;
@@ -3645,76 +3231,6 @@
             lucide.createIcons();
         }
         
-        // --- Money Motive Quiz Logic ---
-        const quizData = [
-            { question: "When you get an unexpected bonus, your first thought is:", answers: [ { text: "Put it straight into savings or investments.", motive: "Security" }, { text: "Book a flight for a spontaneous trip.", motive: "Experience" }, { text: "Treat your friends or family to a nice dinner.", motive: "Generous" }, { text: "Buy that designer item you've been eyeing.", motive: "Status" } ] },
-            { question: "You're most likely to spend money on:", answers: [ { text: "A course to learn a new skill.", motive: "Security" }, { text: "Tickets to a concert or festival.", motive: "Experience" }, { text: "A donation to a cause you care about.", motive: "Generous" }, { text: "Upgrading your car or phone.", motive: "Status" } ] },
-            { question: "Your ideal weekend involves:", answers: [ { text: "Organizing your finances and planning for the future.", motive: "Security" }, { text: "Exploring a new city or hiking trail.", motive: "Experience" }, { text: "Volunteering or hosting a get-together.", motive: "Generous" }, { text: "Shopping at a high-end mall.", motive: "Status" } ] },
-            { question: "When you think about money, you feel most successful when:", answers: [ { text: "Your emergency fund is fully stocked.", motive: "Security" }, { text: "You have a rich collection of memories and stories.", motive: "Experience" }, { text: "You can help someone in need without worrying.", motive: "Generous" }, { text: "People notice and admire your lifestyle.", motive: "Status" } ] },
-            { question: "Which phrase resonates with you most?", answers: [ { text: "Slow and steady wins the race.", motive: "Security" }, { text: "Collect moments, not things.", motive: "Experience" }, { text: "It's better to give than to receive.", motive: "Generous" }, { text: "You get what you pay for.", motive: "Status" } ] },
-            { question: "A 'rich life' to you means:", answers: [ { text: "Never having to worry about money.", motive: "Security" }, { text: "Freedom to travel and explore.", motive: "Experience" }, { text: "The ability to support your community.", motive: "Generous" }, { text: "Enjoying the best of everything.", motive: "Status" } ] }
-        ];
-        
-        const archetypes = {
-            Security: { title: "The Security Seeker", icon: '<i data-lucide="shield-check" class="w-16 h-16 text-green-500"></i>', description: "You are motivated by stability and peace of mind. You find comfort in planning, saving, and knowing you're prepared for the future.", strengths: "Excellent at saving, disciplined, and great at long-term planning.", blinds: "May be overly risk-averse, potentially missing out on growth opportunities. Can sometimes delay gratification to an extent that they forget to enjoy the present.", mantra: "My financial plan gives me the freedom to be secure today and enjoy tomorrow." },
-            Experience: { title: "The Experience Chaser", icon: '<i data-lucide="map" class="w-16 h-16 text-yellow-500"></i>', description: "You believe life is about the memories you make, not the things you own. You prioritize spending on travel, events, and activities that enrich your life.", strengths: "Lives a rich and fulfilling life full of stories. Understands that value isn't always monetary.", blinds: "Can struggle with long-term savings goals. May prioritize a short-term adventure over a long-term need, like retirement savings.", mantra: "I can build a future that funds my adventures and secures my peace." },
-            Generous: { title: "The Generous Giver", icon: '<i data-lucide="heart-handshake" class="w-16 h-16 text-pink-500"></i>', description: "You find the greatest joy in using your resources to help others. Your financial decisions are often guided by your heart.", strengths: "Deeply empathetic and builds strong community bonds. Finds immense fulfillment in helping others.", blinds: "May neglect their own financial needs, a classic 'put your own oxygen mask on first' scenario. Can sometimes be taken advantage of financially.", mantra: "Securing my own finances is the most powerful way I can continue to help others." },
-            Status: { title: "The Status Symbolist", icon: '<i data-lucide="gem" class="w-16 h-16 text-purple-500"></i>', description: "You appreciate quality, craftsmanship, and the finer things in life. You see money as a tool to achieve a certain lifestyle.", strengths: "Often highly driven and successful. Has a clear vision for the life they want to build.", blinds: "Susceptible to lifestyle inflation. May tie self-worth too closely to material possessions, leading to a never-ending cycle of spending.", mantra: "I define my success; my possessions do not. True wealth is freedom." }
-        };
-        
-        let currentQuestionIndex = 0;
-        let motiveScores = {};
-        
-        function startQuiz(elements) {
-            currentQuestionIndex = 0;
-            motiveScores = { Security: 0, Experience: 0, Generous: 0, Status: 0 };
-            elements.quizContainer.classList.remove('hidden');
-            elements.motiveResultContainer.classList.add('hidden');
-            displayQuestion(elements);
-        }
-        
-        function displayQuestion(elements) {
-            const questionData = quizData[currentQuestionIndex];
-            elements.quizQuestion.textContent = questionData.question;
-            elements.quizOptions.innerHTML = '';
-            questionData.answers.forEach(answer => {
-                const button = document.createElement('button');
-                button.className = 'quiz-option p-4 rounded-lg text-left';
-                button.textContent = answer.text;
-                button.onclick = () => selectAnswer(answer.motive, elements);
-                elements.quizOptions.appendChild(button);
-            });
-            const progress = ((currentQuestionIndex) / quizData.length) * 100;
-            elements.quizProgress.style.width = `${progress}%`;
-        }
-        
-        function selectAnswer(motive, elements) {
-            motiveScores[motive]++;
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData.length) {
-                displayQuestion(elements);
-            } else {
-                showResults(elements);
-            }
-        }
-        
-        function showResults(elements) {
-            const finalMotive = Object.keys(motiveScores).reduce((a, b) => motiveScores[a] > motiveScores[b] ? a : b);
-            userMotive = finalMotive;
-            const archetype = archetypes[finalMotive];
-            
-            elements.archetypeIcon.innerHTML = archetype.icon;
-            elements.archetypeTitle.textContent = archetype.title;
-            elements.archetypeDescription.textContent = archetype.description;
-            elements.archetypeStrengths.textContent = archetype.strengths;
-            elements.archetypeBlinds.textContent = archetype.blinds;
-            elements.archetypeMantra.textContent = `"${archetype.mantra}"`;
-            
-            elements.quizContainer.classList.add('hidden');
-            elements.motiveResultContainer.classList.remove('hidden');
-            lucide.createIcons();
-        }
-        
         // --- Dynamic Facts Logic ---
         function displayDynamicFact(tab, elements) {
             const age = parseInt(elements.age.value) || 30;
@@ -3733,17 +3249,6 @@
             // Gender-based facts
             if (gender === 'female') {
                 facts.push("On average, women live longer than men, meaning retirement savings need to last longer. Every dollar invested today is an investment in your future independence.");
-            }
-            
-            // Motive-based facts
-            if (userMotive === 'Security') {
-                facts.push("A study found that people with a stocked emergency fund report significantly lower stress levels, regardless of their income.");
-            } else if (userMotive === 'Experience') {
-                facts.push("Research from Cornell University shows that the happiness from experiential purchases lasts far longer than the happiness from material ones.");
-            } else if (userMotive === 'Generous') {
-                facts.push("Strategic giving, like donating appreciated stocks, can often provide a larger tax benefit, allowing you to give even more to the causes you love.");
-            } else if (userMotive === 'Status') {
-                facts.push("The average new car loses about 20% of its value in the first year. Investing that difference could be worth tens of thousands in the future.");
             }
             
             // Default facts if no specific ones match
@@ -3788,12 +3293,9 @@
                 runwayMonths: document.getElementById('runwayMonths'),
                 runwayAdded: document.getElementById('runwayAdded'),
                 // Debt
-                debtTotal: document.getElementById('debtTotal'),
-                debtRate: document.getElementById('debtRate'),
-                debtPayment: document.getElementById('debtPayment'),
-                debtExtra: document.getElementById('debtExtra'),
                 monthlyIncome: document.getElementById('monthlyIncome'),
                 creditScore: document.getElementById('creditScore'),
+                debtExtra: document.getElementById('debtExtra'),
                 totalMonthlyPayment: document.getElementById('totalMonthlyPayment'),
                 // Investment
                 initialInvestment: document.getElementById('initialInvestment'),
@@ -3806,31 +3308,6 @@
                 otherAllocation: document.getElementById('otherAllocation'),
                 inflationRate: document.getElementById('inflationRate'),
                 showRealReturns: document.getElementById('showRealReturns'),
-                // Financial Health
-                healthIncome: document.getElementById('healthIncome'),
-                healthExpenses: document.getElementById('healthExpenses'),
-                healthSavings: document.getElementById('healthSavings'),
-                healthDebt: document.getElementById('healthDebt'),
-                // Quiz
-                quizContainer: document.getElementById('quiz-container'),
-                motiveResultContainer: document.getElementById('motive-result-container'),
-                quizQuestion: document.getElementById('quizQuestion'),
-                quizOptions: document.getElementById('quizOptions'),
-                quizProgress: document.getElementById('quiz-progress'),
-                archetypeIcon: document.getElementById('archetypeIcon'),
-                archetypeTitle: document.getElementById('archetypeTitle'),
-                archetypeDescription: document.getElementById('archetypeDescription'),
-                archetypeStrengths: document.getElementById('archetypeStrengths'),
-                archetypeBlinds: document.getElementById('archetypeBlinds'),
-                archetypeMantra: document.getElementById('archetypeMantra'),
-                // Goals
-                goalName: document.getElementById('goalName'),
-                goalAmount: document.getElementById('goalAmount'),
-                currentGoalSavings: document.getElementById('currentGoalSavings'),
-                goalTrackerSection: document.getElementById('goal-tracker-section'),
-                goalResultName: document.getElementById('goalResultName'),
-                goalItemName: document.getElementById('goalItemName'),
-                goalContribution: document.getElementById('goalContribution'),
                 // Retirement
                 retireAge: document.getElementById('retireAge'),
                 annualIncome: document.getElementById('annualIncome'),
@@ -3852,10 +3329,7 @@
             // --- Event Listeners ---
             document.getElementById('calculateBtn').addEventListener('click', () => calculatePurchase(elements));
             document.getElementById('debtBtn').addEventListener('click', () => calculateDebtPayoff(elements));
-            document.getElementById('healthBtn').addEventListener('click', () => calculateFinancialHealth(elements));
-            document.getElementById('setGoalBtn').addEventListener('click', () => setGoal(elements));
             document.getElementById('calculateRetireBtn').addEventListener('click', () => handleRetirementCalculation(elements));
-            document.getElementById('retakeQuizBtn').addEventListener('click', () => startQuiz(elements));
             
             // Investment scenario event listeners
             document.getElementById('initialInvestment').addEventListener('input', updateScenarioInputs);
@@ -3888,7 +3362,6 @@
             });
             
             lucide.createIcons();
-            startQuiz(elements); 
         }
     </script>
 </body>
